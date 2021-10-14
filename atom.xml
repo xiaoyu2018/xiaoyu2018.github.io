@@ -48,7 +48,7 @@
     <link href="http://example.com/2021/10/14/first-post/"/>
     <id>http://example.com/2021/10/14/first-post/</id>
     <published>2021-10-14T07:34:05.000Z</published>
-    <updated>2021-10-14T10:39:50.312Z</updated>
+    <updated>2021-10-14T12:39:28.659Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/images/helloworld.jpg" alt="$cover"></p>]]></content>
     
@@ -61,10 +61,10 @@
     
     
     
-    <category term="test1" scheme="http://example.com/categories/test1/"/>
+    <category term="Genesis" scheme="http://example.com/categories/Genesis/"/>
     
     
-    <category term="Hello World" scheme="http://example.com/tags/Hello-World/"/>
+    <category term="Hello" scheme="http://example.com/tags/Hello/"/>
     
   </entry>
   
