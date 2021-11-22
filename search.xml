@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>D2L: Matrix</title>
+      <link href="/2021/11/22/d2l_1/"/>
+      <url>/2021/11/22/d2l_1/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Matrix"><a href="#Matrix" class="headerlink" title="Matrix"></a>Matrix</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li><p>标量</p><pre><code class="python">x=torch.tensor([1.0])y=torch.tensor([2.0])print(x+y,x*y,x/y,x**y)</code></pre></li><li><p>向量</p><pre><code class="python">x=torch.arange(4)print(x,x[3],len(x),x.shape,x.size())</code></pre></li><li><p>矩阵</p><pre><code class="python">x=torch.eye(20)x=torch.arange(20).view(5,4)print(x,x.T,x.t())print(torch.arange(24).reshape(2,3,4))</code></pre></li><li><p>运算</p><pre><code class="python">A=torch.arange(20,dtype=torch.float32).view(5,4)B=A.clone() #创建A的副本给B，A与B指向不同地址C=B  #B与C指向相同地址# B，C都会改变C[0,:] = 0print(A,B,C)# 矩阵加 点乘 每个元素求sinprint(A+B,A*B,torch.sin(A))A=torch.arange(2*20).view(2,5,4).float()print(A)# 求和可指定维度,不指定则全部维度求和print(A.sum(axis=0),A.sum([0,1]),A.sum())# 求均值可指定维度,不指定则全部维度求均值# keepdim=True代表不把求均值的那个维度丢掉，一般用来保证广播机制的正常运行print(A.mean(axis=0,keepdim=True),A.mean([0,1]),A.mean())# 求个数不可以指定维度print(A.numel())# 点积X=torch.arange(4).float()Y=torch.ones(4)print(torch.dot(X,Y))# 2范数,即向量长度，如果输入超过一维，会展成一维然后当成向量计算print(torch.norm(X))# 矩阵乘法X=X.view(2,2)Y=Y.view(2,2)print(torch.mm(X,Y))</code></pre></li></ul><h2 id="Derivative"><a href="#Derivative" class="headerlink" title="Derivative"></a><strong>Derivative</strong></h2><ul><li><p>向量上的导数<br>与向量相关的导数有以下四种形式<br><img src="/images/d2l/1/dv.png"></p><ul><li>y标量，x向量<br>y是由x中各分量计算得到的标量，最终得到y分别每个分量求导得出的向量，这也是梯度的计算过程<br><img src="/images/d2l/1/dv_1.png"></li><li>y向量，x标量<br>向量y的每个分量都是x的函数，每个分量分别对x求导最终得出一个向量<br><img src="/images/d2l/1/dv_2.png"></li><li>y向量，x向量<br>向量y的每个分量都是由x中各分量计算得到的标量，y的每个分量都分别对x的每个分量求导得出一个向量，最后得到一个矩阵<br><img src="/images/d2l/1/dv_3.png"></li></ul></li><li><p>矩阵上的导数<br>导数同样也可以被扩展到矩阵<br><img src="/images/d2l/1/dm.png"></p></li></ul><h2 id="Automatic-derivative"><a href="#Automatic-derivative" class="headerlink" title="Automatic derivative"></a><strong>Automatic derivative</strong></h2><ul><li><p>链式求法则<br>在神经网络中需要关注向量的链式求导，关键还是要把形状搞对<br><img src="/images/d2l/1/chain.png"> </p></li><li><p>自动求导<br>其含义是计算一个函数在指定值上的导数，它不同于符号求导和数值求导</p><ul><li><p>计算图<br>计算图本质上就等价于链式求导法则的求导过程，它将计算表示成一个无环图，下面是具体的例子<br><img src="/images/d2l/1/calc_graph.png"></p></li><li><p>反向传播<br>反向传播解决了自动求导的问题，它利用在前向传播时计算图中存储的计算中间结果，一步一步反向算出链式求导中各步导数<br><img src="/images/d2l/1/bp.png"></p></li><li><p>自动求导实现</p><pre><code class="python"># pytorch中做Tensor的计算时默认直接构造计算图# 计算图中入度为0的节点还应该存储关于自身的梯度，需要手动设置requires_grad=Truex=torch.arange(4.0,requires_grad=True)y=2*torch.dot(x,x)print(y)y.backward()# 计算得出的梯度存在grad中print(x.grad)# 要注意pytorch默认会把同一个变量上的梯度累加# 在另一轮计算梯度时需要先清除之前的值x.grad.zero_()y=x.sum()y.backward()print(x.grad)# 在成batch地计算损失的过程中# 最后将一个向量对向量求导的过程，转化为了标量对向量求导x.grad.zero_()# y是一个向量，把它对应为一个batch的损失y=x*x# 如果直接求导，会得到一个矩阵，这不是我们想要的# 将batch中每一个损失加起来得到一个batch的损失后再求导# 这也是pytorch中所做的y.sum().backward()print(x.grad)# 将某些计算移动到计算图之外# 这在想要固定网络中某些参数时是有用的x.grad.zero_()y=x*x# u不被计入为计算图的一个单元，而是一个常数u=y.detach()z=u*xz.sum().backward()print(x.grad==u)# 控制流也可以正确构成计算图并计算梯度</code></pre></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Neural Network </tag>
+            
+            <tag> Dive Into Deep Learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>GAN #1</title>
       <link href="/2021/11/19/Gan0/"/>
       <url>/2021/11/19/Gan0/</url>
