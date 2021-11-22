@@ -4,6 +4,174 @@
   
     
     <entry>
+      <title>Transformer</title>
+      <link href="/2021/11/22/Transformer/"/>
+      <url>/2021/11/22/Transformer/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/transformer/transformer.jpg" alt="$cover"></p><h1 id="Attention-Is-All-Your-Need"><a href="#Attention-Is-All-Your-Need" class="headerlink" title="Attention Is All Your Need"></a>Attention Is All Your Need</h1><p>以往主流的序列转录(seq2seq)模型中常常基于包含Encoder与Decoder的复杂RNN或CNN，这些模型也会在Encoder与Decoder中使用Attention机制。<br>Transformer仅仅使用了Attention机制，完全没用到循环和卷积，将循环层换为了Multi-headed Attetion。Transformer训练速度更快，预测能力更好。  </p><hr><h2 id="Advantages"><a href="#Advantages" class="headerlink" title="Advantages"></a>Advantages</h2><ul><li>RNN难以并行计算计算效率低，Transformer可并行。</li><li>RNN带有时序信息，但在序列较长时，早期的信息可能在后期丢失。Attention可通过在输入序列中加入index增加时序，并且不会存在信息丢失问题。</li><li>用CNN可以替换掉RNN实现并行计算，但由于感受野的限制其依然存在难以对长序列进行建模的问题。Transformer中的Attention机制一次性看到所有的序列，消除了这一问题。</li><li>CNN可利用多个输出通道识别不一样的模式，在Transformer中使用Multi-headed Attetion，也实现了这样的特性。</li></ul><hr><h2 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h2><p>Transformer整体分为Encoder与Decoder两大部分。  </p><ul><li>Input Embedding/Output Embedding将词映射到向量。</li><li>Postoinal Encoding</li><li>Nx指有N个该块叠在一起。</li><li>Add表示残差连接，Norm表示正则处理。</li><li>在训练时，解码器的输入（outputs）是真实值(Ground Truth)；在测试时，输入（outputs）是前一时刻的输出。<br><img src="/images/transformer/architecture.png" alt="architecture"></li></ul><h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><p>N=6，out_dim=input_dim=512。由两个子层组成，两个子层分别为Multi-headed Attetion和简单的MLP。每个子层使用残差连接和layer normalization。</p><blockquote><p>layer normalization and batch normalization</p><blockquote><p>batch:对每一个feature，将这个feature在一个batch中的所有数据的均值变为0方差变为1<br><img src="/images/transformer/batch_norm.png" alt="batch_norm"><br>layer:对每一个样本，将这个样本所有的特征均值变为0方差变为1<br><img src="/images/transformer/layer_norm.png" alt="layer_norm"><br>成sequence的normalization:<br>蓝为batch，黄为layer，取所有数据去做norm。阴影部分为样本实际长度（即该样本序列的seq_len），在实际长度外取全0。<br><img src="/images/transformer/seq_norm.png" alt="seq_norm"><br>使用layernormalization相对稳定一些。每个样本自己做均值方差再去norm。</p></blockquote></blockquote><hr><h3 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h3><p>N=6,由三个子层组成，其中后两个子层Encoder一致，而第一个子层有所不同，其使用了Masked Multi-headed Attetion。在Decoder中还使用了自回归。当前的outputs输入是上一次的输出。在训练过程中，Decoder的输入outputs为ground truth，但在t时刻的输入不应包含t时刻之后的输入，所以第一个子层引入了masked机制。</p><hr><h3 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h3><blockquote><p>Transformer使用了Scaled Dot-Product Attention。其将输入的一个seq进行融合输出一个等长的seq。<br><img src="/images/transformer/panaroma.png" alt="panaroma"><br>在融合时，每一个输出都考虑了其对应位置输入元素和seq中其他元素的相关度。Wq与Wk是两个参数矩阵，原始输入做矩阵运算后得到两个向量q、k，最后用内积运算即得到了原始输入的相关性（内积运算代表了余弦相似度）。<br><img src="/images/transformer/dot-product.png" alt="dot-product"><br>同理可计算出a1与自身及序列中所有元素的相关性，全部计算完成后输入到softmax层进行归一化。<br><img src="/images/transformer/to-softmax.png" alt="to-softmax"><br>利用一个新的参数矩阵Wv获得v1-v4。v与相关性系数的带权和得到b1。<br><img src="/images/transformer/b1.png" alt="b1"><br>同理，可以得到b2、b3、b4。<br><img src="/images/transformer/panaroma.png" alt="panaroma"><br>上述步骤可表示为矩阵运算。<br><img src="/images/transformer/use_matrix.png" alt="use_matrix"><br>最终的计算公式可如下表示。这里多了一个除以根号dk(input_dim)，这是因为向量(Transformer中dk=512)比较长时，内积绝对值可能会出现比较大的情况，这对梯度下降是不利的。<br><img src="/images/transformer/formula.png" alt="formula"> </p></blockquote><blockquote><p>Multi-headed Attetion可以看作是多通道的Attention。以2heads为例，计算过程如下，增加了多个参数矩阵。<br><img src="/images/transformer/multi-head.png" alt="multi-head"><br>在最后，将bi1与bi2一起其他的相应多通道b在特征维度拼接起来，为保证dim不变，利用一个新的参数矩阵Wo将输出元素的维度变为和输入相同。<br><img src="/images/transformer/concat.png" alt="concat"><br>一个线性层就可看作一个参数矩阵，所以上述两步操作可看作如下的过程。<br><img src="/images/transformer/liner-representatoin.png" alt="liner-representatoin"> </p></blockquote><hr><h3 id="Cross-Attention-in-Transformer"><a href="#Cross-Attention-in-Transformer" class="headerlink" title="Cross Attention in Transformer"></a>Cross Attention in Transformer</h3><p>Cross Attention指的是Encoder与Decoder之间的Attention机制。其V和K来自于Encoder，而Q来自于masked Attention。由于是masked，向Q输入的部分其seq_len会与V和K的不同，又因为其作为Q输入，所以cross-attention输出的seq_len会与之相同，所以Decoder的输入输出seq_len是相同的。<br><img src="/images/transformer/cross-attention.png" alt="cross-attention">  </p><hr><h3 id="Feed-Forward"><a href="#Feed-Forward" class="headerlink" title="Feed-Forward"></a>Feed-Forward</h3><p>只有一个MLP分别去作用于seq中的每个词，<br>图中MLP权重是相同的，也不需要把Encoder的输出合并输入到大的MLP。因为这里只是想要把原始维度投影到想要的另一个维度，其信息融合已经在Encoder中做完了。<br><img src="/images/transformer/feed-forward.png" alt="feed-forward"></p><hr><h3 id="Embedding-and-Softmax"><a href="#Embedding-and-Softmax" class="headerlink" title="Embedding and Softmax"></a>Embedding and Softmax</h3><p>编码器要有embedding，解码器要有embedding，softmax层之前有一个Liner层，这三个层共享权重。</p><hr><h3 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h3><p>为了给Attention加上时序信息，给输入加上位置信息。</p><hr>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> papers </tag>
+            
+            <tag> Neural-Network </tag>
+            
+            <tag> Seq2Seq-Model </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ResNet</title>
+      <link href="/2021/11/22/resnet/"/>
+      <url>/2021/11/22/resnet/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/resnet/cover.jpg" alt="$cover"></p><h1 id="Residual-Network"><a href="#Residual-Network" class="headerlink" title="Residual Network"></a>Residual Network</h1><p>深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。</p><p><img src="/images/resnet/plain_error.png" alt="plain_error"><br>在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。</p><h2 id="Is-learning-better-networks-as-easy-as-stacking-more-layers"><a href="#Is-learning-better-networks-as-easy-as-stacking-more-layers" class="headerlink" title="Is learning better networks as easy as stacking more layers ?"></a><strong>Is learning better networks as easy as stacking more layers ?</strong></h2><ul><li>当网络变得特别深时，会出现梯度爆炸或梯度消失</li><li>传统的解决方法是：参数在初始化时要做的好一点，不要太大也不要太小；加入一些Batch Normalization Layers</li><li>传统的解决方法使得神经网络能够收敛，但是网络的精度却变得更差，而这并非是模型变得复杂后导致的过拟合问题，因为模型的训练误差也变高了</li><li>正常来说，如果在一个浅层的神经网络后直接加入更多的层，这些层只做identity mapping，那么这个深层神经网络的误差绝不会高于浅层的神经网络，但是传统的神经网络模型并未找到这样的解（或更好的解）</li><li>如果深层网络后面的层都是是恒等映射，那么模型就可以转化为一个浅层网络</li></ul><h2 id="Deep-residual-learning-framework"><a href="#Deep-residual-learning-framework" class="headerlink" title="Deep residual learning framework"></a><strong>Deep residual learning framework</strong></h2><ul><li>将残差块的输入与块内最后一个神经网络层的线性输出求和后在进行激活，得到残差块的输出<br><img src="/images/resnet/residual_block.png" alt="plain_error"></li><li>残差块只简单地做了shortcut connections，没有引入额外的训练参数，不会增加网络复杂度</li><li>已有的神经网络很难拟合潜在的恒等映射函数H(x) = x，但是ResNet将残差块设计为H(x) = F(x) + x，其直接把恒等映射作为网络的一部分，只要F(x) = 0，便得到了恒等映射。而此时F(x) = H(x) - x 称为残差函数，就是当前残差块的学习目标（学习出这样一个F(x)函数满足如图输出）</li><li>值得一提的是，一个残差块中应该至少有两层（中间要包含一个非线性激活），否则就会出现如下情况，这显然是没有用的工作<br><img src="/images/resnet/no_use.png" alt="plain_error"></li></ul><h2 id="Deeper-bottleneck-architecture"><a href="#Deeper-bottleneck-architecture" class="headerlink" title="Deeper bottleneck architecture"></a><strong>Deeper bottleneck architecture</strong></h2><ul><li>当神经网络层数进一步增多时，参数的增长会带来很大的计算开销。此时可以考虑使用1*1的卷积核暂时减少通道数来减少整个网络的数据规模<br><img src="/images/resnet/deeper.png" alt="plain_error"></li></ul><h2 id="Analysis-of-Deep-Residual-Networks"><a href="#Analysis-of-Deep-Residual-Networks" class="headerlink" title="Analysis of Deep Residual Networks"></a><strong>Analysis of Deep Residual Networks</strong></h2><ul><li>残差块的反向传播过程较好地解释了残差网络避免梯度消失原因，具体推导过程如下</li><li>推导中忽略偏置项和激活函数<br><img src="/images/resnet/res_bp.png" alt="plain_error"></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> papers </tag>
+            
+            <tag> Neural-Network </tag>
+            
+            <tag> Residual-learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>GAN #1</title>
+      <link href="/2021/11/22/Gan0/"/>
+      <url>/2021/11/22/Gan0/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/gan/cover.png" alt="$cover"></p><h1 id="Generative-Adversarial-Nets"><a href="#Generative-Adversarial-Nets" class="headerlink" title="Generative Adversarial Nets"></a>Generative Adversarial Nets</h1><p>Gan利用对抗的方法，提出了生成模型的新框架。它需要同时训练两个模型（生成模型G和判别模型D），G用于捕获数据的分布，而D需要判别出一个样本是来自训练集还是生成模型。生成模型的目标是尽最大可能让判别模型犯错（无法成功判别数据的来源），G和D在本文中被定义为多层感知机，整个系统通过反向传播来进行训练。</p><h2 id="AN-analogy-to-GAN"><a href="#AN-analogy-to-GAN" class="headerlink" title="AN analogy to GAN"></a><strong>AN analogy to GAN</strong></h2><p>在生成对抗网络框架中，生成模型与判别互相对抗。可以把生成模型类比为造假币者，判别模型类比为警察。生成模型试图制造假币骗过判别模型，而判别模型努力区分假币。二者在这样的对抗中不断学习提升各自的水平，直到生成模型的造的假币和真的一模一样，判别器无法区分。另外，警察进步不能过大或过小。进步过大时，造假者直接被一锅端，无法继续造假钞；进步过小时，造假者不需进步也能骗过警察，则没有动力进步</p><h2 id="Adversarial-nets"><a href="#Adversarial-nets" class="headerlink" title="Adversarial nets"></a><strong>Adversarial nets</strong></h2><ul><li><p>对抗网络认为数据集代表着一个分布，每一个样本都可以由高维随机变量表示。假设数据集是许多张2*2大小的黑白图片，每张图片有四个像素点，于是将该分布看作四维随机变量的分布，每一维代表着一个像素的取值（黑白只取0或1）<br><img src="/images/gan/mrv.jpg"></p></li><li><p>在让生成模型学习数据集代表了分布之前，首先定义一个符合高斯分布的先验噪声Z，生成模型就是要学习把Z映射成为数据集代表的分布，MLP理论上可以拟合这样一个函数来完成目标。生成器以Z为输入，输出一个尽量符合数据集分布的样本  </p></li><li><p>判别器也是一个MLP，判别器以数据集或生成器生产的样本为输入，输出一个标量（0：生成器生成的样本，1：真实样本，判别器的输出介于[0,1]），判别样本的真伪。判别器要学习一个二分类任务  </p></li><li><p>D与G对于同一个目标函数采取相反的优化方式：<br><img src="/images/gan/obj_func.png"><br>在不同分布里采样计算后得到期望和，生成器和鉴别器分别要调整参数最大化和最小化这一期望和，体现了对抗的过程，D尽量区分生成的数据和真实数据，G尽量使得生成的数据和真实数据难以区分</p></li><li><p>下图展示了对抗网络训练过程中，各个成分的变化：<br><img src="/images/gan/graph_proc.png"><br>Z为高斯噪声，绿色线代表G生成数据的概率密度函数，黑色线代表真实数据的概率密度函数，蓝色代表D输出标量的函数<br>（a）G将Z随即映射为另一个分布，与真实分布存在一定差距，此时D未经学习，分类能力弱<br>（b）固定G，训练D，D分类能力明显上升<br>（c）固定D，训练G，G学习到把Z向真实数据分布映射<br>（d）反复多轮后，G映射的分布与真实数据相同，判别器无法区分</p></li><li><p>对抗网络算法流程如下：<br><img src="/images/gan/algorithm.png"><br>先更新D，再更新G，G只与目标函数中后半段有关。k是一个超参数，不能太大也不能大小。取太大判别器训练得太好，取太小判别器变化太小</p></li></ul><h2 id="Theoretical-results"><a href="#Theoretical-results" class="headerlink" title="Theoretical results"></a><strong>Theoretical results</strong></h2><ul><li>理论上，对抗网络存在全局最优解：生成器映射的分布等于真实数据分布</li><li>对抗网络算法可以求解目标函数</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> papers </tag>
+            
+            <tag> Neural-Network </tag>
+            
+            <tag> Generative-Model </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>C# Asynchronous programming #3</title>
+      <link href="/2021/11/22/CSAsync3/"/>
+      <url>/2021/11/22/CSAsync3/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/CSAsynchronousProgramming/cover.png" alt="$cover"></p><h1 id="C-Asynchronous-programming-3"><a href="#C-Asynchronous-programming-3" class="headerlink" title="C# Asynchronous programming #3"></a>C# Asynchronous programming #3</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><h3 id="Use-Thread-in-Applications"><a href="#Use-Thread-in-Applications" class="headerlink" title="Use Thread in Applications"></a><strong>Use Thread in Applications</strong></h3><ul><li>在带界面的WPF、UWP、WinForm等程序种，若主线程执行耗时的操作，就会导致整个程序无响应。因为主线程同时还要处理消息循环，而渲染和鼠标键盘事件处理等工作都是在消息循环中执行的</li><li>针对这种耗时的操作，一种流行的做法使启用一个worker线程，执行完操作后再更新到UI</li><li>富客户端应用的线程模型通常是：<ul><li>UI控件只能从创建他们的线程来进行访问（通常是主线程）</li><li>当想从worker线程更新UI时，应该把请求交给UI线程</li></ul></li></ul><h3 id="Synchronization-Contexts"><a href="#Synchronization-Contexts" class="headerlink" title="Synchronization Contexts"></a><strong>Synchronization Contexts</strong></h3><ul><li>在System.ComponentModel下有一个抽象类：SynchronizationContext，它使得Thread Marshaling得到泛化<ul><li>Thread Marshaling：把一些数据的所有权从一个线程交给了另一个线程</li></ul></li></ul><h3 id="Thread-Pool"><a href="#Thread-Pool" class="headerlink" title="Thread Pool"></a><strong>Thread Pool</strong></h3><ul><li><p>当开始一个线程时，将花费数百微秒来组织一些内容（如一个新的局部变量栈），产生了开销</p></li><li><p>线程池可以节省这些开销：</p><ul><li>预先创建一个可循环使用的线程的池来减少创建新线程的开销</li></ul></li><li><p>线程池对于搞笑的并行编程和细粒度的并发是必不可少的</p></li><li><p>关于c#中的线程池需要注意以下几点：</p><ul><li>不可以设置池线程的<code>Name</code></li><li>池线程都是后台线程</li><li>阻塞池线程可能使性能降低</li><li>池线程优先级可以被自由的更改，当它被释放回池的时候优先级将被还原为正常状态</li><li>可以通过<code>IsThreadPoolThread</code>属性来判断是否为池线程</li><li><code>Task</code>也使用线程池</li></ul></li><li><p>线程池中的整洁</p><ul><li>线程池提供了另一个功能，即确保不会产生CPU超额订阅（活跃的线程数超过CPU核数），超额订阅对性能影响很大</li><li>CLR通过对任务排队并对其启动进行节流限制来避免线程池中的超额订阅</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> C# </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Asynchronous-programming </tag>
+            
+            <tag> CS-Threading </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>C# Asynchronous programming #2</title>
+      <link href="/2021/11/22/CSAsync2/"/>
+      <url>/2021/11/22/CSAsync2/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/CSAsynchronousProgramming/cover.png" alt="$cover"></p><h1 id="C-Asynchronous-programming-2"><a href="#C-Asynchronous-programming-2" class="headerlink" title="C# Asynchronous programming #2"></a>C# Asynchronous programming #2</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><h3 id="Thread-Safety"><a href="#Thread-Safety" class="headerlink" title="Thread Safety"></a><strong>Thread Safety</strong></h3><ul><li>本地状态与共享状态<ul><li>Local 本地独立：CLR为每个线程分配自己的内存栈，以便使本地变量保持独立</li><li>Shared 共享：如果多个线程引用到了同一个对象实例，那么他们就共享了数据；被Lambad表达式或匿名委托捕获的本地变量，会被编译器转化为字段（field），所以也会被共享；静态字段也会在线程间共享</li></ul></li></ul><pre><code class="c#">class Program{        static void Main(string[] args)    {        /*本地变量不共享*/        //打印六次hello...        Thread thread = new Thread(GO);        thread.Start();        GO();        /*同一实例共享*/        //打印一次Done！        ThreadTest test = new ThreadTest();        new Thread(test.Test).Start();        Thread.Sleep(1000);        test.Test();        /*匿名委托共享*/        //打印一次Done        bool done = false;        ThreadStart action = () =&gt;            {                if (!done)                {                    //此处还是会有输出多次的风险                    done = true;                    System.Console.WriteLine("Done");                }            };        new Thread(action).Start();        Thread.Sleep(new TimeSpan(0, 0, 1));        action.Invoke();        /*静态字段共享*/        //打印一次Done！        ThreadTest test1 = new ThreadTest();        ThreadTest test2 = new ThreadTest();        new Thread(test1.AnotherTest).Start();        Thread.Sleep(10);        test2.AnotherTest();    }    static void GO()    {           //cycle是本地变量，属于本地状态        //在每个线程的内存栈上，都会创建cycle的 独立副本        for (int cycle = 0;  cycle&lt; 3; cycle++)        {            System.Console.WriteLine("hello...");        }    }}class ThreadTest{    private bool _done;    private static bool done;    public void AnotherTest()    {        //此处还是会有输出多次的风险        if(!done)        {            System.Console.WriteLine("DONE!");            done = true;        }    }    public void Test()    {        //此处还是会有输出多次的风险        if(!_done)        {            System.Console.WriteLine("Done!");            _done = true;        }    }}</code></pre><ul><li>线程安全<ul><li>上述后涉及线程共享数据的代码是缺乏线程安全的，其实际输出无法确定，理论上Done有可能会打印两次，因为一个线程可能正在评估if，而另一个语句没来得及调整<code>done</code>为<code>true</code></li><li>保证线程安全：消除代码执行过程中的不确定性<ol><li>尽可能的避免使用共享状态以保证线程安全</li><li>使用<code>lock</code>语句加锁，在读取和写入共享数据的时候，通过使用互斥锁，就可以修复前面代码中的问题，当两个线程同时竞争一个锁的时候（锁可以基于任何引用类型对象），一个线程会等待或阻塞，直到锁重新变成可用状态</li></ol></li><li>然而，lock也并非线程安全的银弹，lock也会引起一些其他问题（如死锁）</li></ul></li></ul><pre><code class="c#">    class Program    {        static readonly object locker=new object();        static bool done;        static void Main(string[] args)        {            new Thread(GO).Start();            GO();        }        static void GO()        {            // 锁要基于引用类型的变量            // 线程安全            lock(locker)            {                if (!done)                {                    System.Console.WriteLine("Done");                    Thread.Sleep(1000);                    done = true;                }            }        }    }</code></pre><h3 id="Transfer-Parameter"><a href="#Transfer-Parameter" class="headerlink" title="Transfer Parameter"></a><strong>Transfer Parameter</strong></h3><ul><li>如果想往线程启动方法里传递参数，最简单的方式就是使用lambda表达式，在里面使用参数调用方法</li></ul><pre><code class="c#">class Program    {                static void Main(string[] args)        {            new Thread(() =&gt; { Print("hello world"); }).Start();        }        static void Print(string s)        {            System.Console.WriteLine(s);        }    }</code></pre><ul><li>还可以使用<code>Thread.Start</code>方法来传递参数，类似委托中<code>Invoke</code>时的传参<ul><li>Thread的重载构造函数可以接受下列两个委托之一作为参数：<ol><li><code>public delegate void ThreadStart();</code></li><li><code>public delegate void ParameterizedThreadStart(object obj);</code></li></ol></li><li>第二种委托接收带参数的方法名</li></ul></li></ul><pre><code class="c#">class Program{        static void Main(string[] args)    {        Thread thread = new Thread(Print);        thread.Start("hello world");    }    static void Print(object s)    {        s = s as string;        System.Console.WriteLine(s);    }}</code></pre><ul><li>需要注意的是lambda表达式（匿名委托）传的参数会当作字段，即就算传的是值类型的变量也会得到其地址并被线程共享；而第二种传参强制要求了引用变量，也会被线程共享</li></ul><pre><code class="c#">class Program{      static void Main(string[] args)    {        // Thread1();        Thread2();    }    // 线程共享了同一个局部变量i    // 会出现重复的数    static void Thread1()    {        for (int i = 0; i &lt; 5; i++)        {            new Thread(() =&gt; { System.Console.WriteLine(i); }).Start();        }    }    // 每个线程获得不同局部变量的地址    // 不会出现重复的数    static void Thread2()    {        for (int i = 0; i &lt; 5; i++)        {            int temp = i;            new Thread(() =&gt; { System.Console.WriteLine(temp); }).Start();        }    }    }</code></pre><h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a><strong>Exception</strong></h3><ul><li>异常处理块种的线程抛出异常时，不会被捕获，解决方案是传入线程的方法中处理异常</li></ul><pre><code class="c#">class Program{      static void Main(string[] args)    {        // 正常捕获        new Thread(Go2).Start();        // 无法捕获        try        {            new Thread(Go1).Start();        }        catch        {            System.Console.WriteLine("Exceptoin!");        }    }       static void Go1()    {        throw new Exception();    }    static void Go2()    {        try        {            throw new Exception();        }        catch        {            System.Console.WriteLine("catch sucessfully");        }    }    }</code></pre><h3 id="Foreground-Threads-and-Background-Threads"><a href="#Foreground-Threads-and-Background-Threads" class="headerlink" title="Foreground Threads and Background Threads"></a><strong>Foreground Threads and Background Threads</strong></h3><ul><li>默认情况下，手动创建的线程就是前台线程</li><li>只要有前台线程在运行，那么应用程序就会一直处于活动状态<ul><li>后台线程运行不会保持应用程序的活动状态</li><li>一旦所有前台线程停止，应用程序随即停止，后台线程也会立即终止</li></ul></li><li>线程的前台、后台与它的优先级无关</li><li>通过<code>IsBackground</code>属性判断线程是否是后台线程</li></ul><pre><code class="c#">class Program{      static void Main(string[] args)    {        Thread thread = new Thread(() =&gt; { Console.WriteLine(Console.ReadLine());});                // 如果将thread设置为后台线程，当主线程（前台线程）执行完之后程序立即结束        if(args.Length&gt;0)            thread.IsBackground = true;        thread.Start();    }       }</code></pre><ul><li>如果在退出前想要等待后台线程执行完毕，可以考虑使用<code>Join</code></li><li>应用程序无法正常退出的一个常见原因就是还有活跃的前台线程</li></ul><h3 id="Priority-of-Threading"><a href="#Priority-of-Threading" class="headerlink" title="Priority of Threading"></a><strong>Priority of Threading</strong></h3><ul><li>线程的优先级（<code>Thread</code>中<code>Priority</code>属性）决定了相对于操作系统中其他活跃线程所占的执行时间</li><li>优先级划分：<ul><li><code>enum ThreadPriority{Lowest,BelowNormal,Normal,AboveNormal,Highest}</code></li></ul></li><li>提升线程优先级：<ul><li>提升线程优先级时要特别注意，因为他可能饿死其他线程</li><li>如果想让某线程的优先级比其他进程中的线程优先级高，那么就必须提升进程优先级</li></ul></li><li>手动提升进程/线程优先级适用于只做少量工作且需要较低延迟的非UI进程</li><li>对于需要大量计算的应用程序（尤其是带UI的），手动提升进程/线程优先级可能会使其他进程/线程饿死，从而降低整个计算机的速度</li></ul><h3 id="Signaling"><a href="#Signaling" class="headerlink" title="Signaling"></a><strong>Signaling</strong></h3><ul><li>某个线程在收到其他线程发来通知之前一直处于等待状态，发送通知的过程就称为Signaling，不同于信号量机制</li><li>最简单的信号结构就是<code>ManualResetEvent</code><ul><li>调用其上<code>WaitOne</code>方法会阻塞当前线程，直到另一个线程通过调用<code>Set</code>方法开启信号</li></ul></li></ul><pre><code class="c#">class Program{     static void Main(string[] args)    {        var signal = new ManualResetEvent(false);        new Thread(() =&gt;        {            System.Console.WriteLine("Waiting for signal...");            // 因为在实例化时设置了false主线程打开信号之前处于阻塞状态            // 成功接收到信号时不会将signal状态重置为nonusignaled            signal.WaitOne();            // 获得信号后直接关闭该信号量            System.Console.WriteLine("Got signal!");        }).Start();        for (int i = 0; i &lt; 5; i++)        {            System.Console.WriteLine(i);        }        Thread.Sleep(1000);        signal.Set();    }   }</code></pre><ul><li>调用完<code>Set</code>后信号会处于signaled状态，通过调用<code>Reset</code>将信号重新变为nonsignaled状态</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> C# </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Asynchronous-programming </tag>
+            
+            <tag> CS-Threading </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>C# Asynchronous programming #1</title>
+      <link href="/2021/11/22/CSAsync1/"/>
+      <url>/2021/11/22/CSAsync1/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/CSAsynchronousProgramming/cover.png" alt="$cover"></p><h1 id="C-Asynchronous-programming-1"><a href="#C-Asynchronous-programming-1" class="headerlink" title="C# Asynchronous programming #1"></a>C# Asynchronous programming #1</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><hr><h3 id="What-is-Thread"><a href="#What-is-Thread" class="headerlink" title="What is Thread ?"></a><strong>What is Thread ?</strong></h3><ul><li>线程是一个可执行路径，每一个线程可以独立于其他线程执行</li><li>每个线程在均进程(Process)内执行，在操作系统中，进行提供了程序运行的独立环境</li><li>单线程应用，在进程的独立环境中只跑一个线程，该线程具有独占权</li><li>多线程应用，单个进程中跑多个线程，多个线程共享当前的执行环境（尤其是内存）<ul><li>共享：多个线程共同占有某种资源，如一个线程在后台读取数据，另一个线程在数据到达后进行展示。  </li></ul></li></ul><p>下面是c#中最简单的异步编程实例：</p><pre><code class="c#">class Program{    static void Main(string[] args)    {        Thread.CurrentThread.Name = "Main Thread...";        //开辟一个新线程                    Thread thread = new Thread(WriteY);        thread.Name = "Y Thread...";        thread.Start();        Thread.Sleep(1);        //同时在主线程上做一些工作        System.Console.WriteLine(Thread.CurrentThread.Name);        for (int i = 0; i &lt; 1000; i++)        {            System.Console.Write("x");        }            }    static void WriteY()    {        System.Console.WriteLine(Thread.CurrentThread.Name);        for (int i = 0; i &lt; 1000; i++)        {            System.Console.Write("y");        }            }}</code></pre><ul><li>在单核计算机上，操作系统必须为每个线程分配<strong>时间片</strong>（Windows下通常为20ms）来模拟并发，从而在本例中，会输出重复的x块与y块</li><li>在多核或多处理器的计算机上，使用c#创建的多线程可以真正意义上并行执行。然而，在本例中由于控制台程序处理并发请求机制的微妙性，仍然会得到重复的x块与y块<br><img src="/images/CSAsynchronousProgramming/first_example.png" alt="first_example"></li><li>c#中线程的一些属性：<ul><li>线程一旦开始执行，属性<code>IsAlive</code>就变为<code>true</code>，线程结束就变为<code>false</code></li><li>线程结束的条件：线程构造器中传入的委托结束了执行</li><li>线程一旦结束，便无法重启</li><li>每个线程都有一个<code>Name</code>属性，通常用于调试，<code>Name</code>只能设置一次，多次更改会抛出异常</li><li>静态属性<code>Thread.CurrentThread</code>，指向当前执行的线程</li></ul></li></ul><h3 id="Join-and-Sleep"><a href="#Join-and-Sleep" class="headerlink" title="Join and Sleep"></a><strong>Join and Sleep</strong></h3><ul><li>在线程A中调用另一个线程B实例的<code>Join</code>方法，线程A便会等待线程B执行结束后继续执行。</li><li>调用<code>Jion</code>方法时，可在参数中设置一个超时(毫秒/<code>TimeSpan</code>)<ul><li>使用有超时的重载方法时返回值<code>bool</code>类型，<code>true</code>：线程结束；<code>false</code>：超时</li></ul></li><li><code>Thread.Sleep</code>方法会暂停当前的线程，并等待一段时间<ul><li><code>Thread.Sleep(0)</code>会导致县城立即放弃本身当前时间片，自动将cpu转交给其他线程</li><li><code>Thread.Yield</code>与<code>Thread.Sleep</code>做同样的事情，不同的是<code>Thread.Yield</code>只会把执行交给同一处理器的其他线程</li><li>当等待<code>Sleep</code>和<code>Join</code>时，线程处于阻塞状态</li></ul></li></ul><pre><code class="c#">class Program    {        static Thread thread1;        static Thread thread2;        static void Main(string[] args)        {            thread1 = new Thread(ThreadProc);            thread1.Name = "t1";            thread1.Start();            thread2 = new Thread(ThreadProc);            thread2.Name = "t2";            thread2.Start();        }        private static void ThreadProc()        {            System.Console.WriteLine($"\nCurrent thread:{Thread.CurrentThread.Name}");            if(Thread.CurrentThread.Name=="t1"&amp;&amp;            ((thread2.ThreadState&amp;ThreadState.Unstarted)==0))                if(thread2.Join(2000))                    System.Console.WriteLine("t2 has been terminated");                else                    System.Console.WriteLine("overtime");            //TimeSpan(0,0,4) 0h，0m，4s            Thread.Sleep(new TimeSpan(0,0,4));            System.Console.WriteLine($"\nCurrent thread:{Thread.CurrentThread.Name}");            System.Console.WriteLine($"Thread1:{thread1.ThreadState}");            System.Console.WriteLine($"Thread2:{thread2.ThreadState}");        }    }</code></pre><p>在一次执行中，输出结果如下：<br><img src="/images/CSAsynchronousProgramming/join_sleep.png" alt="join_sleep"><br>在此次运行过程中，线程<code>t2</code>首先进入<code>ThreadProc</code>，之后开始Sleep，时间片交给线程<code>t1</code>，if判断成立，<code>t1</code>进入阻塞状态等待<code>t2</code>运行结束。<code>t2</code>Sleep结束后开始运行，运行结束后，<code>t1</code>继续运行直到结束</p><h3 id="Blocking"><a href="#Blocking" class="headerlink" title="Blocking"></a><strong>Blocking</strong></h3><ul><li>如果线程的执行由于某种原因导致暂停，那么就认为该线程被阻塞了<ul><li>如<code>Sleep</code>、<code>Join</code></li></ul></li><li>被阻塞的线程会立即将其时间片交给其他线程，从此不再消耗处理器时间，知道满足阻塞结束条件为止</li><li>可以通过<code>ThreadState</code>属性来判断线程是否处于阻塞状态</li><li><code>ThreadState</code>是一个<em>flags enum</em>，通过按位与/或来合并数据项<br><img src="/images/CSAsynchronousProgramming/thread_state.png" alt="thread_state"><br><code>ThreadState</code>变化图如下：<br><img src="/images/CSAsynchronousProgramming/transform.png" alt="transform"><br>常用的状态只有四个：<code>Unstarted</code>、<code>Running</code>、<code>WaitSleepJoin</code>和<code>Stopped</code></li></ul><pre><code class="c#">  public static ThreadState Foo(ThreadState ts)          {              return ts &amp; (                  ThreadState.Stopped |                  ThreadState.Unstarted |                  ThreadState.WaitSleepJoin              );          }</code></pre><ul><li><p>当遇到下列四种情况解除阻塞：</p><ul><li>阻塞条件被满足</li><li>操作超时(如果设置了超时)</li><li>通过<code>Thread.Interrupt()</code>进行打断</li><li>通过<code>Thread.Abort()</code>进行中止</li></ul></li><li><p>上下文切换</p><ul><li>当线程阻塞或解除阻塞时，操作系统执行上下文切换。这会产生少量开销，通常为1或2微秒</li></ul></li><li><p>I/O密集型与CPU密集型</p><ul><li>花费大部分时间等待某事发生的操作称为I/O密集型，通常此事指输入/输出，但不是硬性要求，如<code>Thread.Sleep()</code>被视为I/O密集型</li><li>相反，一个花费大部分时间执行CPU密集型的操作成为CPU密集型</li></ul></li><li><p>阻塞与忙等待</p><ul><li>阻塞是在当前线程上同步的等待，<code>Console.ReadLine()</code>、<code>Thread.Sleep()</code>、<code>Thread.Join()</code>都是阻塞操作</li><li>忙等待以周期性的在一个循环里打转，也是同步的<br><code>while(DataTime.Now&lt;nextStartTime)</code></li><li>还有一种异步的操作，在操作完成后触发回调</li><li>如果条件很快得到满足（在几微秒之内）,短暂的忙等待更为适合，因为他避免了上下文切换的开销</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> C# </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Asynchronous-programming </tag>
+            
+            <tag> CS-Threading </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: Matrix</title>
       <link href="/2021/11/22/d2l_1/"/>
       <url>/2021/11/22/d2l_1/</url>
@@ -20,177 +188,9 @@
       
         <tags>
             
-            <tag> Neural Network </tag>
+            <tag> Dive-Into-Deep-Learning </tag>
             
-            <tag> Dive Into Deep Learning </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>GAN #1</title>
-      <link href="/2021/11/19/Gan0/"/>
-      <url>/2021/11/19/Gan0/</url>
-      
-        <content type="html"><![CDATA[<p><img src="/images/gan/cover.png" alt="$cover"></p><h1 id="Generative-Adversarial-Nets"><a href="#Generative-Adversarial-Nets" class="headerlink" title="Generative Adversarial Nets"></a>Generative Adversarial Nets</h1><p>Gan利用对抗的方法，提出了生成模型的新框架。它需要同时训练两个模型（生成模型G和判别模型D），G用于捕获数据的分布，而D需要判别出一个样本是来自训练集还是生成模型。生成模型的目标是尽最大可能让判别模型犯错（无法成功判别数据的来源），G和D在本文中被定义为多层感知机，整个系统通过反向传播来进行训练。</p><h2 id="AN-analogy-to-GAN"><a href="#AN-analogy-to-GAN" class="headerlink" title="AN analogy to GAN"></a><strong>AN analogy to GAN</strong></h2><p>在生成对抗网络框架中，生成模型与判别互相对抗。可以把生成模型类比为造假币者，判别模型类比为警察。生成模型试图制造假币骗过判别模型，而判别模型努力区分假币。二者在这样的对抗中不断学习提升各自的水平，直到生成模型的造的假币和真的一模一样，判别器无法区分。另外，警察进步不能过大或过小。进步过大时，造假者直接被一锅端，无法继续造假钞；进步过小时，造假者不需进步也能骗过警察，则没有动力进步</p><h2 id="Adversarial-nets"><a href="#Adversarial-nets" class="headerlink" title="Adversarial nets"></a><strong>Adversarial nets</strong></h2><ul><li><p>对抗网络认为数据集代表着一个分布，每一个样本都可以由高维随机变量表示。假设数据集是许多张2*2大小的黑白图片，每张图片有四个像素点，于是将该分布看作四维随机变量的分布，每一维代表着一个像素的取值（黑白只取0或1）<br><img src="/images/gan/mrv.jpg"></p></li><li><p>在让生成模型学习数据集代表了分布之前，首先定义一个符合高斯分布的先验噪声Z，生成模型就是要学习把Z映射成为数据集代表的分布，MLP理论上可以拟合这样一个函数来完成目标。生成器以Z为输入，输出一个尽量符合数据集分布的样本  </p></li><li><p>判别器也是一个MLP，判别器以数据集或生成器生产的样本为输入，输出一个标量（0：生成器生成的样本，1：真实样本，判别器的输出介于[0,1]），判别样本的真伪。判别器要学习一个二分类任务  </p></li><li><p>D与G对于同一个目标函数采取相反的优化方式：<br><img src="/images/gan/obj_func.png"><br>在不同分布里采样计算后得到期望和，生成器和鉴别器分别要调整参数最大化和最小化这一期望和，体现了对抗的过程，D尽量区分生成的数据和真实数据，G尽量使得生成的数据和真实数据难以区分</p></li><li><p>下图展示了对抗网络训练过程中，各个成分的变化：<br><img src="/images/gan/graph_proc.png"><br>Z为高斯噪声，绿色线代表G生成数据的概率密度函数，黑色线代表真实数据的概率密度函数，蓝色代表D输出标量的函数<br>（a）G将Z随即映射为另一个分布，与真实分布存在一定差距，此时D未经学习，分类能力弱<br>（b）固定G，训练D，D分类能力明显上升<br>（c）固定D，训练G，G学习到把Z向真实数据分布映射<br>（d）反复多轮后，G映射的分布与真实数据相同，判别器无法区分</p></li><li><p>对抗网络算法流程如下：<br><img src="/images/gan/algorithm.png"><br>先更新D，再更新G，G只与目标函数中后半段有关。k是一个超参数，不能太大也不能大小。取太大判别器训练得太好，取太小判别器变化太小</p></li></ul><h2 id="Theoretical-results"><a href="#Theoretical-results" class="headerlink" title="Theoretical results"></a><strong>Theoretical results</strong></h2><ul><li>理论上，对抗网络存在全局最优解：生成器映射的分布等于真实数据分布</li><li>对抗网络算法可以求解目标函数</li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> Machine Learning </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Neural Network </tag>
-            
-            <tag> papers </tag>
-            
-            <tag> Generative Model </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Transformer</title>
-      <link href="/2021/11/17/Transformer/"/>
-      <url>/2021/11/17/Transformer/</url>
-      
-        <content type="html"><![CDATA[<p><img src="/images/transformer/transformer.jpg" alt="$cover"></p><h1 id="Attention-Is-All-Your-Need"><a href="#Attention-Is-All-Your-Need" class="headerlink" title="Attention Is All Your Need"></a>Attention Is All Your Need</h1><p>以往主流的序列转录(seq2seq)模型中常常基于包含Encoder与Decoder的复杂RNN或CNN，这些模型也会在Encoder与Decoder中使用Attention机制。<br>Transformer仅仅使用了Attention机制，完全没用到循环和卷积，将循环层换为了Multi-headed Attetion。Transformer训练速度更快，预测能力更好。  </p><hr><h2 id="Advantages"><a href="#Advantages" class="headerlink" title="Advantages"></a>Advantages</h2><ul><li>RNN难以并行计算计算效率低，Transformer可并行。</li><li>RNN带有时序信息，但在序列较长时，早期的信息可能在后期丢失。Attention可通过在输入序列中加入index增加时序，并且不会存在信息丢失问题。</li><li>用CNN可以替换掉RNN实现并行计算，但由于感受野的限制其依然存在难以对长序列进行建模的问题。Transformer中的Attention机制一次性看到所有的序列，消除了这一问题。</li><li>CNN可利用多个输出通道识别不一样的模式，在Transformer中使用Multi-headed Attetion，也实现了这样的特性。</li></ul><hr><h2 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h2><p>Transformer整体分为Encoder与Decoder两大部分。  </p><ul><li>Input Embedding/Output Embedding将词映射到向量。</li><li>Postoinal Encoding</li><li>Nx指有N个该块叠在一起。</li><li>Add表示残差连接，Norm表示正则处理。</li><li>在训练时，解码器的输入（outputs）是真实值(Ground Truth)；在测试时，输入（outputs）是前一时刻的输出。<br><img src="/images/transformer/architecture.png" alt="architecture"></li></ul><h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><p>N=6，out_dim=input_dim=512。由两个子层组成，两个子层分别为Multi-headed Attetion和简单的MLP。每个子层使用残差连接和layer normalization。</p><blockquote><p>layer normalization and batch normalization</p><blockquote><p>batch:对每一个feature，将这个feature在一个batch中的所有数据的均值变为0方差变为1<br><img src="/images/transformer/batch_norm.png" alt="batch_norm"><br>layer:对每一个样本，将这个样本所有的特征均值变为0方差变为1<br><img src="/images/transformer/layer_norm.png" alt="layer_norm"><br>成sequence的normalization:<br>蓝为batch，黄为layer，取所有数据去做norm。阴影部分为样本实际长度（即该样本序列的seq_len），在实际长度外取全0。<br><img src="/images/transformer/seq_norm.png" alt="seq_norm"><br>使用layernormalization相对稳定一些。每个样本自己做均值方差再去norm。</p></blockquote></blockquote><hr><h3 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h3><p>N=6,由三个子层组成，其中后两个子层Encoder一致，而第一个子层有所不同，其使用了Masked Multi-headed Attetion。在Decoder中还使用了自回归。当前的outputs输入是上一次的输出。在训练过程中，Decoder的输入outputs为ground truth，但在t时刻的输入不应包含t时刻之后的输入，所以第一个子层引入了masked机制。</p><hr><h3 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h3><blockquote><p>Transformer使用了Scaled Dot-Product Attention。其将输入的一个seq进行融合输出一个等长的seq。<br><img src="/images/transformer/panaroma.png" alt="panaroma"><br>在融合时，每一个输出都考虑了其对应位置输入元素和seq中其他元素的相关度。Wq与Wk是两个参数矩阵，原始输入做矩阵运算后得到两个向量q、k，最后用内积运算即得到了原始输入的相关性（内积运算代表了余弦相似度）。<br><img src="/images/transformer/dot-product.png" alt="dot-product"><br>同理可计算出a1与自身及序列中所有元素的相关性，全部计算完成后输入到softmax层进行归一化。<br><img src="/images/transformer/to-softmax.png" alt="to-softmax"><br>利用一个新的参数矩阵Wv获得v1-v4。v与相关性系数的带权和得到b1。<br><img src="/images/transformer/b1.png" alt="b1"><br>同理，可以得到b2、b3、b4。<br><img src="/images/transformer/panaroma.png" alt="panaroma"><br>上述步骤可表示为矩阵运算。<br><img src="/images/transformer/use_matrix.png" alt="use_matrix"><br>最终的计算公式可如下表示。这里多了一个除以根号dk(input_dim)，这是因为向量(Transformer中dk=512)比较长时，内积绝对值可能会出现比较大的情况，这对梯度下降是不利的。<br><img src="/images/transformer/formula.png" alt="formula"> </p></blockquote><blockquote><p>Multi-headed Attetion可以看作是多通道的Attention。以2heads为例，计算过程如下，增加了多个参数矩阵。<br><img src="/images/transformer/multi-head.png" alt="multi-head"><br>在最后，将bi1与bi2一起其他的相应多通道b在特征维度拼接起来，为保证dim不变，利用一个新的参数矩阵Wo将输出元素的维度变为和输入相同。<br><img src="/images/transformer/concat.png" alt="concat"><br>一个线性层就可看作一个参数矩阵，所以上述两步操作可看作如下的过程。<br><img src="/images/transformer/liner-representatoin.png" alt="liner-representatoin"> </p></blockquote><hr><h3 id="Cross-Attention-in-Transformer"><a href="#Cross-Attention-in-Transformer" class="headerlink" title="Cross Attention in Transformer"></a>Cross Attention in Transformer</h3><p>Cross Attention指的是Encoder与Decoder之间的Attention机制。其V和K来自于Encoder，而Q来自于masked Attention。由于是masked，向Q输入的部分其seq_len会与V和K的不同，又因为其作为Q输入，所以cross-attention输出的seq_len会与之相同，所以Decoder的输入输出seq_len是相同的。<br><img src="/images/transformer/cross-attention.png" alt="cross-attention">  </p><hr><h3 id="Feed-Forward"><a href="#Feed-Forward" class="headerlink" title="Feed-Forward"></a>Feed-Forward</h3><p>只有一个MLP分别去作用于seq中的每个词，<br>图中MLP权重是相同的，也不需要把Encoder的输出合并输入到大的MLP。因为这里只是想要把原始维度投影到想要的另一个维度，其信息融合已经在Encoder中做完了。<br><img src="/images/transformer/feed-forward.png" alt="feed-forward"></p><hr><h3 id="Embedding-and-Softmax"><a href="#Embedding-and-Softmax" class="headerlink" title="Embedding and Softmax"></a>Embedding and Softmax</h3><p>编码器要有embedding，解码器要有embedding，softmax层之前有一个Liner层，这三个层共享权重。</p><hr><h3 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h3><p>为了给Attention加上时序信息，给输入加上位置信息。</p><hr>]]></content>
-      
-      
-      <categories>
-          
-          <category> Machine Learning </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Neural Network </tag>
-            
-            <tag> Seq2Seq Model </tag>
-            
-            <tag> papers </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>ResNet</title>
-      <link href="/2021/11/17/resnet/"/>
-      <url>/2021/11/17/resnet/</url>
-      
-        <content type="html"><![CDATA[<p><img src="/images/resnet/cover.jpg" alt="$cover"></p><h1 id="Residual-Network"><a href="#Residual-Network" class="headerlink" title="Residual Network"></a>Residual Network</h1><p>深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。</p><p><img src="/images/resnet/plain_error.png" alt="plain_error"><br>在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。</p><h2 id="Is-learning-better-networks-as-easy-as-stacking-more-layers"><a href="#Is-learning-better-networks-as-easy-as-stacking-more-layers" class="headerlink" title="Is learning better networks as easy as stacking more layers ?"></a><strong>Is learning better networks as easy as stacking more layers ?</strong></h2><ul><li>当网络变得特别深时，会出现梯度爆炸或梯度消失</li><li>传统的解决方法是：参数在初始化时要做的好一点，不要太大也不要太小；加入一些Batch Normalization Layers</li><li>传统的解决方法使得神经网络能够收敛，但是网络的精度却变得更差，而这并非是模型变得复杂后导致的过拟合问题，因为模型的训练误差也变高了</li><li>正常来说，如果在一个浅层的神经网络后直接加入更多的层，这些层只做identity mapping，那么这个深层神经网络的误差绝不会高于浅层的神经网络，但是传统的神经网络模型并未找到这样的解（或更好的解）</li><li>如果深层网络后面的层都是是恒等映射，那么模型就可以转化为一个浅层网络</li></ul><h2 id="Deep-residual-learning-framework"><a href="#Deep-residual-learning-framework" class="headerlink" title="Deep residual learning framework"></a><strong>Deep residual learning framework</strong></h2><ul><li>将残差块的输入与块内最后一个神经网络层的线性输出求和后在进行激活，得到残差块的输出<br><img src="/images/resnet/residual_block.png" alt="plain_error"></li><li>残差块只简单地做了shortcut connections，没有引入额外的训练参数，不会增加网络复杂度</li><li>已有的神经网络很难拟合潜在的恒等映射函数H(x) = x，但是ResNet将残差块设计为H(x) = F(x) + x，其直接把恒等映射作为网络的一部分，只要F(x) = 0，便得到了恒等映射。而此时F(x) = H(x) - x 称为残差函数，就是当前残差块的学习目标（学习出这样一个F(x)函数满足如图输出）</li><li>值得一提的是，一个残差块中应该至少有两层（中间要包含一个非线性激活），否则就会出现如下情况，这显然是没有用的工作<br><img src="/images/resnet/no_use.png" alt="plain_error"></li></ul><h2 id="Deeper-bottleneck-architecture"><a href="#Deeper-bottleneck-architecture" class="headerlink" title="Deeper bottleneck architecture"></a><strong>Deeper bottleneck architecture</strong></h2><ul><li>当神经网络层数进一步增多时，参数的增长会带来很大的计算开销。此时可以考虑使用1*1的卷积核暂时减少通道数来减少整个网络的数据规模<br><img src="/images/resnet/deeper.png" alt="plain_error"></li></ul><h2 id="Analysis-of-Deep-Residual-Networks"><a href="#Analysis-of-Deep-Residual-Networks" class="headerlink" title="Analysis of Deep Residual Networks"></a><strong>Analysis of Deep Residual Networks</strong></h2><ul><li>残差块的反向传播过程较好地解释了残差网络避免梯度消失原因，具体推导过程如下</li><li>推导中忽略偏置项和激活函数<br><img src="/images/resnet/res_bp.png" alt="plain_error"></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> Machine Learning </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Neural Network </tag>
-            
-            <tag> Residual learning </tag>
-            
-            <tag> papers </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>C# Asynchronous programming #3</title>
-      <link href="/2021/11/12/CSAsync3/"/>
-      <url>/2021/11/12/CSAsync3/</url>
-      
-        <content type="html"><![CDATA[<p><img src="/images/CSAsynchronousProgramming/cover.png" alt="$cover"></p><h1 id="C-Asynchronous-programming-3"><a href="#C-Asynchronous-programming-3" class="headerlink" title="C# Asynchronous programming #3"></a>C# Asynchronous programming #3</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><h3 id="Use-Thread-in-Applications"><a href="#Use-Thread-in-Applications" class="headerlink" title="Use Thread in Applications"></a><strong>Use Thread in Applications</strong></h3><ul><li>在带界面的WPF、UWP、WinForm等程序种，若主线程执行耗时的操作，就会导致整个程序无响应。因为主线程同时还要处理消息循环，而渲染和鼠标键盘事件处理等工作都是在消息循环中执行的</li><li>针对这种耗时的操作，一种流行的做法使启用一个worker线程，执行完操作后再更新到UI</li><li>富客户端应用的线程模型通常是：<ul><li>UI控件只能从创建他们的线程来进行访问（通常是主线程）</li><li>当想从worker线程更新UI时，应该把请求交给UI线程</li></ul></li></ul><h3 id="Synchronization-Contexts"><a href="#Synchronization-Contexts" class="headerlink" title="Synchronization Contexts"></a><strong>Synchronization Contexts</strong></h3><ul><li>在System.ComponentModel下有一个抽象类：SynchronizationContext，它使得Thread Marshaling得到泛化<ul><li>Thread Marshaling：把一些数据的所有权从一个线程交给了另一个线程</li></ul></li></ul><h3 id="Thread-Pool"><a href="#Thread-Pool" class="headerlink" title="Thread Pool"></a><strong>Thread Pool</strong></h3><ul><li><p>当开始一个线程时，将花费数百微秒来组织一些内容（如一个新的局部变量栈），产生了开销</p></li><li><p>线程池可以节省这些开销：</p><ul><li>预先创建一个可循环使用的线程的池来减少创建新线程的开销</li></ul></li><li><p>线程池对于搞笑的并行编程和细粒度的并发是必不可少的</p></li><li><p>关于c#中的线程池需要注意以下几点：</p><ul><li>不可以设置池线程的<code>Name</code></li><li>池线程都是后台线程</li><li>阻塞池线程可能使性能降低</li><li>池线程优先级可以被自由的更改，当它被释放回池的时候优先级将被还原为正常状态</li><li>可以通过<code>IsThreadPoolThread</code>属性来判断是否为池线程</li><li><code>Task</code>也使用线程池</li></ul></li><li><p>线程池中的整洁</p><ul><li>线程池提供了另一个功能，即确保不会产生CPU超额订阅（活跃的线程数超过CPU核数），超额订阅对性能影响很大</li><li>CLR通过对任务排队并对其启动进行节流限制来避免线程池中的超额订阅</li></ul></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> C# </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> C# Threading </tag>
-            
-            <tag> Asynchronous programming </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>C# Asynchronous programming #2</title>
-      <link href="/2021/11/11/CSAsync2/"/>
-      <url>/2021/11/11/CSAsync2/</url>
-      
-        <content type="html"><![CDATA[<p><img src="/images/CSAsynchronousProgramming/cover.png" alt="$cover"></p><h1 id="C-Asynchronous-programming-2"><a href="#C-Asynchronous-programming-2" class="headerlink" title="C# Asynchronous programming #2"></a>C# Asynchronous programming #2</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><h3 id="Thread-Safety"><a href="#Thread-Safety" class="headerlink" title="Thread Safety"></a><strong>Thread Safety</strong></h3><ul><li>本地状态与共享状态<ul><li>Local 本地独立：CLR为每个线程分配自己的内存栈，以便使本地变量保持独立</li><li>Shared 共享：如果多个线程引用到了同一个对象实例，那么他们就共享了数据；被Lambad表达式或匿名委托捕获的本地变量，会被编译器转化为字段（field），所以也会被共享；静态字段也会在线程间共享</li></ul></li></ul><pre><code class="c#">class Program{        static void Main(string[] args)    {        /*本地变量不共享*/        //打印六次hello...        Thread thread = new Thread(GO);        thread.Start();        GO();        /*同一实例共享*/        //打印一次Done！        ThreadTest test = new ThreadTest();        new Thread(test.Test).Start();        Thread.Sleep(1000);        test.Test();        /*匿名委托共享*/        //打印一次Done        bool done = false;        ThreadStart action = () =&gt;            {                if (!done)                {                    //此处还是会有输出多次的风险                    done = true;                    System.Console.WriteLine("Done");                }            };        new Thread(action).Start();        Thread.Sleep(new TimeSpan(0, 0, 1));        action.Invoke();        /*静态字段共享*/        //打印一次Done！        ThreadTest test1 = new ThreadTest();        ThreadTest test2 = new ThreadTest();        new Thread(test1.AnotherTest).Start();        Thread.Sleep(10);        test2.AnotherTest();    }    static void GO()    {           //cycle是本地变量，属于本地状态        //在每个线程的内存栈上，都会创建cycle的 独立副本        for (int cycle = 0;  cycle&lt; 3; cycle++)        {            System.Console.WriteLine("hello...");        }    }}class ThreadTest{    private bool _done;    private static bool done;    public void AnotherTest()    {        //此处还是会有输出多次的风险        if(!done)        {            System.Console.WriteLine("DONE!");            done = true;        }    }    public void Test()    {        //此处还是会有输出多次的风险        if(!_done)        {            System.Console.WriteLine("Done!");            _done = true;        }    }}</code></pre><ul><li>线程安全<ul><li>上述后涉及线程共享数据的代码是缺乏线程安全的，其实际输出无法确定，理论上Done有可能会打印两次，因为一个线程可能正在评估if，而另一个语句没来得及调整<code>done</code>为<code>true</code></li><li>保证线程安全：消除代码执行过程中的不确定性<ol><li>尽可能的避免使用共享状态以保证线程安全</li><li>使用<code>lock</code>语句加锁，在读取和写入共享数据的时候，通过使用互斥锁，就可以修复前面代码中的问题，当两个线程同时竞争一个锁的时候（锁可以基于任何引用类型对象），一个线程会等待或阻塞，直到锁重新变成可用状态</li></ol></li><li>然而，lock也并非线程安全的银弹，lock也会引起一些其他问题（如死锁）</li></ul></li></ul><pre><code class="c#">    class Program    {        static readonly object locker=new object();        static bool done;        static void Main(string[] args)        {            new Thread(GO).Start();            GO();        }        static void GO()        {            // 锁要基于引用类型的变量            // 线程安全            lock(locker)            {                if (!done)                {                    System.Console.WriteLine("Done");                    Thread.Sleep(1000);                    done = true;                }            }        }    }</code></pre><h3 id="Transfer-Parameter"><a href="#Transfer-Parameter" class="headerlink" title="Transfer Parameter"></a><strong>Transfer Parameter</strong></h3><ul><li>如果想往线程启动方法里传递参数，最简单的方式就是使用lambda表达式，在里面使用参数调用方法</li></ul><pre><code class="c#">class Program    {                static void Main(string[] args)        {            new Thread(() =&gt; { Print("hello world"); }).Start();        }        static void Print(string s)        {            System.Console.WriteLine(s);        }    }</code></pre><ul><li>还可以使用<code>Thread.Start</code>方法来传递参数，类似委托中<code>Invoke</code>时的传参<ul><li>Thread的重载构造函数可以接受下列两个委托之一作为参数：<ol><li><code>public delegate void ThreadStart();</code></li><li><code>public delegate void ParameterizedThreadStart(object obj);</code></li></ol></li><li>第二种委托接收带参数的方法名</li></ul></li></ul><pre><code class="c#">class Program{        static void Main(string[] args)    {        Thread thread = new Thread(Print);        thread.Start("hello world");    }    static void Print(object s)    {        s = s as string;        System.Console.WriteLine(s);    }}</code></pre><ul><li>需要注意的是lambda表达式（匿名委托）传的参数会当作字段，即就算传的是值类型的变量也会得到其地址并被线程共享；而第二种传参强制要求了引用变量，也会被线程共享</li></ul><pre><code class="c#">class Program{      static void Main(string[] args)    {        // Thread1();        Thread2();    }    // 线程共享了同一个局部变量i    // 会出现重复的数    static void Thread1()    {        for (int i = 0; i &lt; 5; i++)        {            new Thread(() =&gt; { System.Console.WriteLine(i); }).Start();        }    }    // 每个线程获得不同局部变量的地址    // 不会出现重复的数    static void Thread2()    {        for (int i = 0; i &lt; 5; i++)        {            int temp = i;            new Thread(() =&gt; { System.Console.WriteLine(temp); }).Start();        }    }    }</code></pre><h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a><strong>Exception</strong></h3><ul><li>异常处理块种的线程抛出异常时，不会被捕获，解决方案是传入线程的方法中处理异常</li></ul><pre><code class="c#">class Program{      static void Main(string[] args)    {        // 正常捕获        new Thread(Go2).Start();        // 无法捕获        try        {            new Thread(Go1).Start();        }        catch        {            System.Console.WriteLine("Exceptoin!");        }    }       static void Go1()    {        throw new Exception();    }    static void Go2()    {        try        {            throw new Exception();        }        catch        {            System.Console.WriteLine("catch sucessfully");        }    }    }</code></pre><h3 id="Foreground-Threads-and-Background-Threads"><a href="#Foreground-Threads-and-Background-Threads" class="headerlink" title="Foreground Threads and Background Threads"></a><strong>Foreground Threads and Background Threads</strong></h3><ul><li>默认情况下，手动创建的线程就是前台线程</li><li>只要有前台线程在运行，那么应用程序就会一直处于活动状态<ul><li>后台线程运行不会保持应用程序的活动状态</li><li>一旦所有前台线程停止，应用程序随即停止，后台线程也会立即终止</li></ul></li><li>线程的前台、后台与它的优先级无关</li><li>通过<code>IsBackground</code>属性判断线程是否是后台线程</li></ul><pre><code class="c#">class Program{      static void Main(string[] args)    {        Thread thread = new Thread(() =&gt; { Console.WriteLine(Console.ReadLine());});                // 如果将thread设置为后台线程，当主线程（前台线程）执行完之后程序立即结束        if(args.Length&gt;0)            thread.IsBackground = true;        thread.Start();    }       }</code></pre><ul><li>如果在退出前想要等待后台线程执行完毕，可以考虑使用<code>Join</code></li><li>应用程序无法正常退出的一个常见原因就是还有活跃的前台线程</li></ul><h3 id="Priority-of-Threading"><a href="#Priority-of-Threading" class="headerlink" title="Priority of Threading"></a><strong>Priority of Threading</strong></h3><ul><li>线程的优先级（<code>Thread</code>中<code>Priority</code>属性）决定了相对于操作系统中其他活跃线程所占的执行时间</li><li>优先级划分：<ul><li><code>enum ThreadPriority{Lowest,BelowNormal,Normal,AboveNormal,Highest}</code></li></ul></li><li>提升线程优先级：<ul><li>提升线程优先级时要特别注意，因为他可能饿死其他线程</li><li>如果想让某线程的优先级比其他进程中的线程优先级高，那么就必须提升进程优先级</li></ul></li><li>手动提升进程/线程优先级适用于只做少量工作且需要较低延迟的非UI进程</li><li>对于需要大量计算的应用程序（尤其是带UI的），手动提升进程/线程优先级可能会使其他进程/线程饿死，从而降低整个计算机的速度</li></ul><h3 id="Signaling"><a href="#Signaling" class="headerlink" title="Signaling"></a><strong>Signaling</strong></h3><ul><li>某个线程在收到其他线程发来通知之前一直处于等待状态，发送通知的过程就称为Signaling，不同于信号量机制</li><li>最简单的信号结构就是<code>ManualResetEvent</code><ul><li>调用其上<code>WaitOne</code>方法会阻塞当前线程，直到另一个线程通过调用<code>Set</code>方法开启信号</li></ul></li></ul><pre><code class="c#">class Program{     static void Main(string[] args)    {        var signal = new ManualResetEvent(false);        new Thread(() =&gt;        {            System.Console.WriteLine("Waiting for signal...");            // 因为在实例化时设置了false主线程打开信号之前处于阻塞状态            // 成功接收到信号时不会将signal状态重置为nonusignaled            signal.WaitOne();            // 获得信号后直接关闭该信号量            System.Console.WriteLine("Got signal!");        }).Start();        for (int i = 0; i &lt; 5; i++)        {            System.Console.WriteLine(i);        }        Thread.Sleep(1000);        signal.Set();    }   }</code></pre><ul><li>调用完<code>Set</code>后信号会处于signaled状态，通过调用<code>Reset</code>将信号重新变为nonsignaled状态</li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> C# </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> C# Threading </tag>
-            
-            <tag> Asynchronous programming </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>C# Asynchronous programming #1</title>
-      <link href="/2021/11/10/CSAsync1/"/>
-      <url>/2021/11/10/CSAsync1/</url>
-      
-        <content type="html"><![CDATA[<p><img src="/images/CSAsynchronousProgramming/cover.png" alt="$cover"></p><h1 id="C-Asynchronous-programming-1"><a href="#C-Asynchronous-programming-1" class="headerlink" title="C# Asynchronous programming #1"></a>C# Asynchronous programming #1</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><hr><h3 id="What-is-Thread"><a href="#What-is-Thread" class="headerlink" title="What is Thread ?"></a><strong>What is Thread ?</strong></h3><ul><li>线程是一个可执行路径，每一个线程可以独立于其他线程执行</li><li>每个线程在均进程(Process)内执行，在操作系统中，进行提供了程序运行的独立环境</li><li>单线程应用，在进程的独立环境中只跑一个线程，该线程具有独占权</li><li>多线程应用，单个进程中跑多个线程，多个线程共享当前的执行环境（尤其是内存）<ul><li>共享：多个线程共同占有某种资源，如一个线程在后台读取数据，另一个线程在数据到达后进行展示。  </li></ul></li></ul><p>下面是c#中最简单的异步编程实例：</p><pre><code class="c#">class Program{    static void Main(string[] args)    {        Thread.CurrentThread.Name = "Main Thread...";        //开辟一个新线程                    Thread thread = new Thread(WriteY);        thread.Name = "Y Thread...";        thread.Start();        Thread.Sleep(1);        //同时在主线程上做一些工作        System.Console.WriteLine(Thread.CurrentThread.Name);        for (int i = 0; i &lt; 1000; i++)        {            System.Console.Write("x");        }            }    static void WriteY()    {        System.Console.WriteLine(Thread.CurrentThread.Name);        for (int i = 0; i &lt; 1000; i++)        {            System.Console.Write("y");        }            }}</code></pre><ul><li>在单核计算机上，操作系统必须为每个线程分配<strong>时间片</strong>（Windows下通常为20ms）来模拟并发，从而在本例中，会输出重复的x块与y块</li><li>在多核或多处理器的计算机上，使用c#创建的多线程可以真正意义上并行执行。然而，在本例中由于控制台程序处理并发请求机制的微妙性，仍然会得到重复的x块与y块<br><img src="/images/CSAsynchronousProgramming/first_example.png" alt="first_example"></li><li>c#中线程的一些属性：<ul><li>线程一旦开始执行，属性<code>IsAlive</code>就变为<code>true</code>，线程结束就变为<code>false</code></li><li>线程结束的条件：线程构造器中传入的委托结束了执行</li><li>线程一旦结束，便无法重启</li><li>每个线程都有一个<code>Name</code>属性，通常用于调试，<code>Name</code>只能设置一次，多次更改会抛出异常</li><li>静态属性<code>Thread.CurrentThread</code>，指向当前执行的线程</li></ul></li></ul><h3 id="Join-and-Sleep"><a href="#Join-and-Sleep" class="headerlink" title="Join and Sleep"></a><strong>Join and Sleep</strong></h3><ul><li>在线程A中调用另一个线程B实例的<code>Join</code>方法，线程A便会等待线程B执行结束后继续执行。</li><li>调用<code>Jion</code>方法时，可在参数中设置一个超时(毫秒/<code>TimeSpan</code>)<ul><li>使用有超时的重载方法时返回值<code>bool</code>类型，<code>true</code>：线程结束；<code>false</code>：超时</li></ul></li><li><code>Thread.Sleep</code>方法会暂停当前的线程，并等待一段时间<ul><li><code>Thread.Sleep(0)</code>会导致县城立即放弃本身当前时间片，自动将cpu转交给其他线程</li><li><code>Thread.Yield</code>与<code>Thread.Sleep</code>做同样的事情，不同的是<code>Thread.Yield</code>只会把执行交给同一处理器的其他线程</li><li>当等待<code>Sleep</code>和<code>Join</code>时，线程处于阻塞状态</li></ul></li></ul><pre><code class="c#">class Program    {        static Thread thread1;        static Thread thread2;        static void Main(string[] args)        {            thread1 = new Thread(ThreadProc);            thread1.Name = "t1";            thread1.Start();            thread2 = new Thread(ThreadProc);            thread2.Name = "t2";            thread2.Start();        }        private static void ThreadProc()        {            System.Console.WriteLine($"\nCurrent thread:{Thread.CurrentThread.Name}");            if(Thread.CurrentThread.Name=="t1"&amp;&amp;            ((thread2.ThreadState&amp;ThreadState.Unstarted)==0))                if(thread2.Join(2000))                    System.Console.WriteLine("t2 has been terminated");                else                    System.Console.WriteLine("overtime");            //TimeSpan(0,0,4) 0h，0m，4s            Thread.Sleep(new TimeSpan(0,0,4));            System.Console.WriteLine($"\nCurrent thread:{Thread.CurrentThread.Name}");            System.Console.WriteLine($"Thread1:{thread1.ThreadState}");            System.Console.WriteLine($"Thread2:{thread2.ThreadState}");        }    }</code></pre><p>在一次执行中，输出结果如下：<br><img src="/images/CSAsynchronousProgramming/join_sleep.png" alt="join_sleep"><br>在此次运行过程中，线程<code>t2</code>首先进入<code>ThreadProc</code>，之后开始Sleep，时间片交给线程<code>t1</code>，if判断成立，<code>t1</code>进入阻塞状态等待<code>t2</code>运行结束。<code>t2</code>Sleep结束后开始运行，运行结束后，<code>t1</code>继续运行直到结束</p><h3 id="Blocking"><a href="#Blocking" class="headerlink" title="Blocking"></a><strong>Blocking</strong></h3><ul><li>如果线程的执行由于某种原因导致暂停，那么就认为该线程被阻塞了<ul><li>如<code>Sleep</code>、<code>Join</code></li></ul></li><li>被阻塞的线程会立即将其时间片交给其他线程，从此不再消耗处理器时间，知道满足阻塞结束条件为止</li><li>可以通过<code>ThreadState</code>属性来判断线程是否处于阻塞状态</li><li><code>ThreadState</code>是一个<em>flags enum</em>，通过按位与/或来合并数据项<br><img src="/images/CSAsynchronousProgramming/thread_state.png" alt="thread_state"><br><code>ThreadState</code>变化图如下：<br><img src="/images/CSAsynchronousProgramming/transform.png" alt="transform"><br>常用的状态只有四个：<code>Unstarted</code>、<code>Running</code>、<code>WaitSleepJoin</code>和<code>Stopped</code></li></ul><pre><code class="c#">  public static ThreadState Foo(ThreadState ts)          {              return ts &amp; (                  ThreadState.Stopped |                  ThreadState.Unstarted |                  ThreadState.WaitSleepJoin              );          }</code></pre><ul><li><p>当遇到下列四种情况解除阻塞：</p><ul><li>阻塞条件被满足</li><li>操作超时(如果设置了超时)</li><li>通过<code>Thread.Interrupt()</code>进行打断</li><li>通过<code>Thread.Abort()</code>进行中止</li></ul></li><li><p>上下文切换</p><ul><li>当线程阻塞或解除阻塞时，操作系统执行上下文切换。这会产生少量开销，通常为1或2微秒</li></ul></li><li><p>I/O密集型与CPU密集型</p><ul><li>花费大部分时间等待某事发生的操作称为I/O密集型，通常此事指输入/输出，但不是硬性要求，如<code>Thread.Sleep()</code>被视为I/O密集型</li><li>相反，一个花费大部分时间执行CPU密集型的操作成为CPU密集型</li></ul></li><li><p>阻塞与忙等待</p><ul><li>阻塞是在当前线程上同步的等待，<code>Console.ReadLine()</code>、<code>Thread.Sleep()</code>、<code>Thread.Join()</code>都是阻塞操作</li><li>忙等待以周期性的在一个循环里打转，也是同步的<br><code>while(DataTime.Now&lt;nextStartTime)</code></li><li>还有一种异步的操作，在操作完成后触发回调</li><li>如果条件很快得到满足（在几微秒之内）,短暂的忙等待更为适合，因为他避免了上下文切换的开销</li></ul></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> C# </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> C# Threading </tag>
-            
-            <tag> Asynchronous programming </tag>
+            <tag> Neural-Network </tag>
             
         </tags>
       
