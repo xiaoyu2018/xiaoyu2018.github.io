@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>D2L: Linear Regression</title>
+      <link href="/2021/11/23/d2l_2/"/>
+      <url>/2021/11/23/d2l_2/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Linear-Regression"><a href="#Linear-Regression" class="headerlink" title="Linear Regression"></a>Linear Regression</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li>线性模型  <ul><li>基本的线性模型可抽象为如下表示,其可以看作一个单层单神经元的神经网络<br><img src="/images/d2l/2/l_model.png"></li><li>线性模型有显示解<br><img src="/images/d2l/2/ex_solution.png"></li></ul></li><li>优化<ul><li>梯度下降<br>需要注意的是梯度是t-1时刻得来的，而且梯度是t-1时刻样本点、标签值以及W参数值对应的梯度，因为他们都是损失函数中的因变量<br><img src="/images/d2l/2/grad_desc.png"></li><li>成批计算梯度<br>batch_size不能太大也不能太小。太小：并行计算难以发挥效果；太大：内存消耗增加、易陷入局部最优。batch_size是另一个重要的超参数。</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul><li>从零实现</li></ul><pre><code class="python">import randomimport torchfrom torch.utils.data.dataloader import DataLoadertrue_w=torch.tensor([2.2,3])true_b=torch.tensor([-1.9])num_examples=2500batch_size=50epoch=100learning_rate=0.01# 初始化参数w=torch.normal(0,0.01,true_w.shape,requires_grad=True)b=torch.zeros(true_b.shape,requires_grad=True)def SyntheticData(w,b,num_examples):    X=torch.normal(0,1,size=(num_examples,len(w)))    # 支持多维度、不同维度的矩阵乘法    # 直接加b用了广播机制    y=torch.matmul(X,w) + b    # 增加噪声，使得不能完全拟合    y+=torch.normal(0,0.01,y.shape)    return X,y.view(-1,1)# 生成小批量def DataIter(batch_size,features,labels):    num_examples=len(features)        indices=list(range(num_examples))    # 打乱顺序    random.shuffle(indices)    for i in range(0,num_examples,batch_size):        batch_indices=torch.tensor(            indices[i:min(i+batch_size,num_examples)]            )                # Tensor可以接受一个列表的下标来取值        yield features[batch_indices],labels[batch_indices]# 定义模型def LinReg(X,w,b):        return torch.matmul(X,w)+b# 定义损失函数def SquaredLoss(y_hat,y):    return (y_hat-y.view(y_hat.shape))**2/2/batch_size# 优化算法def sgd(params,lr,batch_size):    with torch.no_grad():        for param in params:            param-=lr*param.grad            param.grad.zero_()    features,labels=SyntheticData(true_w,true_b,num_examples)# 训练def Train():    for i in range(epoch):        e_loss=[]        for X,y in DataIter(batch_size,features,labels):            out=LinReg(X,w,b)            # 将batch_size个损失求和            l=SquaredLoss(y,out).sum()            l.backward()            sgd([w,b],learning_rate,batch_size)            e_loss.append(l.item())        print(f"{i+1},loss:{sum(e_loss)/num_examples}")Train()# 简单验证x=torch.tensor([108,2.666])print(true_w,w)print(true_b,b)print(LinReg(x,true_w,true_b).item())print(LinReg(x,w,b).item())</code></pre><ul><li>简洁实现</li></ul><pre><code class="python">import numpy as npimport torchfrom torch.utils import datafrom torch import nnfrom torch import optimtrue_w=torch.tensor([2.2,3])true_b=torch.tensor([-1.9])num_examples=5000def SyntheticData(w,b,num_examples):    X=torch.normal(0,1,size=(num_examples,len(w)))    y=torch.matmul(X,w)+b    y+=torch.normal(0,0.01,y.shape)    return X,y.view(-1,1)features,labels=SyntheticData(true_w,true_b,num_examples)# 使第一维成为两个Tensor的共同索引，所以两个Tensor的第一维size要相同# 用来组成dataloader可处理的形式dataset=data.TensorDataset(features,labels)data_iter=data.dataloader.DataLoader(dataset,shuffle=True,batch_size=150)net=nn.Sequential(nn.Linear(len(true_w),1,bias=True))loss_f=nn.MSELoss()opt=optim.SGD(net.parameters(),lr=0.01)for epoch in range(100):    e_loss=[]    for X,y in data_iter:        out=net(X)        l=loss_f(out,y)        e_loss.append(l.item())        l.backward()        opt.step()        opt.zero_grad()        print(f"{epoch+1} {sum(e_loss)}")x=torch.tensor([108,2.666])print(true_w,true_b)for i in net.parameters():    print(i)</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Transformer</title>
       <link href="/2021/11/22/Transformer/"/>
       <url>/2021/11/22/Transformer/</url>
