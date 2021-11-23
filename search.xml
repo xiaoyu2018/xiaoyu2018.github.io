@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>D2L: Softmax Regression</title>
+      <link href="/2021/11/23/d2l_3/"/>
+      <url>/2021/11/23/d2l_3/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Softmax-Regression"><a href="#Softmax-Regression" class="headerlink" title="Softmax Regression"></a>Softmax Regression</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li>softmax操作子<br>将输出变为一个概率分布（保证非负性与归一性）<br><img src="/images/d2l/3/softmax.png"></li><li>交叉熵损失<br>用于衡量两个概率分布的区别,将softmax输出的分布与one-hot形式的标签作为两个分布<br><img src="/images/d2l/3/cross_entropy.png"></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul><li>数据集</li></ul><pre><code class="python">import torchimport torchvisionfrom torch.utils import datafrom torchvision import transformsdef LoadData(batch_size,resize=None):    # 用于把图片转为Tensor，会自动归一化    trans=[transforms.ToTensor()]    if resize:        trans.insert(0,transforms.Resize(resize))    trans=transforms.Compose(trans)        train_data=torchvision.datasets.FashionMNIST(        root="./dataset",train=True,        transform=trans,download=True    )    test_data=torchvision.datasets.FashionMNIST(        root="./dataset",train=False,        transform=trans,download=True    )    # print(test_data[0])        return (data.DataLoader(train_data,batch_size=batch_size,shuffle=True),        data.DataLoader(test_data,batch_size=batch_size,shuffle=False))    train_iter,test_iter=LoadData(256) </code></pre><ul><li>从零实现</li></ul><pre><code class="python"># 将图片展平num_inputs=1*28*28# 共有10类num_outputs=10w=torch.normal(0,0.01,size=(num_inputs,num_outputs),requires_grad=True)b=torch.zeros(num_outputs,requires_grad=True)def Softmax(X):    # 成batch分子组成的向量    X_exp=torch.exp(X)    # 成batch个分母    partition=X_exp.sum(1,keepdim=True)    # 应用广播机制    return X_exp/partitiondef CrossEntropy(y_hat,y):    # 只有y为下标那一项起作用    # 按正常one_hot编码为0的项直接就没算了    # 一个batch的y_hat都取对应y中的值为下标那个    # 最终得到了整个batch中所有样本的损失    return -torch.log(y_hat[range(len(y_hat)),y]).sum()def Net(w,b,X):    return Softmax(torch.matmul(X,w)+b)def Sgd(params,lr):    with torch.no_grad():        for i in params:            i-=lr*i.grad            i.grad.zero_()def Train():    for epoch in range(50):        loss=0        for X,y in train_iter:            X=X.view(-1,784)            out=Net(w,b,X)            l=CrossEntropy(out,y)            l.backward()            # 学习率设置这么小是因为在损失函数或优化器中            # 没有除以batch_size,导致求的梯度会很大            Sgd([w,b],0.0001)            loss=l.item()        print(f"{epoch},{loss}")</code></pre><ul><li>简洁实现</li></ul><pre><code class="python">train_iter,test_iter=LoadData(256)# 将图片展平num_inputs=1*28*28# 共有10类num_outputs=10from torch import nn,optim# Flatten() 保留第零维度，其他全部展平net=nn.Sequential(nn.Flatten(),nn.Linear(num_inputs,num_outputs))loss_f=nn.CrossEntropyLoss()opt=optim.Adam(net.parameters())for epoch in range(50):    loss=0    for X,y in train_iter:        out=net(X)        l=loss_f(out,y)        l.backward()        opt.step()        opt.zero_grad()        loss=l.item()    print(f"{epoch},{loss}")</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: Linear Regression</title>
       <link href="/2021/11/23/d2l_2/"/>
       <url>/2021/11/23/d2l_2/</url>
