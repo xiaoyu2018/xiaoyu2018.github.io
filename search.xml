@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>D2L: Modle Selection</title>
+      <link href="/2021/11/24/d2l_5/"/>
+      <url>/2021/11/24/d2l_5/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Modle-Selection"><a href="#Modle-Selection" class="headerlink" title="Modle Selection"></a>Modle Selection</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li>训练误差和泛化误差  <ul><li>训练误差：模型在训练数据上的误差（不太关心）</li><li>泛化误差：模型在新数据上的误差（很关心）</li></ul></li><li>验证数据集和测试数据集<ul><li>验证数据集<br>用于在训练过程中评估模型好坏的数据集，一般从训练集中划分出一部分，验证数据集不能作为训练集让模型训练，用来动态调整模型超参数</li><li>测试数据集<br>模型最终训练完毕后，使用测试集测试模型泛化能力，<strong>不能使用测试集来调整模型超参数</strong>，大多数情况下不会被打上标签</li></ul></li><li>K-折交叉验证<br>通常情况下，我们都没有足够富裕的数据去从训练集中划分验证集，这是使用K-折交叉验证能较简单的解决问题<ul><li>思想：一般情况将K折交叉验证用于模型调优，找到使得模型泛化性能最优的超参值。找到后，在全部训练集上重新训练模型，并使用独立验证集对模型性能做出最终评价。</li><li>算法：K折就将训练集分为K块，训练代价为原来的K倍<ol><li>将原始数据集划分为相等的K部分（“折”）</li><li>将第i部分作为验证集，其余作为训练集</li><li>训练模型，计算模型在验证集上的准确率</li><li>每次用不同的部分i作为验证集，重复步骤2和3 K次</li><li>将平均准确率作为使用当前超参时的模型准确率</li><li>找到一个较好的超参数后，再用全部训练集训练模型，并在一个全新的验证集上验证，不用调超参数，达到一个较好的验证准确率时，直接去测试</li></ol></li></ul></li><li>过拟合和欠拟合<br><img src="/images/d2l/5/fitting.png"><ul><li>模型容量的影响<br>数据集复杂程度应该与模型复杂程度正相关，否则就会出现过拟合与欠拟合。举例来说，当模型很复杂而数据很简单时，模型可以直接就把所有数据记住而丧失泛化能力；而模型过于简单时，如感知机模型，无法正确划分异或的数据<br>模型足够复杂时，有其他手段减少过拟合；模型太简单没前途<br><img src="/images/d2l/5/capacity.png"></li></ul></li><li>估计模型容量<br>模型种类确定时（如神经网络），模型容量由两个因素估计：参数个数、参数取值范围 </li><li>数据复杂度<br>有多个重要因素：<ul><li>样本个数</li><li>特征个数</li><li>时间、空间结构</li><li>多样性</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>D2L: Perceptron</title>
+      <link href="/2021/11/24/d2l_4/"/>
+      <url>/2021/11/24/d2l_4/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Perceptron"><a href="#Perceptron" class="headerlink" title="Perceptron"></a>Perceptron</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li>感知机  <ul><li>模型<br>感知机只比线性分类多了一个激活函数，激活函数为单层感知机带来了分类能力，为多层感知机带来了非线性因素<br><img src="/images/d2l/4/perceptron.png"></li><li>训练<br>训练感知机等价于批量大小为1的梯度下降，按顺序逐个取样本，与随机梯度下降不同<br><img src="/images/d2l/4/train_p.png"></li><li>单层感知机无法解决异或问题，他只能产生线性分割面，这导致了第一次AI寒冬</li></ul></li><li>多层感知机<ul><li>多层感知机由多个感知机组成，分为输入层、隐藏层、输出层，层内不连接，层间全连接<br><img src="/images/d2l/4/mlp.png"></li><li>每个感知机输出后要经过一个非线性的激活函数，否则多层感知机等价于单层感知机</li><li>常用激活函数：Sigmoiod、Tanh、ReLU，性能都没太大区别，ReLU计算更容易，如果没有特别的想法，用ReLU就行</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul><li>从零实现</li></ul><pre><code class="python">from torch import nn,optimtrain_iter,_=LoadData(256)num_in,num_out,num_h=784,10,256# 隐层参数w1=torch.randn(num_in,num_h,requires_grad=True)b1=torch.zeros(num_h,requires_grad=True)# 输出层参数w2=torch.randn(num_h,num_out,requires_grad=True)b2=torch.zeros(num_out,requires_grad=True)params=[w1,b2,w1,b2]loss_f=nn.CrossEntropyLoss()opt=optim.SGD(params,lr=0.001)def ReLU(X):    a=torch.zeros_like(X)    return torch.max(X,a)def Net(X:Tensor):    X=X.view(-1,num_in)    # @被重载为了矩阵乘法    X=ReLU(X@w1+b1)    return X@w2+b2def Train():    for epoch in range(50):        loss=0        for X,y in train_iter:            X=X.view(-1,784)            out=Net(X)            l=loss_f(out,y)            l.backward()            opt.step()            opt.zero_grad()            loss=l.item()        print(f"{epoch},{loss}")</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: Softmax Regression</title>
       <link href="/2021/11/23/d2l_3/"/>
       <url>/2021/11/23/d2l_3/</url>
