@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-11-24T09:15:12.949Z</updated>
+  <updated>2021-11-25T13:29:12.614Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>D2L: Weight Decay &amp; Dropout</title>
+    <link href="http://example.com/2021/11/25/d2l_6/"/>
+    <id>http://example.com/2021/11/25/d2l_6/</id>
+    <published>2021-11-25T13:29:12.614Z</published>
+    <updated>2021-11-25T13:29:12.614Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Weight-Decay-amp-Dropout"><a href="#Weight-Decay-amp-Dropout" class="headerlink" title="Weight Decay &amp; Dropout"></a>Weight Decay &amp; Dropout</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li><p>权重衰退<br>权重衰退可以控制模型复杂度，使其复杂度不会太大，从而一定程度上避免过拟合</p><ul><li>使用均方范数作为硬性限制<br>通过限制参数的取值范围来控制模型容量，具体有如下例子<br>在限制参数向量范数的情况下优化损失函数，一般不会使用这种正则方式<br><img src="/images/d2l/6/hard_res.png"></li><li>使用均方范数作为柔性限制<br>上述硬性限制有一个等价方案，具体如下，这就是一般的正则化方法，其作用同样也是使得参数被限制在一个较小的范围<br><img src="/images/d2l/6/soft_res.png"><br>下面是正则项对最优解影响的一个演示<br>坐标轴分别是w的各个分量，圆线是等高线。<br>正则项给了另外一个梯度，把原始的损失函数算出的最优解往原点拉，必然会导致W的取值范围变小从而使模型复杂度降低，也就减小了过拟合。另外一种理解，正则项加入后优化目标就不再全局最优点了，所以肯定会减小训练集拟合程度，也就减小了过拟合<br>考虑为什么λ控制了正则项的重要程度，因为求偏导时λ会变成梯度前的常数项<br><img src="/images/d2l/6/effect.png"></li><li>参数更新<br>带正则项后参数更新过程如下，这也说明了为什么这种方法叫权重衰退：更新前先把权重减小，然后继续更新梯度<br><img src="/images/d2l/6/update.png"></li><li>注意<br>权重衰减也只在训练过程中使用，用来限制训练过程中的参数，在最终的验证过程中，指标还是原先的损失函数</li></ul></li><li><p>丢弃法</p><ul><li>动机<br>一个好的模型需要对输入数据加入扰动鲁棒，使用有噪音的数据等价于Tikhonov正则。丢弃法就是在层之间加入噪音，丢弃法也可以看作一个正则</li><li>无偏差地加入噪音<br>丢弃法就是加入了无偏噪音<br><img src="/images/d2l/6/noise.png"></li><li>使用丢弃法  <ul><li>对其发作用域隐藏层地输出上，即随机将某些神经元的输出置零且其它输出按上述公式增大</li><li>丢弃法只在训练过程中使用，测试和验证过程中不使用，这样保证了确定的输出<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2></li></ul></li></ul></li><li><p>权重衰减从零实现</p></li></ul><pre><code class="python">import torchfrom torch import nn,optimfrom d2l import *# 训练数据设置比较小，容易过拟合num_train=20num_test=100num_inputs=200batch_size=5true_w,true_b=torch.ones(num_inputs)*0.01,0.05train_data=synthetic_data(true_w,true_b,num_train)train_iter=data_loader(train_data,batch_size)test_data=synthetic_data(true_w,true_b,num_test)test_iter=data_loader(test_data,batch_size)# for X,y in train_iter:#     print(X,y)w=torch.normal(0,1,size=true_w.shape,requires_grad=True)b=torch.zeros(1,requires_grad=True)# L2正则def L2_penalty(lambada,w):    return torch.sum(w**2)/2*lambadadef liner_reg(w,b,X):    return torch.matmul(X,w)+bdef net(X):    return liner_reg(w,b,X)def squared_loss_L2(y_hat,y):    loss=(y_hat.view(y.shape)-y)**2/2/len(y)    return (loss+L2_penalty(0.5,w)).sum()opt=optim.SGD([w,b],lr=0.01)train(100,squared_loss_L2,opt,net,train_iter,test_iter)</code></pre><ul><li>权重衰减简洁实现</li></ul><pre><code class="python">net=nn.Sequential(nn.Linear(num_inputs,1))loss_f=nn.MSELoss()# weight_decay代表了L2范数前面的λ系数# 权重衰减系数很小时，在当前数据集下过拟合非常明显# 权重衰减系数很大时，欠拟合则会非常明显opt=optim.SGD(net.parameters(),lr=0.01,weight_decay=1.2)train(100,loss_f,opt,net,train_iter,test_iter)# 其它范数的正则pytorch没有直接的实现# 手动实现也很简单</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/d2l/1/cover.png&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Weight-Decay-amp-Dropout&quot;&gt;&lt;a href=&quot;#Weight-Decay-amp-Dropout&quot; class=&quot;headerl</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
+    
+    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+  </entry>
   
   <entry>
     <title>D2L: Modle Selection</title>
