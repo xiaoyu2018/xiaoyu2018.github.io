@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>D2L: Basic Pytorch</title>
+      <link href="/2021/11/28/d2l_8/"/>
+      <url>/2021/11/28/d2l_8/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Basic-Pytorch"><a href="#Basic-Pytorch" class="headerlink" title="Basic Pytorch"></a>Basic Pytorch</h1><ul><li>模型构造</li></ul><pre><code class="python">import torch from torch import nnnet=nn.Sequential(nn.Linear(20,256),nn.ReLU(),nn.Linear(256,10))X=torch.normal(0,1,size=(1,20))print(net(X))class MLP(nn.Module):    def __init__(self):        super().__init__()        self.rand_weight=torch.randn((20,64),requires_grad=False,dtype=torch.float32)        self.hidden=nn.Sequential(nn.Linear(64,128),nn.ReLU(),nn.Linear(128,256))        self.out=nn.Linear(256,10)    def forward(self,X):        X=X@self.rand_weight+1        X=nn.ReLU()(self.hidden(X))        X=self.out(X)        # 下面这个过程流不会计入计算图        with torch.no_grad():            while torch.abs(X).sum()&gt;1:                X/=2        return X.sum()net=MLP()print(net(X))</code></pre><ul><li>参数管理</li></ul><pre><code class="python">import torchfrom torch import nnnet=nn.Sequential(nn.Linear(4,8),nn.ReLU(),nn.Linear(8,1))X=torch.rand(size=(2,4))# 访问参数# 访问网络中每一层，以及如何访问层中的参数print(net[0].state_dict(),net[1],net[2].bias.data)# 网络中的参数包括data和grad两部分，在这没做反向传播呢，所以梯度为Noneprint(net[2].weight.grad==None)# 将整个网络信息打印print(net)# 初始化参数# pytorch已经为我们做了比较好的默认初始化def init_xavier(m):    if(type(m)==nn.Linear):        nn.init.xavier_normal_(m.weight)        nn.init.zeros_(m.bias)def init_42(m):    nn.init.constant_(m.weight,42)    nn.init.constant_(m.bias,42)# 将初始化函数应用到net每一个子层，不止可以用在初始化上net[0].apply(init_xavier)print([i for i in net[0].parameters()])net[2].apply(init_42)print(net[2].weight,net[2].bias)# 更暴力的方法net[0].weight.data[:]+=100print(net[0].weight.data)# 参数绑定# 让某几层共享同样的参数shared=nn.Linear(8,8)net=nn.Sequential(nn.Linear(4,8),nn.ReLU(),shared,nn.ReLU(),shared,nn.Sigmoid(),nn.Linear(8,1))print(net[2]==shared)print(net[2].weight.data==net[4].weight.data)</code></pre><ul><li>自定义层</li></ul><pre><code class="python">import torchfrom torch import nn# 自定义层和自定义模型没本质区别class CenteredLayer(nn.Module):    def __init__(self):        super().__init__()        def forward(self,X):                return X-X.mean()layer=CenteredLayer()print(layer(torch.tensor([1,2,3,4],dtype=torch.float32)))# 带有参数的层class PrameterizedLayer(nn.Module):    def __init__(self,in_dim,out_dim):        super().__init__()        self.w=nn.Parameter(torch.randn((in_dim,out_dim)))        self.b=nn.Parameter(torch.randn((out_dim)))    def forward(self,X):                return X@self.w.data+self.b.datanet=PrameterizedLayer(2,8)print(net(torch.tensor([[1,2],[2,3],[3,4]],dtype=torch.float32)))</code></pre><ul><li>读写文件</li></ul><pre><code class="python">import torchfrom torch import nnx=torch.arange(4)# 加载和保存张量torch.save(x,'x_file')y=torch.load('x_file')print(x==y)# 加载和保存张量组成的数据结构a=torch.arange(5)b=torch.arange(5)torch.save([a,b],"list")torch.save({'a':a,'b':b},"dict")# 读取到内存会保持原数据结构print(torch.load("list"))print(torch.load("dict"))# 加载和保存模型的参数net=nn.Sequential(nn.Conv2d(1,2,5),nn.Flatten(),nn.Linear(288,64))print(net(torch.normal(0,0.5,size=(1,1,16,16))))print(net.state_dict())torch.save(net.state_dict(),'net.params')new_net=nn.Sequential(nn.Conv2d(1,2,5),nn.Flatten(),nn.Linear(288,64))new_net.load_state_dict(torch.load('net.params'))print(new_net==net)X=torch.normal(0,0.5,size=(1,1,16,16))print(new_net(X)==net(X))</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>D2L: Numerical Stability &amp; Initialization</title>
+      <link href="/2021/11/28/d2l_7/"/>
+      <url>/2021/11/28/d2l_7/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="D2L-Numerical-Stability-amp-Initialization"><a href="#D2L-Numerical-Stability-amp-Initialization" class="headerlink" title="D2L: Numerical Stability &amp; Initialization"></a>D2L: Numerical Stability &amp; Initialization</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li>数值的稳定性<ul><li>神经网络的梯度<br>求某一层的参数的梯度，直接就对损失函数关于该层参数求导,然后通过链式法则，化成d-t次的矩阵乘法<br><img src="/images/d2l/7/chain_d.png"></li><li>梯度爆炸与梯度消失<br>上述连续的乘法运算会带来两个问题：梯度爆炸与梯度消失<br><img src="/images/d2l/7/e_v.png"><br>梯度爆炸带来的问题：梯度值超过计算机可表示大小、对学习率敏感<br>梯度消失带来的问题：梯度值变为0（超出计算可表示精度的小浮点数）、无论如何选择学习率训练都没有进展、神经网络无法做到更深</li></ul></li><li>模型初始化<ul><li>如何让训练更加稳定？（不产生梯度消失和梯度爆炸）<br>要让梯度值保持在合理的范围内，一般有如下方法：<ul><li>将乘法变为加法（ResNet、LSTM）</li><li>归一化（梯度归一化、梯度裁剪）</li><li>选定合适的激活函数</li><li>合理的初始参数</li></ul></li><li>让每层的方差是一个常数<br><img src="/images/d2l/7/bn.png"></li><li>合理的权重初始化<ul><li>需要在一个合理值区间里随机初始参数<ul><li>远离最优解的地方损失函数很复杂（梯度很大）</li><li>最优解附近比较平缓 </li></ul></li></ul></li><li>Xavier初始化<br>使得输入空间的方差和输出空间的方差尽量相等</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: Weight Decay &amp; Dropout</title>
       <link href="/2021/11/25/d2l_6/"/>
       <url>/2021/11/25/d2l_6/</url>
