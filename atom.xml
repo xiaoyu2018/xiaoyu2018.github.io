@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-11-28T09:15:03.446Z</updated>
+  <updated>2021-12-17T11:12:40.591Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,64 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ResNet</title>
+    <link href="http://example.com/2021/12/17/resnet/"/>
+    <id>http://example.com/2021/12/17/resnet/</id>
+    <published>2021-12-17T11:12:40.591Z</published>
+    <updated>2021-12-17T11:12:40.591Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/images/resnet/cover.jpg" alt="$cover"></p><h1 id="Residual-Network"><a href="#Residual-Network" class="headerlink" title="Residual Network"></a>Residual Network</h1><p>深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。</p><p><img src="/images/resnet/plain_error.png" alt="plain_error"><br>在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。</p><h2 id="Is-learning-better-networks-as-easy-as-stacking-more-layers"><a href="#Is-learning-better-networks-as-easy-as-stacking-more-layers" class="headerlink" title="Is learning better networks as easy as stacking more layers ?"></a><strong>Is learning better networks as easy as stacking more layers ?</strong></h2><ul><li>当网络变得特别深时，会出现梯度爆炸或梯度消失</li><li>传统的解决方法是：参数在初始化时要做的好一点，不要太大也不要太小；加入一些Batch Normalization Layers</li><li>传统的解决方法使得神经网络能够收敛，但是网络的精度却变得更差，而这并非是模型变得复杂后导致的过拟合问题，因为模型的训练误差也变高了</li><li>正常来说，如果在一个浅层的神经网络后直接加入更多的层，这些层只做identity mapping，那么这个深层神经网络的误差绝不会高于浅层的神经网络，但是传统的神经网络模型并未找到这样的解（或更好的解）</li><li>如果深层网络后面的层都是是恒等映射，那么模型就可以转化为一个浅层网络</li></ul><h2 id="Deep-residual-learning-framework"><a href="#Deep-residual-learning-framework" class="headerlink" title="Deep residual learning framework"></a><strong>Deep residual learning framework</strong></h2><ul><li>将残差块的输入与块内最后一个神经网络层的线性输出求和后在进行激活，得到残差块的输出<br><img src="/images/resnet/residual_block.png" alt="plain_error"></li><li>残差块只简单地做了shortcut connections，没有引入额外的训练参数，不会增加网络复杂度</li><li>已有的神经网络很难拟合潜在的恒等映射函数H(x) = x，但是ResNet将残差块设计为H(x) = F(x) + x，其直接把恒等映射作为网络的一部分，只要F(x) = 0，便得到了恒等映射。而此时F(x) = H(x) - x 称为残差函数，就是当前残差块的学习目标（学习出这样一个F(x)函数满足如图输出）</li><li>值得一提的是，一个残差块中应该至少有两层（中间要包含一个非线性激活），否则就会出现如下情况，这显然是没有用的工作<br><img src="/images/resnet/no_use.png" alt="plain_error"></li></ul><h2 id="Deeper-bottleneck-architecture"><a href="#Deeper-bottleneck-architecture" class="headerlink" title="Deeper bottleneck architecture"></a><strong>Deeper bottleneck architecture</strong></h2><ul><li>当神经网络层数进一步增多时，参数的增长会带来很大的计算开销。此时可以考虑使用1*1的卷积核暂时减少通道数来减少整个网络的数据规模<br><img src="/images/resnet/deeper.png" alt="plain_error"></li></ul><h2 id="Analysis-of-Deep-Residual-Networks"><a href="#Analysis-of-Deep-Residual-Networks" class="headerlink" title="Analysis of Deep Residual Networks"></a><strong>Analysis of Deep Residual Networks</strong></h2><ul><li>基本BP算法流程如下<br><img src="/images/resnet/bp.jpg" alt="plain_error"></li><li>残差块的反向传播过程较好地解释了残差网络避免梯度消失原因，具体推导过程如下</li><li>推导中忽略偏置项和激活函数<br><img src="/images/resnet/res_bp.png" alt="plain_error"></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/resnet/cover.jpg&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Residual-Network&quot;&gt;&lt;a href=&quot;#Residual-Network&quot; class=&quot;headerlink&quot; title=&quot;Res</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="papers" scheme="http://example.com/tags/papers/"/>
+    
+    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+    <category term="Residual-learning" scheme="http://example.com/tags/Residual-learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GAN #1</title>
+    <link href="http://example.com/2021/12/01/Gan0/"/>
+    <id>http://example.com/2021/12/01/Gan0/</id>
+    <published>2021-12-01T07:56:32.031Z</published>
+    <updated>2021-12-01T07:56:32.031Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/images/gan/cover.png" alt="$cover"></p><h1 id="Generative-Adversarial-Nets"><a href="#Generative-Adversarial-Nets" class="headerlink" title="Generative Adversarial Nets"></a>Generative Adversarial Nets</h1><p>Gan利用对抗的方法，提出了生成式模型的新框架。它需要同时训练两个模型（生成模型G和判别模型D），G用于捕获数据的分布，而D需要判别出一个样本是来自训练集还是生成模型。生成模型的目标是尽最大可能让判别模型犯错（无法成功判别数据的来源），G和D在本文中被定义为多层感知机，整个系统通过反向传播来进行训练。</p><h2 id="AN-analogy-to-GAN"><a href="#AN-analogy-to-GAN" class="headerlink" title="AN analogy to GAN"></a><strong>AN analogy to GAN</strong></h2><p>在生成对抗网络框架中，生成模型与判别互相对抗。可以把生成模型类比为造假币者，判别模型类比为警察。生成模型试图制造假币骗过判别模型，而判别模型努力区分假币。二者在这样的对抗中不断学习提升各自的水平，直到生成模型的造的假币和真的一模一样，判别器无法区分。另外，警察进步不能过大或过小。进步过大时，造假者直接被一锅端，无法继续造假钞；进步过小时，造假者不需进步也能骗过警察，则没有动力进步</p><h2 id="Adversarial-nets"><a href="#Adversarial-nets" class="headerlink" title="Adversarial nets"></a><strong>Adversarial nets</strong></h2><ul><li><p>对抗网络认为数据集代表着一个联合分布，每一个样本都可以由高维随机变量表示。假设数据集是许多张2*2大小的黑白图片，每张图片有四个像素点，于是将该分布看作四维随机变量的分布，每一维代表着一个像素的取值（黑白只取0或1）<br><img src="/images/gan/mrv.jpg"></p></li><li><p>在让生成模型学习数据集代表了分布之前，首先定义一个符合高斯分布的先验噪声Z，生成模型就是要学习把Z映射成为数据集代表的分布，MLP理论上可以拟合这样一个函数来完成目标。生成器以Z为输入，输出一个尽量符合数据集分布的样本  </p></li><li><p>判别器也是一个MLP，判别器以数据集或生成器生产的样本为输入，输出一个标量（0：生成器生成的样本，1：真实样本，判别器的输出介于[0,1]），判别样本的真伪。判别器要学习一个二分类任务  </p></li><li><p>D与G对于同一个目标函数采取相反的优化方式：<br><img src="/images/gan/obj_func.png"><br>在不同分布里采样计算后得到期望和，生成器和鉴别器分别要调整参数最大化和最小化这一期望和，体现了对抗的过程，D尽量区分生成的数据和真实数据，G尽量使得生成的数据和真实数据难以区分</p></li><li><p>下图展示了对抗网络训练过程中，各个成分的变化：<br><img src="/images/gan/graph_proc.png"><br>Z为高斯噪声，绿色线代表G生成数据的概率密度函数，黑色线代表真实数据的概率密度函数，蓝色代表D输出标量的函数<br>（a）G将Z随即映射为另一个分布，与真实分布存在一定差距，此时D未经学习，分类能力弱<br>（b）固定G，训练D，D分类能力明显上升<br>（c）固定D，训练G，G学习到把Z向真实数据分布映射<br>（d）反复多轮后，G映射的分布与真实数据相同，判别器无法区分</p></li><li><p>对抗网络算法流程如下：<br><img src="/images/gan/algorithm.png"><br>先更新D，再更新G，G只与目标函数中后半段有关。k是一个超参数，不能太大也不能大小。取太大判别器训练得太好，取太小判别器变化太小</p></li></ul><h2 id="Theoretical-results"><a href="#Theoretical-results" class="headerlink" title="Theoretical results"></a><strong>Theoretical results</strong></h2><ul><li>理论上，对抗网络存在全局最优解：生成器映射的分布等于真实数据分布</li><li>对抗网络算法可以求解目标函数</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/gan/cover.png&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Generative-Adversarial-Nets&quot;&gt;&lt;a href=&quot;#Generative-Adversarial-Nets&quot; class=&quot;hea</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="papers" scheme="http://example.com/tags/papers/"/>
+    
+    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+    <category term="Generative-Model" scheme="http://example.com/tags/Generative-Model/"/>
+    
+  </entry>
   
   <entry>
     <title>D2L: Basic Pytorch</title>
@@ -231,64 +289,6 @@
     <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
     
     <category term="Seq2Seq-Model" scheme="http://example.com/tags/Seq2Seq-Model/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ResNet</title>
-    <link href="http://example.com/2021/11/22/resnet/"/>
-    <id>http://example.com/2021/11/22/resnet/</id>
-    <published>2021-11-22T08:36:44.959Z</published>
-    <updated>2021-11-22T08:36:44.959Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/images/resnet/cover.jpg" alt="$cover"></p><h1 id="Residual-Network"><a href="#Residual-Network" class="headerlink" title="Residual Network"></a>Residual Network</h1><p>深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。</p><p><img src="/images/resnet/plain_error.png" alt="plain_error"><br>在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。</p><h2 id="Is-learning-better-networks-as-easy-as-stacking-more-layers"><a href="#Is-learning-better-networks-as-easy-as-stacking-more-layers" class="headerlink" title="Is learning better networks as easy as stacking more layers ?"></a><strong>Is learning better networks as easy as stacking more layers ?</strong></h2><ul><li>当网络变得特别深时，会出现梯度爆炸或梯度消失</li><li>传统的解决方法是：参数在初始化时要做的好一点，不要太大也不要太小；加入一些Batch Normalization Layers</li><li>传统的解决方法使得神经网络能够收敛，但是网络的精度却变得更差，而这并非是模型变得复杂后导致的过拟合问题，因为模型的训练误差也变高了</li><li>正常来说，如果在一个浅层的神经网络后直接加入更多的层，这些层只做identity mapping，那么这个深层神经网络的误差绝不会高于浅层的神经网络，但是传统的神经网络模型并未找到这样的解（或更好的解）</li><li>如果深层网络后面的层都是是恒等映射，那么模型就可以转化为一个浅层网络</li></ul><h2 id="Deep-residual-learning-framework"><a href="#Deep-residual-learning-framework" class="headerlink" title="Deep residual learning framework"></a><strong>Deep residual learning framework</strong></h2><ul><li>将残差块的输入与块内最后一个神经网络层的线性输出求和后在进行激活，得到残差块的输出<br><img src="/images/resnet/residual_block.png" alt="plain_error"></li><li>残差块只简单地做了shortcut connections，没有引入额外的训练参数，不会增加网络复杂度</li><li>已有的神经网络很难拟合潜在的恒等映射函数H(x) = x，但是ResNet将残差块设计为H(x) = F(x) + x，其直接把恒等映射作为网络的一部分，只要F(x) = 0，便得到了恒等映射。而此时F(x) = H(x) - x 称为残差函数，就是当前残差块的学习目标（学习出这样一个F(x)函数满足如图输出）</li><li>值得一提的是，一个残差块中应该至少有两层（中间要包含一个非线性激活），否则就会出现如下情况，这显然是没有用的工作<br><img src="/images/resnet/no_use.png" alt="plain_error"></li></ul><h2 id="Deeper-bottleneck-architecture"><a href="#Deeper-bottleneck-architecture" class="headerlink" title="Deeper bottleneck architecture"></a><strong>Deeper bottleneck architecture</strong></h2><ul><li>当神经网络层数进一步增多时，参数的增长会带来很大的计算开销。此时可以考虑使用1*1的卷积核暂时减少通道数来减少整个网络的数据规模<br><img src="/images/resnet/deeper.png" alt="plain_error"></li></ul><h2 id="Analysis-of-Deep-Residual-Networks"><a href="#Analysis-of-Deep-Residual-Networks" class="headerlink" title="Analysis of Deep Residual Networks"></a><strong>Analysis of Deep Residual Networks</strong></h2><ul><li>残差块的反向传播过程较好地解释了残差网络避免梯度消失原因，具体推导过程如下</li><li>推导中忽略偏置项和激活函数<br><img src="/images/resnet/res_bp.png" alt="plain_error"></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/resnet/cover.jpg&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Residual-Network&quot;&gt;&lt;a href=&quot;#Residual-Network&quot; class=&quot;headerlink&quot; title=&quot;Res</summary>
-      
-    
-    
-    
-    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
-    
-    
-    <category term="papers" scheme="http://example.com/tags/papers/"/>
-    
-    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
-    
-    <category term="Residual-learning" scheme="http://example.com/tags/Residual-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>GAN #1</title>
-    <link href="http://example.com/2021/11/22/Gan0/"/>
-    <id>http://example.com/2021/11/22/Gan0/</id>
-    <published>2021-11-22T08:36:36.426Z</published>
-    <updated>2021-11-22T08:36:36.426Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/images/gan/cover.png" alt="$cover"></p><h1 id="Generative-Adversarial-Nets"><a href="#Generative-Adversarial-Nets" class="headerlink" title="Generative Adversarial Nets"></a>Generative Adversarial Nets</h1><p>Gan利用对抗的方法，提出了生成模型的新框架。它需要同时训练两个模型（生成模型G和判别模型D），G用于捕获数据的分布，而D需要判别出一个样本是来自训练集还是生成模型。生成模型的目标是尽最大可能让判别模型犯错（无法成功判别数据的来源），G和D在本文中被定义为多层感知机，整个系统通过反向传播来进行训练。</p><h2 id="AN-analogy-to-GAN"><a href="#AN-analogy-to-GAN" class="headerlink" title="AN analogy to GAN"></a><strong>AN analogy to GAN</strong></h2><p>在生成对抗网络框架中，生成模型与判别互相对抗。可以把生成模型类比为造假币者，判别模型类比为警察。生成模型试图制造假币骗过判别模型，而判别模型努力区分假币。二者在这样的对抗中不断学习提升各自的水平，直到生成模型的造的假币和真的一模一样，判别器无法区分。另外，警察进步不能过大或过小。进步过大时，造假者直接被一锅端，无法继续造假钞；进步过小时，造假者不需进步也能骗过警察，则没有动力进步</p><h2 id="Adversarial-nets"><a href="#Adversarial-nets" class="headerlink" title="Adversarial nets"></a><strong>Adversarial nets</strong></h2><ul><li><p>对抗网络认为数据集代表着一个分布，每一个样本都可以由高维随机变量表示。假设数据集是许多张2*2大小的黑白图片，每张图片有四个像素点，于是将该分布看作四维随机变量的分布，每一维代表着一个像素的取值（黑白只取0或1）<br><img src="/images/gan/mrv.jpg"></p></li><li><p>在让生成模型学习数据集代表了分布之前，首先定义一个符合高斯分布的先验噪声Z，生成模型就是要学习把Z映射成为数据集代表的分布，MLP理论上可以拟合这样一个函数来完成目标。生成器以Z为输入，输出一个尽量符合数据集分布的样本  </p></li><li><p>判别器也是一个MLP，判别器以数据集或生成器生产的样本为输入，输出一个标量（0：生成器生成的样本，1：真实样本，判别器的输出介于[0,1]），判别样本的真伪。判别器要学习一个二分类任务  </p></li><li><p>D与G对于同一个目标函数采取相反的优化方式：<br><img src="/images/gan/obj_func.png"><br>在不同分布里采样计算后得到期望和，生成器和鉴别器分别要调整参数最大化和最小化这一期望和，体现了对抗的过程，D尽量区分生成的数据和真实数据，G尽量使得生成的数据和真实数据难以区分</p></li><li><p>下图展示了对抗网络训练过程中，各个成分的变化：<br><img src="/images/gan/graph_proc.png"><br>Z为高斯噪声，绿色线代表G生成数据的概率密度函数，黑色线代表真实数据的概率密度函数，蓝色代表D输出标量的函数<br>（a）G将Z随即映射为另一个分布，与真实分布存在一定差距，此时D未经学习，分类能力弱<br>（b）固定G，训练D，D分类能力明显上升<br>（c）固定D，训练G，G学习到把Z向真实数据分布映射<br>（d）反复多轮后，G映射的分布与真实数据相同，判别器无法区分</p></li><li><p>对抗网络算法流程如下：<br><img src="/images/gan/algorithm.png"><br>先更新D，再更新G，G只与目标函数中后半段有关。k是一个超参数，不能太大也不能大小。取太大判别器训练得太好，取太小判别器变化太小</p></li></ul><h2 id="Theoretical-results"><a href="#Theoretical-results" class="headerlink" title="Theoretical results"></a><strong>Theoretical results</strong></h2><ul><li>理论上，对抗网络存在全局最优解：生成器映射的分布等于真实数据分布</li><li>对抗网络算法可以求解目标函数</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/gan/cover.png&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Generative-Adversarial-Nets&quot;&gt;&lt;a href=&quot;#Generative-Adversarial-Nets&quot; class=&quot;hea</summary>
-      
-    
-    
-    
-    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
-    
-    
-    <category term="papers" scheme="http://example.com/tags/papers/"/>
-    
-    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
-    
-    <category term="Generative-Model" scheme="http://example.com/tags/Generative-Model/"/>
     
   </entry>
   
