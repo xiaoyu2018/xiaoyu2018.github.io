@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-12-17T11:12:40.591Z</updated>
+  <updated>2022-01-17T08:04:28.649Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Vison in Transformer</title>
+    <link href="http://example.com/2022/01/17/VIT/"/>
+    <id>http://example.com/2022/01/17/VIT/</id>
+    <published>2022-01-17T08:04:28.649Z</published>
+    <updated>2022-01-17T08:04:28.649Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/images/VIT/cover.jpg" alt="$cover"></p><h1 id="An-Image-is-Worth-16x16-Words-Transformers-for-Image-Recognition-at-Scale"><a href="#An-Image-is-Worth-16x16-Words-Transformers-for-Image-Recognition-at-Scale" class="headerlink" title="An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"></a>An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</h1><p>从2012年AlexNet提出以来，卷积神经网络在计算机视觉领域一直占据统治地位。而本篇论文的研究表明，拥有足够多数据进行预训练的情况下，Transformer网络架构也可以把计算机视觉问题解决的很好。更进一步来说，这篇论文的提出打破了cv和nlp之间的壁垒，在多模态领域也产生了很大影响</p><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><ul><li>将每一张图片视作由许多16x16的patch组成，每个patch当作nlp领域中的单词，一张图片便可视作一个sequence</li><li>CV领域不需要局限于CNNs的结构，纯Transformer在预训练集足够大时在图像分类任务达到了目前CNNs的SOTA，并且需要更少的计算资源</li><li>使用Transformer架构，到目前为止还未出现增加数据和模型复杂度导致性能饱和的现象</li><li>CNNs具有人为规定的两个先验信息（局部性、平移不变性），而Transformer是缺少这样的信息的，所以在数据集不够的时候时VIT比CNNs的SOTA要差一点（因为VIT需要自己去学习两个先验信息），进一步扩大数据集后，效果达到SOTA</li></ul><h2 id="Problems-and-Purposes"><a href="#Problems-and-Purposes" class="headerlink" title="Problems and Purposes"></a><strong>Problems and Purposes</strong></h2><ul><li>受Transformer在nlp领域可扩展性的成功，本文想尽量少地修改Transformer架构，将这种可扩展性带到CV领域</li><li>如何把2d的图片变成1d的序列</li><li>输入transformer的长一般为512、1024这个量级，要考虑计算性能，序列过长复杂度无法接受</li><li>本文的解决方案：将原图划分为多个16x16地patch，再将patch组成sequence，大大减小了序列长度</li></ul><h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a><strong>Method</strong></h2><p><img src="/images/VIT/cover.jpg" alt="$cover"><br>将原始图片划分出多个patches，patches经过线性投射层展平为一维向量，为每个向量加入位置编码后输入Transformer Encoder。另外引入了一个额外的token（第0位向量），并以该对应的Transformer Encoder输出作为分类的依据</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/VIT/cover.jpg&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;An-Image-is-Worth-16x16-Words-Transformers-for-Image-Recognition-at-Scale&quot;&gt;&lt;a </summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="Neural Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+    <category term="Computer Vision" scheme="http://example.com/tags/Computer-Vision/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>D2L: Convolution and Pooling</title>
+    <link href="http://example.com/2022/01/17/d2l_10/"/>
+    <id>http://example.com/2022/01/17/d2l_10/</id>
+    <published>2022-01-17T01:58:32.835Z</published>
+    <updated>2022-01-16T03:50:01.837Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Convolution-and-Pooling"><a href="#Convolution-and-Pooling" class="headerlink" title="Convolution and Pooling"></a>Convolution and Pooling</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li><p>卷积</p><ul><li>平移不变性和局部性是在图片中寻找某种模式的原则。<ul><li>因为模式不会随着其在图片中位置改变而改变，所以一个识别器（卷积核）被设计为具有平移不变性（即参数只与输入的像素值有关，而与像素在图片的位置无关），去学习图片中的一种模式</li><li>模式与其相邻的局部相关，识别器每次仅去看图片的一部分</li><li>对全连接层使用平移不变性和局部性得到卷积层</li></ul></li></ul></li><li><p>卷积层<br><img src="/images/d2l/10/1.png"></p><ul><li>不同卷积核（值）会对图片带来不同的效果，当某种效果对任务有帮助时，网络很有可能就会学习出这种卷积核<br><img src="/images/d2l/10/2.png"></li></ul></li><li><p>填充与步幅</p><ul><li>在输入的四周加入额外的行和列以控制卷积后的输出图像大小，卷积核大小一般选奇数，能上下对称地填充图片来保证输入输出图片大小不变<br><img src="/images/d2l/10/3.png"></li><li>增大卷积步幅，快速缩小图片</li><li>总结<br><img src="/images/d2l/10/4.png"></li></ul></li><li><p>通道</p><ul><li>每个通道有自己的卷积核，输入通道不同通道的对应卷积后直接相加后再加偏置项，最后输出一个单通道</li><li>多输出通道就是多个上述操作输出的多个单通道</li><li>每个输出通道可以识别特定的模式，输入通道识别并组合（加权相加）输入中的模式</li></ul></li><li><p>池化</p><ul><li>池化层缓解卷积对位置的敏感性</li><li>池化层不学习任何参数，有最大池化、平均池化等</li><li>池化层也可以调整填充与步幅</li><li>经过池化层不会改变通道数</li></ul></li><li><p>tricks</p><ul><li>填充：一般填充就是为了使图小大小不变</li><li>步幅：一般设置为1，计算量太大时增大步幅</li><li>最终图像大小：一般为3x3、5x5、7x7</li><li>1x1卷积层：不识别空间模式，而是用来改变通道数</li></ul></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/images/d2l/1/cover.png&quot; alt=&quot;$cover&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Convolution-and-Pooling&quot;&gt;&lt;a href=&quot;#Convolution-and-Pooling&quot; class=&quot;headerlin</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
+    
+    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+  </entry>
   
   <entry>
     <title>ResNet</title>
