@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>D2L: AlexNet</title>
+      <link href="/2022/01/22/d2l_12/"/>
+      <url>/2022/01/22/d2l_12/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>在深度学习之前：<ul><li>核方法<ul><li>特征提取</li><li>选择核函数</li><li>凸优化问题</li><li>漂亮的定理</li></ul></li><li>几何学<ul><li>抽取特征</li><li>将计算机视觉问题描述为几何问题（如多相机）</li><li>凸优化</li><li>漂亮的定理</li><li>建立假设模型，若假设满足，效果会很好</li></ul></li><li>特征工程<ul><li>特征工程（人工特征提取）是关键，不太关心机器学习模型</li><li>特征描述子（SIFT、SURF）</li><li>视觉词袋（聚类）</li><li>最后一般用SVM</li></ul></li></ul></li><li>AlexNet赢得了2012年ImageNet竞赛的冠军，引起了深度学习的热潮，其本质上是一个更深更大的LeNet<ul><li>主要改进：<ul><li>丢弃法</li><li>ReLU</li><li>MaxPooling</li><li>数据增强（截取、调亮度、调色温等）</li><li>更深更大</li></ul></li></ul></li><li>网络结构与复杂度<br><img src="/images/d2l/12/1.png"></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><pre><code class="python">import torchfrom torch import nn,optimimport d2lclass AlexNet(nn.Module):        def __init__(self):        super().__init__()        self.conv1=nn.Conv2d(1,96,kernel_size=11,stride=4,padding=1)        self.conv2=nn.Conv2d(96,256,kernel_size=5,padding=2)        self.conv3=nn.Conv2d(256,384,kernel_size=3,padding=1)        self.conv4=nn.Conv2d(384,384,kernel_size=3,padding=1)        self.conv5=nn.Conv2d(384,256,kernel_size=3,padding=1)        self.liner1=nn.Linear(6400,4096)        self.liner2=nn.Linear(4096,4096)        self.liner3=nn.Linear(4096,10)        self.pool=nn.MaxPool2d(kernel_size=3,stride=2)        self.flatten=nn.Flatten()        self.relu=nn.ReLU()        self.dropout=nn.Dropout(p=0.5)        def forward(self,x):                x=self.relu(self.pool(self.conv1(x)))                x=self.relu(self.pool(self.conv2(x)))        x=self.relu(self.conv3(x))        x=self.relu(self.conv4(x))        x=self.relu(self.conv5(x))        x=self.pool(x)        x=self.flatten(x)        x=self.dropout((self.liner1(x)))        x=self.dropout((self.liner2(x)))        x=self.liner3(x)        return xnet=AlexNet().to(torch.device("cuda:0"))# x=torch.rand((1,1,224,224)).cuda()# print(net(x).size())# 读取Fashion-MNIST，将图片直接拉伸为224x224train_iter,test_iter=d2l.load_data_fashion_mnist(256,224)# d2l.train(#     25,nn.CrossEntropyLoss(),#     optim.Adam(net.parameters()),#     net,train_iter,save_name="AlexNet",#     device=torch.device("cuda:0"))d2l.evaluate(    net,test_iter,nn.CrossEntropyLoss(),    param_path="D:\code\machine_learning\limu_d2l\params\AlexNet_5",    device=torch.device("cuda:0"))</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>D2L: LeNet</title>
+      <link href="/2022/01/22/d2l_11/"/>
+      <url>/2022/01/22/d2l_11/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="LeNet"><a href="#LeNet" class="headerlink" title="LeNet"></a>LeNet</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>最早是用于手写数字识别，识别信件上的邮政编码</li><li>网络结构<br><img src="/images/d2l/11/1.png" alt="$cover"></li><li>提出了一个数据集：MNIST<ul><li>5w个训练数据</li><li>1w个测试数据</li><li>图像大小 28x28</li><li>10类</li></ul></li><li>总结<ul><li>LeNet是早期成功的神经网络</li><li>先使用卷积层学习图片空间信息</li><li>然后使用全连接层转换到类别空间</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><pre><code class="python">from torch import optimimport torchfrom torch import nnimport d2l# 定义Reshape层class Reshape(nn.Module):        def forward(self,x):        return x.view(-1,1,28,28)net=nn.Sequential(    Reshape(),    nn.Conv2d(1,6,kernel_size=5,padding=2),    nn.AvgPool2d(2),nn.Sigmoid(),    nn.Conv2d(6,16,5),    nn.AvgPool2d(2,2),nn.Sigmoid(),nn.Flatten(),    nn.Linear(16*5*5,120),nn.Sigmoid(),    nn.Linear(120,84),nn.Sigmoid(),    nn.Linear(84,10))x=torch.rand((1,28,28),dtype=torch.float32)# 观察每一层输出的tensor尺寸for layer in net:    x=layer(x)    print(layer.__class__.__name__,':\t',x.size())# 在Fashion-MINST上的表现train_iter,test_iter=d2l.load_data_fashion_mnist(256)loss_f=nn.CrossEntropyLoss()opt=optim.Adam(net.parameters())# d2l.train(#     25,loss_f,opt,net,train_iter,#     param_name="LeNet",device=torch.device("cuda:0")#     )d2l.evaluate(net,test_iter,loss_f,".\params\LeNet_25")   </code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Vison in Transformer</title>
       <link href="/2022/01/17/VIT/"/>
       <url>/2022/01/17/VIT/</url>
@@ -108,6 +162,33 @@
             <tag> Neural-Network </tag>
             
             <tag> Generative-Model </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>D2L: Sequential Model</title>
+      <link href="/2021/11/30/d2l_9/"/>
+      <url>/2021/11/30/d2l_9/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="Sequential-Model"><a href="#Sequential-Model" class="headerlink" title="Sequential Model"></a>Sequential Model</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><p>序列模型是考虑时间信息的模型</p><ul><li><p>序列数据</p><ul><li>数据带有时序结构，如电影的评价随时间变化<ul><li>电影拿奖后评分上升</li><li>导演、演员负面报道后评分下降</li></ul></li></ul></li><li><p>统计工具  </p><ul><li>将序列中每个元素看作随机变量，显然他们不是独立的<br><img src="/images/d2l/9/1.png"></li><li>在实际操作中，时序序列一般只能正向建模去预测<br><img src="/images/d2l/9/2.png"></li><li>要使用序列模型预测T时刻x的概率，核心是求T时刻的条件概率（似然），这里的f可看作神经网络，神经网络将训练集建模。自回归指的是用数据对见过的数据建模（因为最后预测也是在预测相同的数据），与非序列模型用数据对独立于数据的标签建模不同。<br><img src="/images/d2l/9/3.png"></li><li>具体如何建模？<ul><li>马尔科夫假设<br>当前预测的数据只跟过去的tau个数据相关，tau是一个固定常数。假设x是标量数据，此时只需要将其看作回归问题，使用MLP把tau个x当作特征训练得到t时刻标量x。MLP进行梯度优化的过程便是最大化似然概率的过程<br><img src="/images/d2l/9/4.png"></li><li>潜变量模型<br>引入一个可不断更新的潜变量用于概括历史信息，使得建模更加简单（RNN）<br><img src="/images/d2l/9/5.png"></li></ul></li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul><li>马尔可夫假设+MLP<br>```python<br>import torch<br>from torch import nn<br>from torch.utils.data import TensorDataset<br>from torch.utils.data.dataloader import DataLoader<br>from torch import optim<br>import math</li></ul><h1 id="使用正弦函数加上噪声生成序列数据"><a href="#使用正弦函数加上噪声生成序列数据" class="headerlink" title="使用正弦函数加上噪声生成序列数据"></a>使用正弦函数加上噪声生成序列数据</h1><p>T=1000</p><p>time=torch.arange(1,T+1,dtype=torch.float32)<br>data=torch.sin(0.01*time)+torch.normal(0,0.1,time.shape)</p><h1 id="将数据映射为数据对"><a href="#将数据映射为数据对" class="headerlink" title="将数据映射为数据对"></a>将数据映射为数据对</h1><p>tau=4<br>labels=data[tau:].view(-1,1)<br>features=torch.zeros(T-tau,tau)<br>for i in range(tau):<br>    features[:,i]=data[i:T-tau+i]</p><p>train_dataset=TensorDataset(features[:600],labels[:600])<br>test_dataset=TensorDataset(features[600:],labels[600:])</p><p>train_iter=DataLoader(train_dataset,batch_size=16)<br>test_iter=DataLoader(test_dataset,batch_size=16)</p><p>net=nn.Sequential(<br>    nn.Linear(4,32),<br>    nn.Dropout(0.1),<br>    nn.ReLU(),<br>    nn.Linear(32,16),<br>    nn.ReLU(),<br>    nn.Linear(16,1)<br>    )<br>loss_f=nn.MSELoss()<br>opt=optim.Adam(net.parameters())</p><p>try:<br>    net.load_state_dict(torch.load(“9.params”))</p><p>except:<br>    for epoch in range(100):<br>        train_loss=[]<br>        test_loss=[]<br>        for X,y in train_iter:<br>            out=net(X)<br>            l=loss_f(out,y)</p><pre><code>        l.backward()        train_loss.append(l.item())        opt.step()        opt.zero_grad()    with torch.no_grad():        for X,y in test_iter:            out=net(X)            l=loss_f(out,y)            test_loss.append(l.item())    print(f"{epoch+1},{sum(train_loss)}  {sum(test_loss)}")torch.save(net.state_dict(),"9.params")</code></pre><h1 id="使用测试集预测"><a href="#使用测试集预测" class="headerlink" title="使用测试集预测"></a>使用测试集预测</h1><p>from matplotlib import pyplot as plt<br>t=600<br>steps=396</p><p>plt.plot([i for i in range(t,t+steps)],net(features[600:]).view(-1).detach().numpy())</p><h1 id="使用预测值进行多步预测"><a href="#使用预测值进行多步预测" class="headerlink" title="使用预测值进行多步预测"></a>使用预测值进行多步预测</h1><p>win=[math.sin(i*0.01) for i in range(t-4,t)]<br>true=[]<br>pred=[]<br>for i in range(steps):<br>    X=torch.tensor(win,dtype=torch.float32)<br>    out=net(X)<br>    truth=math.sin((t+i)*0.01)<br>    true.append(truth);pred.append(out.item())<br>    # print(out.item(),t)<br>    win.pop(0)<br>    win.append(out)</p><p>plt.plot([i for i in range(t,t+steps)],pred)<br>plt.plot([i for i in range(t,t+steps)],true)<br>plt.show()<br>```</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
             
         </tags>
       

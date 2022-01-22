@@ -2,7 +2,78 @@
 <!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="/images/tom.jpg"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/widget-post-list.css"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
 
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Xavier's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><span>Tags · Neural-Network</span></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/17/d2l_10/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/17/d2l_10/">D2L: Convolution and Pooling</a></h2><time class="has-text-grey" datetime="2022-01-17T01:58:32.835Z">2022-01-17</time><p class="is-flex-grow-2 mt-2">
+</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Xavier's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><span>Tags · Neural-Network</span></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/22/d2l_12/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/22/d2l_12/">D2L: AlexNet</a></h2><time class="has-text-grey" datetime="2022-01-22T08:05:31.808Z">2022-01-22</time><p class="is-flex-grow-2 mt-2">
+AlexNetBasic knowledge
+在深度学习之前：
+核方法
+特征提取
+选择核函数
+凸优化问题
+漂亮的定理
+
+
+几何学
+抽取特征
+将计算机视觉问题描述为几何问题（如多相机）
+凸优化
+漂亮的定理
+建立假设模型，若假设满足，效果会很好
+
+
+特征工程
+特征工程（人工特征提取）是关键，不太关心机器学习模型
+特征描述子（SIFT、SURF）
+视觉词袋（聚类）
+最后一般用SVM
+
+
+
+
+AlexNet赢得了2012年ImageNet竞赛的冠军，引起了深度学习的热潮，其本质上是一个更深更大的LeNet
+主要改进：
+丢弃法
+ReLU
+MaxPooling
+数据增强（截取、调亮度、调色温等）
+更深更大
+
+
+
+
+网络结构与复杂度
+
+Implementationimport torch
+from torch impo..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2022/01/22/d2l_12/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/22/d2l_11/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/22/d2l_11/">D2L: LeNet</a></h2><time class="has-text-grey" datetime="2022-01-22T04:20:12.842Z">2022-01-22</time><p class="is-flex-grow-2 mt-2">
+LeNetBasic knowledge
+最早是用于手写数字识别，识别信件上的邮政编码
+网络结构
+提出了一个数据集：MNIST
+5w个训练数据
+1w个测试数据
+图像大小 28x28
+10类
+
+
+总结
+LeNet是早期成功的神经网络
+先使用卷积层学习图片空间信息
+然后使用全连接层转换到类别空间
+
+
+
+Implementationfrom torch import optim
+import torch
+from torch import nn
+import d2l
+
+# 定义Reshape层
+class Reshape(nn.Module):
+    
+    def forward(self,x):
+        return x.view(-1,1,28,28)
+
+net=nn.Sequential(
+..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2022/01/22/d2l_11/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/17/d2l_10/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/17/d2l_10/">D2L: Convolution and Pooling</a></h2><time class="has-text-grey" datetime="2022-01-17T01:58:32.835Z">2022-01-17</time><p class="is-flex-grow-2 mt-2">
 Convolution and PoolingBasic knowledge
 卷积
 
@@ -37,37 +108,25 @@ Is learning better networks as easy as stacking more layers ?
 传统的解决方法使得神经网络能够收敛，但是网络的精度却变得更差，而这并非是模型变得复杂后导致的过拟合问题，因为模型的训练误差也变高了
 正常来说，如果..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/12/17/resnet/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/gan/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/12/01/Gan0/"><img class="post-cover-img js-img-fadeIn" src="/images/gan/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/papers"><i class="tag post-item-tag">papers</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a><a href="/tags/Generative-Model"><i class="tag post-item-tag">Generative-Model</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/12/01/Gan0/">GAN #1</a></h2><time class="has-text-grey" datetime="2021-12-01T07:56:32.031Z">2021-12-01</time><p class="is-flex-grow-2 mt-2">
 Generative Adversarial NetsGan利用对抗的方法，提出了生成式模型的新框架。它需要同时训练两个模型（生成模型G和判别模型D），G用于捕获数据的分布，而D需要判别出一个样本是来自训练集还是生成模型。生成模型的目标是尽最大可能让判别模型犯错（无法成功判别数据的来源），G和D在本文中被定义为多层感知机，整个系统通过反向传播来进行训练。
-AN analogy to GAN在生成对抗网络框架中，生成模型与判别互相对抗。可以把生成模型类比为造假币者，判别模型类比为警察。生成模型试图制造假币骗过判别模型，而判别模型努力区分假币。二者在这样的对抗中不断学习提升各自的水平，直到生成模型的造的假币和真的一模一样，判别器无法区分。另外，警察进步不能过大或过小。进步过大时，造假者直接被一锅端，无法继续造..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/12/01/Gan0/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/28/d2l_8/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/28/d2l_8/">D2L: Basic Pytorch</a></h2><time class="has-text-grey" datetime="2021-11-28T09:15:03.446Z">2021-11-28</time><p class="is-flex-grow-2 mt-2">
-Basic Pytorch
-模型构造
+AN analogy to GAN在生成对抗网络框架中，生成模型与判别互相对抗。可以把生成模型类比为造假币者，判别模型类比为警察。生成模型试图制造假币骗过判别模型，而判别模型努力区分假币。二者在这样的对抗中不断学习提升各自的水平，直到生成模型的造的假币和真的一模一样，判别器无法区分。另外，警察进步不能过大或过小。进步过大时，造假者直接被一锅端，无法继续造..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/12/01/Gan0/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/30/d2l_9/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/30/d2l_9/">D2L: Sequential Model</a></h2><time class="has-text-grey" datetime="2021-11-30T08:41:29.526Z">2021-11-30</time><p class="is-flex-grow-2 mt-2">
+Sequential ModelBasic knowledge序列模型是考虑时间信息的模型
 
-import torch 
-from torch import nn
-net=nn.Sequential(nn.Linear(20,256),nn.ReLU(),nn.Linear(256,10))
-X=torch.normal(0,1,size=(1,20))
-print(net(X))
+序列数据
 
-class MLP(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.rand_weight=torch.randn((20,64),requires_grad=False,dtype=torch.float32)
-        self.hidden=nn.Sequenti..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/28/d2l_8/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/28/d2l_7/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/28/d2l_7/">D2L: Numerical Stability &amp; Initialization</a></h2><time class="has-text-grey" datetime="2021-11-28T06:18:56.312Z">2021-11-28</time><p class="is-flex-grow-2 mt-2">
-D2L: Numerical Stability &amp;amp; InitializationBasic Knowledge
-数值的稳定性
-神经网络的梯度求某一层的参数的梯度，直接就对损失函数关于该层参数求导,然后通过链式法则，化成d-t次的矩阵乘法
-梯度爆炸与梯度消失上述连续的乘法运算会带来两个问题：梯度爆炸与梯度消失梯度爆炸带来的问题：梯度值超过计算机可表示大小、对学习率敏感梯度消失带来的问题：梯度值变为0（超出计算可表示精度的小浮点数）、无论如何选择学习率训练都没有进展、神经网络无法做到更深
+数据带有时序结构，如电影的评价随时间变化
+电影拿奖后评分上升
+导演、演员负面报道后评分下降
 
 
-模型初始化
-如何让训练更加稳定？（不产生梯度消失和梯度爆炸）要让梯度值保持在合理的范围内，一般有如下方法：
-将乘法变为加法（ResNet、LSTM）
-归一化（梯度归一化、梯度裁剪）
-选定合适的激活函数
-合理的初..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/28/d2l_7/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/25/d2l_6/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/25/d2l_6/">D2L: Weight Decay &amp; Dropout</a></h2><time class="has-text-grey" datetime="2021-11-25T13:32:01.344Z">2021-11-25</time><p class="is-flex-grow-2 mt-2">
-Weight Decay &amp;amp; DropoutBasic Knowledge
-权重衰退权重衰退可以控制模型复杂度，使其复杂度不会太大，从而一定程度上避免过拟合
-使用均方范数作为硬性限制通过限制参数的取值范围来控制模型容量，具体有如下例子在限制参数向量范数的情况下优化损失函数，一般不会使用这种正则方式
-使用均方范数作为柔性限制上述硬性限制有一个等价方案，具体如下，这就是一般的正则化方法，其作用同样也是使得参数被限制在一个较小的范围下面是正则项对最优解影响的一个演示坐标轴分别是w的各个分量，圆线是等高线。正则项给了另外一个梯度，把原始的损失函数算出的最优解往原点拉，必然会导致W的取值范围变小从而使模型复杂度降低，也就减小了过拟合。另外一种理解，正则项加入后优化目标就不再全局最优点了，所以肯定会减小训练集..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/25/d2l_6/">Read more</a></section></article><section class="paginator is-flex is-justify-content-flex-end is-flex-wrap-wrap mt-5"><span class="page-number current">1</span><a class="page-number" href="/tags/Neural-Network/page/2/">2</a><a class="extend next" rel="next" href="/tags/Neural-Network/page/2/"><i class="iconfont icon-next has-text-grey"></i></a></section></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><div style="position: sticky; top: 50px;"><main class="aside-card-container tag-widget is-in-tag-page"><h3>Tags</h3><section><a href="/tags/typography"><span class="tag post-item-tag" style="margin-bottom: 5px;">typography</span></a><a href="/tags/hexo"><span class="tag post-item-tag" style="margin-bottom: 5px;">hexo</span></a><a href="/tags/Hello"><span class="tag post-item-tag" style="margin-bottom: 5px;">Hello</span></a><a href="/tags/Neural%20Network"><span class="tag post-item-tag" style="margin-bottom: 5px;">Neural Network</span></a><a href="/tags/papers"><span class="tag post-item-tag" style="margin-bottom: 5px;">papers</span></a><a href="/tags/Dive-Into-Deep-Learning"><span class="tag post-item-tag" style="margin-bottom: 5px;">Dive-Into-Deep-Learning</span></a><a href="/tags/Neural-Network"><span class="tag post-item-tag" style="margin-bottom: 5px;">Neural-Network</span></a><a href="/tags/Asynchronous-programming"><span class="tag post-item-tag" style="margin-bottom: 5px;">Asynchronous-programming</span></a><a href="/tags/CS-Threading"><span class="tag post-item-tag" style="margin-bottom: 5px;">CS-Threading</span></a><a href="/tags/Generative-Model"><span class="tag post-item-tag" style="margin-bottom: 5px;">Generative-Model</span></a><a href="/tags/Residual-learning"><span class="tag post-item-tag" style="margin-bottom: 5px;">Residual-learning</span></a><a href="/tags/Seq2Seq-Model"><span class="tag post-item-tag" style="margin-bottom: 5px;">Seq2Seq-Model</span></a><a href="/tags/Computer%20Vision"><span class="tag post-item-tag" style="margin-bottom: 5px;">Computer Vision</span></a></section></main></div></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
+
+
+统计工具  
+
+将序列中每个元素看作随机变量，显然他们不是独立的
+在实际操作中，时序序列一般只能正向建模去预测
+要使用序列模型预测T时刻x的概率，核心是求T时刻的条件概率（似然），这里的f可看作神经网络，神经网络将训练集建模。自回归指的是用数据对见过的数据建模（因为最后预测也是在预测相同的数据），与非序列模型用数据对独立于数据的标签建模不同。
+具体如何建模？
+马尔科夫假设当前预测的数据只跟过去的tau个数据相关，tau是一个固定常数。假设x是标量数据，此时只需要将其看作回归问题，使用MLP把tau个x当..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/30/d2l_9/">Read more</a></section></article><section class="paginator is-flex is-justify-content-flex-end is-flex-wrap-wrap mt-5"><span class="page-number current">1</span><a class="page-number" href="/tags/Neural-Network/page/2/">2</a><a class="page-number" href="/tags/Neural-Network/page/3/">3</a><a class="extend next" rel="next" href="/tags/Neural-Network/page/2/"><i class="iconfont icon-next has-text-grey"></i></a></section></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><div style="position: sticky; top: 50px;"><main class="aside-card-container tag-widget is-in-tag-page"><h3>Tags</h3><section><a href="/tags/typography"><span class="tag post-item-tag" style="margin-bottom: 5px;">typography</span></a><a href="/tags/hexo"><span class="tag post-item-tag" style="margin-bottom: 5px;">hexo</span></a><a href="/tags/Hello"><span class="tag post-item-tag" style="margin-bottom: 5px;">Hello</span></a><a href="/tags/Neural%20Network"><span class="tag post-item-tag" style="margin-bottom: 5px;">Neural Network</span></a><a href="/tags/papers"><span class="tag post-item-tag" style="margin-bottom: 5px;">papers</span></a><a href="/tags/Dive-Into-Deep-Learning"><span class="tag post-item-tag" style="margin-bottom: 5px;">Dive-Into-Deep-Learning</span></a><a href="/tags/Neural-Network"><span class="tag post-item-tag" style="margin-bottom: 5px;">Neural-Network</span></a><a href="/tags/Asynchronous-programming"><span class="tag post-item-tag" style="margin-bottom: 5px;">Asynchronous-programming</span></a><a href="/tags/CS-Threading"><span class="tag post-item-tag" style="margin-bottom: 5px;">CS-Threading</span></a><a href="/tags/Generative-Model"><span class="tag post-item-tag" style="margin-bottom: 5px;">Generative-Model</span></a><a href="/tags/Residual-learning"><span class="tag post-item-tag" style="margin-bottom: 5px;">Residual-learning</span></a><a href="/tags/Seq2Seq-Model"><span class="tag post-item-tag" style="margin-bottom: 5px;">Seq2Seq-Model</span></a><a href="/tags/Computer%20Vision"><span class="tag post-item-tag" style="margin-bottom: 5px;">Computer Vision</span></a></section></main></div></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
 
 window.addEventListener('resize', $claudia.throttle(function () {
     var images = document.querySelectorAll('.js-img-fadeIn')
