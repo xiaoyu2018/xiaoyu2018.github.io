@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>D2L: NiN</title>
+      <link href="/2022/01/24/d2l_14/"/>
+      <url>/2022/01/24/d2l_14/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="NiN"><a href="#NiN" class="headerlink" title="NiN"></a>NiN</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>全连接层的问题：<ul><li>全连接层参数比卷积层的参数多很多，导致很多的内存（显存）及计算带宽占用</li><li>全连接层容易带来过拟合</li></ul></li><li>NiN思想：完全不要全连接层</li><li>NiN块：<ul><li>一个卷积层后跟两个起到全连接层的作用的卷积层</li><li>起到全连接层的作用的卷积层为1x1步幅为1无填充的卷积层</li></ul></li><li>NiN架构<ul><li>无全连接层</li><li>交替使用NiN块和步幅为2的最大池化层</li><li>最后使用全局平均池化层得到输出（通道数是类别数）<br><img src="/images/d2l/14/1.png"></li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><pre><code class="python">import torchfrom torch import nn,optimclass NiNBlock(nn.Module):    def __init__(        self,in_channels,out_channels,        kernel_size,stride,padding    ):        super().__init__()        self.conv=nn.Conv2d(            in_channels,out_channels,kernel_size,            stride=stride,padding=padding        )        self.f1=nn.Conv2d(out_channels,out_channels,1)        self.f2=nn.Conv2d(out_channels,out_channels,1)        self.relu=nn.ReLU()    def forward(self,x):        x=self.relu(self.conv(x))        x=self.relu(self.f1(x))        x=self.relu(self.f2(x))        return xnin_net=nn.Sequential(    NiNBlock(1,96,11,4,0),    nn.MaxPool2d(3,stride=2),    NiNBlock(96,256,5,1,2),    nn.MaxPool2d(3,stride=2),    NiNBlock(256,384,3,1,1),    nn.MaxPool2d(3,stride=2),nn.Dropout(),    NiNBlock(384,10,3,1,1),    # 目标输出size为1x1，也就是全局池化    nn.AdaptiveAvgPool2d(1),    nn.Flatten())loss_f=nn.CrossEntropyLoss()opt=optim.Adam(nin_net.parameters())import d2ltrain_iter,test_iter=d2l.load_data_fashion_mnist(128,resize=224)# d2l.train(#     10,loss_f,opt,nin_net,train_iter,#     device=torch.device("cuda:0"),#     save_name="NIN"# )d2l.evaluate(    nin_net,test_iter,loss_f,    "D:/code/machine_learning/limu_d2l/params/NIN_5",    device=torch.device("cuda:0"))</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>D2L: VGGNet</title>
+      <link href="/2022/01/23/d2l_13/"/>
+      <url>/2022/01/23/d2l_13/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="VGGNet"><a href="#VGGNet" class="headerlink" title="VGGNet"></a>VGGNet</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>AlexNet的设计很随意，如何变大变深无规律性，VGG探讨了如何对CNN进行扩展</li><li>如何更深更大？<ul><li>更多全连接层（太贵）</li><li>更多的卷积层</li><li>将卷积层组合成块（VGG）</li></ul></li><li>VGG块<ul><li>使用小卷积核深网络比大小卷积核浅网络效果好</li><li>3x3卷积层（n层、m通道）</li><li>2x2最大池化层<br><img src="/images/d2l/13/2.png"></li></ul></li><li>VGG架构<ul><li>多个VGG块后接全连接层</li><li>不同次数的重复块得到不同架构（VGG-16、VGG-19等）<br><img src="/images/d2l/13/1.png"></li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><pre><code class="python">import torchfrom torch import dropout, nn,optimimport d2l# 返回VGG块def vgg_block(num_convs,in_channels,out_channels):    layers=[]    for _ in range(num_convs):        layers.append(            nn.Conv2d(in_channels,out_channels,3,padding=1)            )        layers.append(nn.ReLU())        in_channels=out_channels    layers.append(nn.MaxPool2d(kernel_size=2,stride=2))        return nn.Sequential(*layers)def vgg_architecture(num_blocks,in_channels):    blocks=[]    out_channels=16    blocks.append(vgg_block(1,in_channels,out_channels))    for _ in range(num_blocks-1):        in_channels=out_channels        out_channels*=2        blocks.append(vgg_block(1,in_channels,out_channels))        return nn.Sequential(*blocks)def vgg_5(in_channels):    return nn.Sequential(        vgg_architecture(5,in_channels),        nn.Flatten(),        nn.Linear(256*7*7,1024),        nn.Dropout(),        nn.Linear(1024,512),        nn.Dropout(),        nn.Linear(512,10)    )vgg=vgg_5(1).to(torch.device("cuda:0"))train_iter,test_iter=d2l.load_data_fashion_mnist(64,224)loss_f=nn.CrossEntropyLoss()opt=optim.Adam(vgg.parameters())d2l.train(10,loss_f,opt,vgg,train_iter,save_name="vgg_5")</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: AlexNet</title>
       <link href="/2022/01/22/d2l_12/"/>
       <url>/2022/01/22/d2l_12/</url>

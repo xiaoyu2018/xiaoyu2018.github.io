@@ -2,7 +2,60 @@
 <!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="/images/tom.jpg"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/widget-post-list.css"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
 
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Xavier's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><span>Archives · 2022</span></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/22/d2l_12/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/22/d2l_12/">D2L: AlexNet</a></h2><time class="has-text-grey" datetime="2022-01-22T08:05:31.808Z">2022-01-22</time><p class="is-flex-grow-2 mt-2">
+</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Xavier's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><span>Archives · 2022</span></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/24/d2l_14/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/24/d2l_14/">D2L: NiN</a></h2><time class="has-text-grey" datetime="2022-01-24T08:13:02.319Z">2022-01-24</time><p class="is-flex-grow-2 mt-2">
+NiNBasic knowledge
+全连接层的问题：
+全连接层参数比卷积层的参数多很多，导致很多的内存（显存）及计算带宽占用
+全连接层容易带来过拟合
+
+
+NiN思想：完全不要全连接层
+NiN块：
+一个卷积层后跟两个起到全连接层的作用的卷积层
+起到全连接层的作用的卷积层为1x1步幅为1无填充的卷积层
+
+
+NiN架构
+无全连接层
+交替使用NiN块和步幅为2的最大池化层
+最后使用全局平均池化层得到输出（通道数是类别数）
+
+
+
+Implementationimport torch
+from torch import nn,optim
+
+class NiNBlock(nn.Module):
+    def __init__(
+        self,in_channels,out_channels,
+     ..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2022/01/24/d2l_14/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/23/d2l_13/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/23/d2l_13/">D2L: VGGNet</a></h2><time class="has-text-grey" datetime="2022-01-23T02:58:52.194Z">2022-01-23</time><p class="is-flex-grow-2 mt-2">
+VGGNetBasic knowledge
+AlexNet的设计很随意，如何变大变深无规律性，VGG探讨了如何对CNN进行扩展
+如何更深更大？
+更多全连接层（太贵）
+更多的卷积层
+将卷积层组合成块（VGG）
+
+
+VGG块
+使用小卷积核深网络比大小卷积核浅网络效果好
+3x3卷积层（n层、m通道）
+2x2最大池化层
+
+
+VGG架构
+多个VGG块后接全连接层
+不同次数的重复块得到不同架构（VGG-16、VGG-19等）
+
+
+
+Implementationimport torch
+from torch import dropout, nn,optim
+import d2l
+# 返回VGG块
+
+def vgg_block(num_convs,in_channels,out_channels):
+    layers..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2022/01/23/d2l_13/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2022/01/22/d2l_12/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2022/01/22/d2l_12/">D2L: AlexNet</a></h2><time class="has-text-grey" datetime="2022-01-22T08:05:31.808Z">2022-01-22</time><p class="is-flex-grow-2 mt-2">
 AlexNetBasic knowledge
 在深度学习之前：
 核方法
@@ -103,7 +156,7 @@ Convolution and PoolingBasic knowledge
 
 通道
 
-每..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2022/01/17/d2l_10/">Read more</a></section></article></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><div style="position: sticky; top: 50px;"><main class="aside-card-container archives-widget is-in-archive-page"><h3>Archives</h3><section><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">November 2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a><span class="archive-list-count">2</span></li></ul></section></main></div></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
+每..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2022/01/17/d2l_10/">Read more</a></section></article></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><div style="position: sticky; top: 50px;"><main class="aside-card-container archives-widget is-in-archive-page"><h3>Archives</h3><section><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">November 2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a><span class="archive-list-count">2</span></li></ul></section></main></div></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
 
 window.addEventListener('resize', $claudia.throttle(function () {
     var images = document.querySelectorAll('.js-img-fadeIn')
