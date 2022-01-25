@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>D2L: GoogLeNet</title>
+      <link href="/2022/01/25/d2l_15/"/>
+      <url>/2022/01/25/d2l_15/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/d2l/1/cover.png" alt="$cover"></p><h1 id="GoogLeNet"><a href="#GoogLeNet" class="headerlink" title="GoogLeNet"></a>GoogLeNet</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>Inception块<ul><li>4个路径从不同层面抽取信息，然后再输出通道合并，最终输出高宽与输入相等，要把更多的通道数留给比较重要的通道<br><img src="/images/d2l/15/1.png"></li><li>要达到相同的输出通道数，Inception块与直接的3x3或5x5卷积相比，参数和计算复杂度更低</li></ul></li><li>GoogLeNet<ul><li>5个stage（高宽减半一次就是一个stage），9个Inception块<br><img src="/images/d2l/15/2.png"></li></ul></li><li>Inception后续具有多个变种<ul><li>Inception-BN(v2)：使用batch normalization</li><li>Inception-v3：修改了inception块</li><li>Inception-v4：使用了残差连接</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><pre><code class="python">import torchfrom torch import nn,optimimport d2lclass Inception(nn.Module):    def __init__(self, in_channels, c1, c2, c3, c4, **kwargs):        super(Inception, self).__init__(**kwargs)        self.p1_1 = nn.Conv2d(in_channels, c1, kernel_size=1)        self.p2_1 = nn.Conv2d(in_channels, c2[0], kernel_size=1)        self.p2_2 = nn.Conv2d(c2[0], c2[1], kernel_size=3, padding=1)        self.p3_1 = nn.Conv2d(in_channels, c3[0], kernel_size=1)        self.p3_2 = nn.Conv2d(c3[0], c3[1], kernel_size=5, padding=2)        self.p4_1 = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)        self.p4_2 = nn.Conv2d(in_channels, c4, kernel_size=1)        self.relu=nn.ReLU()    def forward(self, x):        p1 = self.relu(self.p1_1(x))        p2 = self.relu(self.p2_2(self.relu(self.p2_1(x))))        p3 = self.relu(self.p3_2(self.relu(self.p3_1(x))))        p4 = self.relu(self.p4_2(self.p4_1(x)))        # 以通道维拼接张量        return torch.cat((p1, p2, p3, p4), dim=1)b1 = nn.Sequential(nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3),                   nn.ReLU(), nn.MaxPool2d(kernel_size=3, stride=2,                                           padding=1))b2 = nn.Sequential(nn.Conv2d(64, 64, kernel_size=1), nn.ReLU(),                   nn.Conv2d(64, 192, kernel_size=3, padding=1),                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))b3 = nn.Sequential(Inception(192, 64, (96, 128), (16, 32), 32),                   Inception(256, 128, (128, 192), (32, 96), 64),                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))b4 = nn.Sequential(Inception(480, 192, (96, 208), (16, 48), 64),                   Inception(512, 160, (112, 224), (24, 64), 64),                   Inception(512, 128, (128, 256), (24, 64), 64),                   Inception(512, 112, (144, 288), (32, 64), 64),                   Inception(528, 256, (160, 320), (32, 128), 128),                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))b5 = nn.Sequential(Inception(832, 256, (160, 320), (32, 128), 128),                   Inception(832, 384, (192, 384), (48, 128), 128),                   nn.AdaptiveAvgPool2d((1, 1)), nn.Flatten())net = nn.Sequential(b1, b2, b3, b4, b5, nn.Linear(1024, 10))loss_f=nn.CrossEntropyLoss()opt=optim.Adam(net.parameters())train_iter,test_iter=d2l.load_data_fashion_mnist(128,resize=96)# d2l.train(#     10,loss_f,opt,net,train_iter,#     device=torch.device("cuda:0"),#     save_name="GoogLeNet"# )d2l.evaluate(    net,test_iter,loss_f,    "D:/code/machine_learning/limu_d2l/params/GoogLeNet_5",    device=torch.device("cuda:0"))</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+            <tag> Neural-Network </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: NiN</title>
       <link href="/2022/01/24/d2l_14/"/>
       <url>/2022/01/24/d2l_14/</url>
