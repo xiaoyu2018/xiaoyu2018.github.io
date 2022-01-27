@@ -1,0 +1,92 @@
+<!DOCTYPE html><html class="appearance-auto" lang="en"><head><meta charset="UTF-8"><title>D2L: Batch Normalization</title><meta name="description" content="while(true) me.Learn();"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><!-- Google Analytics --><!-- End Google Analytics -->
+<!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="/images/tom.jpg"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/post.css"><link rel="stylesheet" href="/style/themes/highlight-theme-light.css"><script src="/js/highlight.pack.js"></script><meta name="description" content="
+Batch NormalizationBasic knowledge
+问题
+损失出现在最后，由BP算法和梯度消失，后面的层训练的会更快
+数据在最前面，前面的层训练的慢且前面的层变化后面的层也要跟着变（抽取的底层信息变化让后面的层要重新学），所以后面的层要重新学习很多次，导致收敛变慢
+考虑在学习底部层时避免变化顶部层
+
+
+批量归一化
+固定小批量里面的均值和方差，然后再做额外的调整（可学习的参数gama和beta）
+是线性变换
+作用在
+全连接层和卷积层输出后，激活函数前
+全连接层和卷积层输入前
+
+
+对于全连接层作用于特征维
+对于卷积层作用于通道维（将每一个像素都当作一个样本，通道数就是一个样本的特征数）
+
+
+批量归一化在做什么？
+最初的论文是想用它来减少内部协变量转移（使每一层的输出分布变化不那么剧烈）
+后续.."><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Xavier's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><div class="is-full-height" id="postTopic"><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">D2L: Batch Normalization</p><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">Click back to the top</p></div></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><main class="container is-max-widescreen content section post-page pt-4 px-4"><div class="columns is-flex-desktop is-justify-content-center is-flex-direction-row-reverse"><div class="column is-3 is-hidden-mobile"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Basic-knowledge"><span class="toc-text">Basic knowledge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implementation"><span class="toc-text">Implementation</span></a></li></ol></li></ol></div><div class="column is-9"><header class="my-4"><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h1 class="mt-0 mb-1 is-family-serif" id="postTitle">D2L: Batch Normalization</h1><time class="has-text-grey" datetime="2022-01-27T04:16:47.198Z">2022-01-27</time><article class="mt-2 post-content"><p><img src="/images/d2l/1/cover.png" alt="$cover"></p>
+<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul>
+<li>问题<ul>
+<li>损失出现在最后，由BP算法和梯度消失，后面的层训练的会更快</li>
+<li>数据在最前面，前面的层训练的慢且前面的层变化后面的层也要跟着变（抽取的底层信息变化让后面的层要重新学），所以后面的层要重新学习很多次，导致收敛变慢</li>
+<li>考虑在学习底部层时避免变化顶部层</li>
+</ul>
+</li>
+<li>批量归一化<ul>
+<li>固定小批量里面的均值和方差，然后再做额外的调整（可学习的参数gama和beta）<br><img src="/images/d2l/16/1.png"></li>
+<li>是线性变换</li>
+<li>作用在<ul>
+<li>全连接层和卷积层输出后，激活函数前</li>
+<li>全连接层和卷积层输入前</li>
+</ul>
+</li>
+<li>对于全连接层作用于特征维</li>
+<li>对于卷积层作用于通道维（将每一个像素都当作一个样本，通道数就是一个样本的特征数）</li>
+</ul>
+</li>
+<li>批量归一化在做什么？<ul>
+<li>最初的论文是想用它来减少内部协变量转移（使每一层的输出分布变化不那么剧烈）</li>
+<li>后续有论文指出，批量归一化可能只是在小批量中加入噪声控制模型复杂度</li>
+</ul>
+</li>
+<li>总结<ul>
+<li>批量归一化固定小批量中的均值和方差，然后学习出适合的偏移和缩放</li>
+<li>批量归一化可以加速收敛（可以设置更大的学习率），一般不改变模型精度<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2></li>
+</ul>
+</li>
+</ul>
+<pre><code class="python">from torch import nn,optim
+import torch
+import torch
+
+net=nn.Sequential(
+    nn.Conv2d(1,6,kernel_size=5,padding=2),nn.BatchNorm2d(6),
+    nn.AvgPool2d(2),nn.Sigmoid(),
+    nn.Conv2d(6,16,5),nn.BatchNorm2d(16),
+    nn.AvgPool2d(2,2),nn.Sigmoid(),nn.Flatten(),
+    nn.Linear(16*5*5,120),nn.BatchNorm1d(120),
+    nn.Sigmoid(),
+    nn.Linear(120,84),nn.BatchNorm1d(84),
+    nn.Sigmoid(),
+    nn.Linear(84,10)
+)
+loss_f=nn.CrossEntropyLoss()
+opt=optim.Adam(net.parameters(),lr=1.0)
+
+import d2l
+
+
+train_iter,test_iter=d2l.load_data_fashion_mnist(256)
+
+# d2l.train(
+#     10,nn.CrossEntropyLoss(),
+#     optim.Adam(net.parameters()),
+#     net,train_iter,save_name="LeNet_bn",
+#     device=torch.device("cuda:0"))
+d2l.evaluate(
+    net,test_iter,nn.CrossEntropyLoss(),
+    param_path="D:/code/machine_learning/limu_d2l/params/LeNet_bn_10",
+    device=torch.device("cuda:0")
+)
+</code></pre>
+</article><section class="jump-container is-flex is-justify-content-space-between my-6"><!-- em is empty placeholder--><em></em><a class="button is-default" href="/2022/01/25/d2l_15/" title="D2L: GoogLeNet"><span class="has-text-weight-semibold">Next: D2L: GoogLeNet</span><i class="iconfont icon-next ml-2 has-text-grey"></i></a></section><article class="mt-6 comment-container"><script async repo="xiaoyu2018/xiaoyu2018.github.io" src="https://utteranc.es/client.js" issue-term="pathname" theme="preferred-color-scheme"></script></article></div></div></main></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/xiaoyu2018"><i class="iconfont icon-github"></i></a><!-- Ins--><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--></section><p><span>Copyright ©</span><span> Xavier 2022</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script src="/js/post.js"></script></body></html>
