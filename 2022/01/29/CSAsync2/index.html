@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>C# Asynchronous programming #2 | Xavier's blog</title><meta name="keywords" content="Asynchronous-programming,CS-Threading"><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="C# Asynchronous programming #2ThreadThread Safety 本地状态与共享状态 Local 本地独立：CLR为每个线程分配自己的内存栈，以便使本地变量保持独立 Shared 共享：如果多个线程引用到了同一个对象实例，那么他们就共享了数据；被Lambad表达式或匿名委托捕获的本地变量，会被编译器转化为字段（field），所以也会被共享；静态字段也会在线程间共享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C# Asynchronous programming #2">
+<meta property="og:url" content="http://example.com/2022/01/29/CSAsync2/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="C# Asynchronous programming #2ThreadThread Safety 本地状态与共享状态 Local 本地独立：CLR为每个线程分配自己的内存栈，以便使本地变量保持独立 Shared 共享：如果多个线程引用到了同一个对象实例，那么他们就共享了数据；被Lambad表达式或匿名委托捕获的本地变量，会被编译器转化为字段（field），所以也会被共享；静态字段也会在线程间共享">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/3.png">
+<meta property="article:published_time" content="2022-01-29T06:13:36.040Z">
+<meta property="article:modified_time" content="2022-01-29T06:13:36.040Z">
+<meta property="article:author" content="Xavier">
+<meta property="article:tag" content="Asynchronous-programming">
+<meta property="article:tag" content="CS-Threading">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/3.png"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2022/01/29/CSAsync2/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C# Asynchronous programming #2',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-29 14:13:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">25</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/3.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C# Asynchronous programming #2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-01-29T06:13:36.040Z" title="Created 2022-01-29 14:13:36">2022-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-01-29T06:13:36.040Z" title="Updated 2022-01-29 14:13:36">2022-01-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C#</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C# Asynchronous programming #2"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="C-Asynchronous-programming-2"><a href="#C-Asynchronous-programming-2" class="headerlink" title="C# Asynchronous programming #2"></a>C# Asynchronous programming #2</h1><h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a><strong>Thread</strong></h2><h3 id="Thread-Safety"><a href="#Thread-Safety" class="headerlink" title="Thread Safety"></a><strong>Thread Safety</strong></h3><ul>
+<li>本地状态与共享状态<ul>
+<li>Local 本地独立：CLR为每个线程分配自己的内存栈，以便使本地变量保持独立</li>
+<li>Shared 共享：如果多个线程引用到了同一个对象实例，那么他们就共享了数据；被Lambad表达式或匿名委托捕获的本地变量，会被编译器转化为字段（field），所以也会被共享；静态字段也会在线程间共享</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        <span class="hljs-comment">/*本地变量不共享*/</span><br>        <span class="hljs-comment">//打印六次hello...</span><br>        Thread thread = <span class="hljs-keyword">new</span> Thread(GO);<br>        thread.Start();<br>        GO();<br>        <span class="hljs-comment">/*同一实例共享*/</span><br>        <span class="hljs-comment">//打印一次Done！</span><br>        ThreadTest test = <span class="hljs-keyword">new</span> ThreadTest();<br>        <span class="hljs-keyword">new</span> Thread(test.Test).Start();<br>        Thread.Sleep(<span class="hljs-number">1000</span>);<br>        test.Test();<br>        <span class="hljs-comment">/*匿名委托共享*/</span><br>        <span class="hljs-comment">//打印一次Done</span><br>        <span class="hljs-built_in">bool</span> done = <span class="hljs-literal">false</span>;<br>        ThreadStart action = () =&gt;<br>            {<br>                <span class="hljs-keyword">if</span> (!done)<br>                {<br>                    <span class="hljs-comment">//此处还是会有输出多次的风险</span><br>                    done = <span class="hljs-literal">true</span>;<br>                    System.Console.WriteLine(<span class="hljs-string">"Done"</span>);<br>                }<br>            };<br>        <span class="hljs-keyword">new</span> Thread(action).Start();<br>        Thread.Sleep(<span class="hljs-keyword">new</span> TimeSpan(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>));<br>        action.Invoke();<br>        <span class="hljs-comment">/*静态字段共享*/</span><br>        <span class="hljs-comment">//打印一次Done！</span><br>        ThreadTest test1 = <span class="hljs-keyword">new</span> ThreadTest();<br>        ThreadTest test2 = <span class="hljs-keyword">new</span> ThreadTest();<br>        <span class="hljs-keyword">new</span> Thread(test1.AnotherTest).Start();<br>        Thread.Sleep(<span class="hljs-number">10</span>);<br>        test2.AnotherTest();<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">GO</span>(<span class="hljs-params"></span>)</span><br>    {   <br>        <span class="hljs-comment">//cycle是本地变量，属于本地状态</span><br>        <span class="hljs-comment">//在每个线程的内存栈上，都会创建cycle的 独立副本</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> cycle = <span class="hljs-number">0</span>;  cycle&lt; <span class="hljs-number">3</span>; cycle++)<br>        {<br>            System.Console.WriteLine(<span class="hljs-string">"hello..."</span>);<br>        }<br>    }<br><br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadTest</span><br>{<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">bool</span> _done;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> done;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">AnotherTest</span>(<span class="hljs-params"></span>)</span><br>    {<br>        <span class="hljs-comment">//此处还是会有输出多次的风险</span><br>        <span class="hljs-keyword">if</span>(!done)<br>        {<br>            System.Console.WriteLine(<span class="hljs-string">"DONE!"</span>);<br>            done = <span class="hljs-literal">true</span>;<br>        }<br>    }<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Test</span>(<span class="hljs-params"></span>)</span><br>    {<br>        <span class="hljs-comment">//此处还是会有输出多次的风险</span><br>        <span class="hljs-keyword">if</span>(!_done)<br>        {<br>            System.Console.WriteLine(<span class="hljs-string">"Done!"</span>);<br>            _done = <span class="hljs-literal">true</span>;<br>        }<br>    }<br><br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>线程安全<ul>
+<li>上述后涉及线程共享数据的代码是缺乏线程安全的，其实际输出无法确定，理论上Done有可能会打印两次，因为一个线程可能正在评估if，而另一个语句没来得及调整<code>done</code>为<code>true</code></li>
+<li>保证线程安全：消除代码执行过程中的不确定性<ol>
+<li>尽可能的避免使用共享状态以保证线程安全</li>
+<li>使用<code>lock</code>语句加锁，在读取和写入共享数据的时候，通过使用互斥锁，就可以修复前面代码中的问题，当两个线程同时竞争一个锁的时候（锁可以基于任何引用类型对象），一个线程会等待或阻塞，直到锁重新变成可用状态</li>
+</ol>
+</li>
+<li>然而，lock也并非线程安全的银弹，lock也会引起一些其他问题（如死锁）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">readonly</span> <span class="hljs-built_in">object</span> locker=<span class="hljs-keyword">new</span> <span class="hljs-built_in">object</span>();<br>    <span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> done;<br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        <span class="hljs-keyword">new</span> Thread(GO).Start();<br>        GO();<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">GO</span>(<span class="hljs-params"></span>)</span><br>    {<br>        <span class="hljs-comment">// 锁要基于引用类型的变量</span><br>        <span class="hljs-comment">// 线程安全</span><br>        <span class="hljs-keyword">lock</span>(locker)<br>        {<br>            <span class="hljs-keyword">if</span> (!done)<br>            {<br>                System.Console.WriteLine(<span class="hljs-string">"Done"</span>);<br>                Thread.Sleep(<span class="hljs-number">1000</span>);<br>                done = <span class="hljs-literal">true</span>;<br>            }<br>        }<br>    }<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<h3 id="Transfer-Parameter"><a href="#Transfer-Parameter" class="headerlink" title="Transfer Parameter"></a><strong>Transfer Parameter</strong></h3><ul>
+<li>如果想往线程启动方法里传递参数，最简单的方式就是使用lambda表达式，在里面使用参数调用方法</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>    {<br>        <br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>        {<br>            <span class="hljs-keyword">new</span> Thread(() =&gt; { Print(<span class="hljs-string">"hello world"</span>); }).Start();<br><br>        }<br><br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Print</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> s</span>)</span><br>        {<br>            System.Console.WriteLine(s);<br>        }<br>    }<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>还可以使用<code>Thread.Start</code>方法来传递参数，类似委托中<code>Invoke</code>时的传参<ul>
+<li>Thread的重载构造函数可以接受下列两个委托之一作为参数：<ol>
+<li><code>public delegate void ThreadStart();</code></li>
+<li><code>public delegate void ParameterizedThreadStart(object obj);</code></li>
+</ol>
+</li>
+<li>第二种委托接收带参数的方法名</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        Thread thread = <span class="hljs-keyword">new</span> Thread(Print);<br>        thread.Start(<span class="hljs-string">"hello world"</span>);<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Print</span>(<span class="hljs-params"><span class="hljs-built_in">object</span> s</span>)</span><br>    {<br>        s = s <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>;<br>        System.Console.WriteLine(s);<br>    }<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>需要注意的是lambda表达式（匿名委托）传的参数会当作字段，即就算传的是值类型的变量也会得到其地址并被线程共享；而第二种传参强制要求了引用变量，也会被线程共享</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{  <br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        <span class="hljs-comment">// Thread1();</span><br>        Thread2();<br>    }<br><br>    <span class="hljs-comment">// 线程共享了同一个局部变量i</span><br>    <span class="hljs-comment">// 会出现重复的数</span><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Thread1</span>(<span class="hljs-params"></span>)</span><br>    {<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)<br>        {<br>            <span class="hljs-keyword">new</span> Thread(() =&gt; { System.Console.WriteLine(i); }).Start();<br>        }<br>    }<br>    <span class="hljs-comment">// 每个线程获得不同局部变量的地址</span><br>    <span class="hljs-comment">// 不会出现重复的数</span><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Thread2</span>(<span class="hljs-params"></span>)</span><br>    {<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)<br>        {<br>            <span class="hljs-built_in">int</span> temp = i;<br>            <span class="hljs-keyword">new</span> Thread(() =&gt; { System.Console.WriteLine(temp); }).Start();<br>        }<br>    }<br>    <br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a><strong>Exception</strong></h3><ul>
+<li>异常处理块种的线程抛出异常时，不会被捕获，解决方案是传入线程的方法中处理异常</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{  <br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        <span class="hljs-comment">// 正常捕获</span><br>        <span class="hljs-keyword">new</span> Thread(Go2).Start();<br>        <span class="hljs-comment">// 无法捕获</span><br>        <span class="hljs-keyword">try</span><br>        {<br>            <span class="hljs-keyword">new</span> Thread(Go1).Start();<br>        }<br>        catch<br>        {<br>            System.Console.WriteLine(<span class="hljs-string">"Exceptoin!"</span>);<br>        }<br>    }   <br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Go1</span>(<span class="hljs-params"></span>)</span><br>    {<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Exception();<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Go2</span>(<span class="hljs-params"></span>)</span><br>    {<br>        <span class="hljs-keyword">try</span><br>        {<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Exception();<br>        }<br><br>        catch<br>        {<br>            System.Console.WriteLine(<span class="hljs-string">"catch sucessfully"</span>);<br>        }<br>    }<br>    <br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<h3 id="Foreground-Threads-and-Background-Threads"><a href="#Foreground-Threads-and-Background-Threads" class="headerlink" title="Foreground Threads and Background Threads"></a><strong>Foreground Threads and Background Threads</strong></h3><ul>
+<li>默认情况下，手动创建的线程就是前台线程</li>
+<li>只要有前台线程在运行，那么应用程序就会一直处于活动状态<ul>
+<li>后台线程运行不会保持应用程序的活动状态</li>
+<li>一旦所有前台线程停止，应用程序随即停止，后台线程也会立即终止</li>
+</ul>
+</li>
+<li>线程的前台、后台与它的优先级无关</li>
+<li>通过<code>IsBackground</code>属性判断线程是否是后台线程</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{  <br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        Thread thread = <span class="hljs-keyword">new</span> Thread(() =&gt; { Console.WriteLine(Console.ReadLine());});<br>        <br>        <span class="hljs-comment">// 如果将thread设置为后台线程，当主线程（前台线程）执行完之后程序立即结束</span><br>        <span class="hljs-keyword">if</span>(args.Length&gt;<span class="hljs-number">0</span>)<br>            thread.IsBackground = <span class="hljs-literal">true</span>;<br><br>        thread.Start();<br>    }   <br>    <br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>如果在退出前想要等待后台线程执行完毕，可以考虑使用<code>Join</code></li>
+<li>应用程序无法正常退出的一个常见原因就是还有活跃的前台线程</li>
+</ul>
+<h3 id="Priority-of-Threading"><a href="#Priority-of-Threading" class="headerlink" title="Priority of Threading"></a><strong>Priority of Threading</strong></h3><ul>
+<li>线程的优先级（<code>Thread</code>中<code>Priority</code>属性）决定了相对于操作系统中其他活跃线程所占的执行时间</li>
+<li>优先级划分：<ul>
+<li><code>enum ThreadPriority{Lowest,BelowNormal,Normal,AboveNormal,Highest}</code></li>
+</ul>
+</li>
+<li>提升线程优先级：<ul>
+<li>提升线程优先级时要特别注意，因为他可能饿死其他线程</li>
+<li>如果想让某线程的优先级比其他进程中的线程优先级高，那么就必须提升进程优先级</li>
+</ul>
+</li>
+<li>手动提升进程/线程优先级适用于只做少量工作且需要较低延迟的非UI进程</li>
+<li>对于需要大量计算的应用程序（尤其是带UI的），手动提升进程/线程优先级可能会使其他进程/线程饿死，从而降低整个计算机的速度</li>
+</ul>
+<h3 id="Signaling"><a href="#Signaling" class="headerlink" title="Signaling"></a><strong>Signaling</strong></h3><ul>
+<li>某个线程在收到其他线程发来通知之前一直处于等待状态，发送通知的过程就称为Signaling，不同于信号量机制</li>
+<li>最简单的信号结构就是<code>ManualResetEvent</code><ul>
+<li>调用其上<code>WaitOne</code>方法会阻塞当前线程，直到另一个线程通过调用<code>Set</code>方法开启信号</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span><br>{ <br>    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] args</span>)</span><br>    {<br>        <span class="hljs-keyword">var</span> signal = <span class="hljs-keyword">new</span> ManualResetEvent(<span class="hljs-literal">false</span>);<br><br>        <span class="hljs-keyword">new</span> Thread(() =&gt;<br>        {<br>            System.Console.WriteLine(<span class="hljs-string">"Waiting for signal..."</span>);<br>            <span class="hljs-comment">// 因为在实例化时设置了false主线程打开信号之前处于阻塞状态</span><br>            <span class="hljs-comment">// 成功接收到信号时不会将signal状态重置为nonusignaled</span><br>            signal.WaitOne();<br>            <span class="hljs-comment">// 获得信号后直接关闭该信号量</span><br>            System.Console.WriteLine(<span class="hljs-string">"Got signal!"</span>);<br>        }).Start();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)<br>        {<br>            System.Console.WriteLine(i);<br>        }<br>        Thread.Sleep(<span class="hljs-number">1000</span>);<br>        signal.Set();<br>    }   <br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>调用完<code>Set</code>后信号会处于signaled状态，通过调用<code>Reset</code>将信号重新变为nonsignaled状态</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Asynchronous-programming/">Asynchronous-programming</a><a class="post-meta__tags" href="/tags/CS-Threading/">CS-Threading</a></div><div class="post_share"><div class="social-share" data-image="/img/3.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#C-Asynchronous-programming-2"><span class="toc-number">1.</span> <span class="toc-text">C# Asynchronous programming #2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Thread"><span class="toc-number">1.1.</span> <span class="toc-text">Thread</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Thread-Safety"><span class="toc-number">1.1.1.</span> <span class="toc-text">Thread Safety</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transfer-Parameter"><span class="toc-number">1.1.2.</span> <span class="toc-text">Transfer Parameter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exception"><span class="toc-number">1.1.3.</span> <span class="toc-text">Exception</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Foreground-Threads-and-Background-Threads"><span class="toc-number">1.1.4.</span> <span class="toc-text">Foreground Threads and Background Threads</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Priority-of-Threading"><span class="toc-number">1.1.5.</span> <span class="toc-text">Priority of Threading</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Signaling"><span class="toc-number">1.1.6.</span> <span class="toc-text">Signaling</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

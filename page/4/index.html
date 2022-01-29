@@ -1,9 +1,184 @@
-<!DOCTYPE html><html class="appearance-auto" lang="en"><head><meta charset="UTF-8"><title>Xavier's blog</title><meta name="description" content="while(true) me.Learn();"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><!-- Google Analytics --><!-- End Google Analytics -->
-<!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="/images/tom.jpg"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/widget-post-list.css"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Xavier's blog</title><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="Xavier&#39;s blog">
+<meta property="og:url" content="http://example.com/page/4/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/37758182?v=4">
+<meta property="article:author" content="Xavier">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/37758182?v=4"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/page/4/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Xavier\'s blog',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-01-29 14:31:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Xavier's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><article class="post-container is-flex is-justify-content-center section container is-max-widescreen pt-4 px-2"><div class="columns is-variable is-1-tablet is-3-desktop-only is-2-widescreen is-full-width"><section class="column"><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/24/d2l_4/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/24/d2l_4/">D2L: Perceptron</a></h2><time class="has-text-grey" datetime="2021-11-24T08:09:16.313Z">2021-11-24</time><p class="is-flex-grow-2 mt-2">
-PerceptronBasic Knowledge
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">25</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('/img/1.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Xavier's blog</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/29/d2l_5/" title="D2L: Modle Selection">D2L: Modle Selection</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-29T06:17:45.836Z" title="Created 2022-01-29 14:17:45">2022-01-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Machine-Learning/">Machine Learning</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/Neural-Network/">Neural-Network</a></span></div><div class="content">Modle SelectionBasic Knowledge
+训练误差和泛化误差  
+训练误差：模型在训练数据上的误差（不太关心）
+泛化误差：模型在新数据上的误差（很关心）
+
+
+验证数据集和测试数据集
+验证数据集用于在训练过程中评估模型好坏的数据集，一般从训练集中划分出一部分，验证数据集不能作为训练集让模型训练，用来动态调整模型超参数
+测试数据集模型最终训练完毕后，使用测试集测试模型泛化能力，不能使用测试集来调整模型超参数，大多数情况下不会被打上标签
+
+
+K-折交叉验证通常情况下，我们都没有足够富裕的数据去从训练集中划分验证集，这是使用K-折交叉验证能较简单的解决问题
+思想：一般情况将K折交叉验证用于模型调优，找到使得模型泛化性能最优的超参值。找到后，在全部训练集上重新训练模型，并使用独立验证集对模型性能做出最终评价。
+算法：K折就将训练集分为K块，训练代价为原来的K倍
+将原始数据集划分为相等的K部分（“折”）
+将第i部分作为验证集，其余作为训练集
+训练模型，计算模型在验证集上的准确率
+每次用不同的部分i作为验证集，重复步骤2和3 K次
+将平均准确率作为使用当前超参时的模型准确率
+找到 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/29/d2l_4/" title="D2L: Perceptron">D2L: Perceptron</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-29T06:17:40.810Z" title="Created 2022-01-29 14:17:40">2022-01-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Machine-Learning/">Machine Learning</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/Neural-Network/">Neural-Network</a></span></div><div class="content">PerceptronBasic Knowledge
 感知机  
 模型感知机只比线性分类多了一个激活函数，激活函数为单层感知机带来了分类能力，为多层感知机带来了非线性因素
 训练训练感知机等价于批量大小为1的梯度下降，按顺序逐个取样本，与随机梯度下降不同
@@ -20,25 +195,14 @@ PerceptronBasic Knowledge
 Implementation
 从零实现
 
-from torch import nn,..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/24/d2l_4/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/23/d2l_3/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/23/d2l_3/">D2L: Softmax Regression</a></h2><time class="has-text-grey" datetime="2021-11-23T14:29:44.147Z">2021-11-23</time><p class="is-flex-grow-2 mt-2">
-Softmax RegressionBasic Knowledge
+1234567891011121314151617181920212223242526272829303132333435363738from torch import nn,optimtrain_iter,_=LoadData(256)num_in,num_out,num_h=784,10,256# 隐层参数w1=torch ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/29/d2l_3/" title="D2L: Softmax Regression">D2L: Softmax Regression</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-29T06:17:32.432Z" title="Created 2022-01-29 14:17:32">2022-01-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Machine-Learning/">Machine Learning</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/Neural-Network/">Neural-Network</a></span></div><div class="content">Softmax RegressionBasic Knowledge
 softmax操作子将输出变为一个概率分布（保证非负性与归一性）
 交叉熵损失用于衡量两个概率分布的区别,将softmax输出的分布与one-hot形式的标签作为两个分布
 
 Implementation
 数据集
 
-import torch
-import torchvision
-from torch.utils import data
-from torchvision import transforms
-
-def LoadData(batch_size,resize=None):
-    # 用于把图片转为Tensor，会自动归一化
-    trans=[transforms.ToTensor()]
-    if resize:
-      ..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/23/d2l_3/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/d2l/1/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/23/d2l_2/"><img class="post-cover-img js-img-fadeIn" src="/images/d2l/1/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Dive-Into-Deep-Learning"><i class="tag post-item-tag">Dive-Into-Deep-Learning</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/23/d2l_2/">D2L: Linear Regression</a></h2><time class="has-text-grey" datetime="2021-11-23T07:59:48.186Z">2021-11-23</time><p class="is-flex-grow-2 mt-2">
-Linear RegressionBasic Knowledge
+1234567891011121314151617181920212223242526import torchimport torchvisionfrom torch.utils import datafrom torchvision import transformsdef LoadData(batch_size,resize=None):    # 用于把图片转为Tensor，会自动归一化    trans=[transforms.ToTensor()]    if resize:        trans.insert(0,transforms.Resize(resize))    trans=transforms.Compose(trans)        train_data=torchvision. ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/29/d2l_2/" title="D2L: Linear Regression">D2L: Linear Regression</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-29T06:17:09.187Z" title="Created 2022-01-29 14:17:09">2022-01-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Machine-Learning/">Machine Learning</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/Neural-Network/">Neural-Network</a></span></div><div class="content">Linear RegressionBasic Knowledge
 线性模型  
 基本的线性模型可抽象为如下表示,其可以看作一个单层单神经元的神经网络
 线性模型有显示解
@@ -53,166 +217,57 @@ Linear RegressionBasic Knowledge
 Implementation
 从零实现
 
-import random
-import torch
-from torch.utils.data.dataloader import DataLoader
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283import randomimport torchfrom torch.utils.data.dataloader import DataLoadertrue_w=t ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/29/d2l_1/" title="D2L: Matrix">D2L: Matrix</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-29T06:15:24.649Z" title="Created 2022-01-29 14:15:24">2022-01-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Machine-Learning/">Machine Learning</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/Neural-Network/">Neural-Network</a></span></div><div class="content">MatrixBasic knowledge
+标量
 
-true_w=torch.tenso..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/23/d2l_2/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/transformer/transformer.jpg" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/22/Transformer/"><img class="post-cover-img js-img-fadeIn" src="/images/transformer/transformer.jpg" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/papers"><i class="tag post-item-tag">papers</i></a><a href="/tags/Neural-Network"><i class="tag post-item-tag">Neural-Network</i></a><a href="/tags/Seq2Seq-Model"><i class="tag post-item-tag">Seq2Seq-Model</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/22/Transformer/">Transformer</a></h2><time class="has-text-grey" datetime="2021-11-22T08:36:52.958Z">2021-11-22</time><p class="is-flex-grow-2 mt-2">
-Attention Is All Your Need以往主流的序列转录(seq2seq)模型中常常基于包含Encoder与Decoder的复杂RNN或CNN，这些模型也会在Encoder与Decoder中使用Attention机制。Transformer仅仅使用了Attention机制，完全没用到循环和卷积，将循环层换为了Multi-headed Attetion。Transformer训练速度更快，预测能力更好。  
+1234x=torch.tensor([1.0])y=torch.tensor([2.0])print(x+y,x*y,x/y,x**y)
 
-Advantages
-RNN难以并行计算计算效率低，Transformer可并行。
-RNN带有时序信息，但在序列较长时，早期的信息可能在后期丢失。Attention可通过在输入序列中加入index增加时序，并且不会存在信息丢失问题。
-用CNN可以替换掉RNN实现并行计算，但由于感受野的限..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/22/Transformer/">Read more</a></section></article><article class="post-item-card"><header class="is-relative is-flex"><div class="post-cover-backdrop is-hidden"><img src="/images/CSAsynchronousProgramming/cover.png" alt="loading.."></div><a class="post-cover-link has-text-centered skeleton" href="/2021/11/22/CSAsync3/"><img class="post-cover-img js-img-fadeIn" src="/images/CSAsynchronousProgramming/cover.png" alt="loading.." data-backdrop="true"></a></header><section class="content post-card-content p-4 pb-5"><header><a href="/tags/Asynchronous-programming"><i class="tag post-item-tag">Asynchronous-programming</i></a><a href="/tags/CS-Threading"><i class="tag post-item-tag">CS-Threading</i></a></header><h2 class="mt-4 mb-0 is-family-serif"><a href="/2021/11/22/CSAsync3/">C# Asynchronous programming #3</a></h2><time class="has-text-grey" datetime="2021-11-22T08:36:21.830Z">2021-11-22</time><p class="is-flex-grow-2 mt-2">
-C# Asynchronous programming #3ThreadUse Thread in Applications
-在带界面的WPF、UWP、WinForm等程序种，若主线程执行耗时的操作，就会导致整个程序无响应。因为主线程同时还要处理消息循环，而渲染和鼠标键盘事件处理等工作都是在消息循环中执行的
-针对这种耗时的操作，一种流行的做法使启用一个worker线程，执行完操作后再更新到UI
-富客户端应用的线程模型通常是：
-UI控件只能从创建他们的线程来进行访问（通常是主线程）
-当想从worker线程更新UI时，应该把请求交给UI线程
+向量
+
+12x=torch.arange(4)print(x,x[3],len(x),x.shape,x.size())
+
+矩阵
+
+1234x=torch.eye(20)x=torch.arange(20).view(5,4)print(x,x.T,x.t())print(torch.arange(24).reshape(2,3,4))
 
 
+运算
 
-Synchronization Contexts
-在System.ComponentModel下有一个抽象类：SynchronizationContext，它使得T..</p><a class="button is-default mt-2 has-text-weight-semibold" href="/2021/11/22/CSAsync3/">Read more</a></section></article><section class="paginator is-flex is-justify-content-flex-end is-flex-wrap-wrap mt-5"><a class="extend prev" rel="prev" href="/page/3/"><i class="iconfont icon-prev has-text-grey"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="iconfont icon-next has-text-grey"></i></a></section></section><aside class="column is-hidden-mobile is-4-tablet is-3-widescreen"><style>.search-widget .search-input {
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--second-text-color);
-}
-.search-widget .search-content {
-    position: absolute;
-    left: 0;
-    top: calc(100% - 3px);
-    z-index: 2;
-
-    width: 100%;
-    height: 0;
-    max-height: 550px;
-
-    overflow: auto;
-    box-sizing: border-box;
-
-    background: var(--top-bar-bg-color);
-    backdrop-filter: blur(var(--backdropFilter));
-    -webkit-backdrop-filter: blur(var(--backdropFilter));
-
-    border-bottom-left-radius: var(--borderRadius);
-    border-bottom-right-radius: var(--borderRadius);
-    box-shadow: 0 12px 15px rgba(0, 0, 0, 0.08);
-}
-
-.search-widget .search-content a:hover h5 {
-    color: #3273dc!important;
-}
-</style><main class="aside-card-container search-widget is-relative"><label for="searchInput"><div class="is-flex px-4" id="searchButton"><i class="iconfont icon--search1 mr-1"></i><input class="search-input is-flex-grow-1" id="searchInput" placeholder="Search everything.."></div></label><section class="search-content content" id="searchContent"></section></main><script>var searchDatabase = []
-var searchInputEl = document.getElementById('searchInput')
-var searchButtonEl = document.getElementById('searchButton')
-var searchResultEl = document.getElementById('searchContent')
-
-searchInputEl.oninput = function (evt) {
-    var searchValue = evt.srcElement.value
-    var haveSearchValue = Boolean(searchValue.trim())
-    if (!haveSearchValue) {
-        searchResultEl.style.height = 0
-        searchResultEl.innerHTML = null
-        return
-    }
-
-    var searchResults = searching(searchValue)
-
-    if (searchResults.length > 0) {
-        renderSearchResults(searchResults)
-    }
-}
-
-function renderSearchResults(results) {
-    searchResultEl.innerHTML = null
-    var fragment = document.createDocumentFragment()
-
-    results.forEach(function (item) {
-        var link = document.createElement('a')
-        var title = document.createElement('h5')
-        var content = document.createElement('p')
-
-        title.className = 'mb-1'
-        title.innerText = item.title
-        content.innerText = item.content
-
-        link.href = item.link
-        link.appendChild(title)
-        link.appendChild(content)
-        link.className = 'p-4 is-block'
-
-        fragment.appendChild(link)
+123456789101112131415161718192021222324252627A=torch.arange(20,dtype=torch.float32).view(5,4)B=A.clone() #创建A的副本给B，A与B指向不同地址C=B  #B与C指向相同地址# B，C都会改变C[0,:] = 0print(A,B,C)# 矩阵加 点乘 每个元素求sinprint(A+B,A*B,torch.sin(A))A=torch.arang ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/5/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xavier</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">25</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xiaoyu2018"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/01/29/VIT/" title="Vison in Transformer">Vison in Transformer</a><time datetime="2022-01-29T06:19:17.911Z" title="Created 2022-01-29 14:19:17">2022-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/01/29/Transformer/" title="Transformer">Transformer</a><time datetime="2022-01-29T06:19:03.569Z" title="Created 2022-01-29 14:19:03">2022-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/01/29/resnet/" title="ResNet">ResNet</a><time datetime="2022-01-29T06:18:59.404Z" title="Created 2022-01-29 14:18:59">2022-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/01/29/Gan0/" title="GAN #1">GAN #1</a><time datetime="2022-01-29T06:18:55.732Z" title="Created 2022-01-29 14:18:55">2022-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/01/29/d2l_16/" title="D2L: Batch Normalization">D2L: Batch Normalization</a><time datetime="2022-01-29T06:18:39.759Z" title="Created 2022-01-29 14:18:39">2022-01-29</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/C/"><span class="card-category-list-name">C#</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Genesis/"><span class="card-category-list-name">Genesis</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Machine-Learning/"><span class="card-category-list-name">Machine Learning</span><span class="card-category-list-count">20</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/notes/"><span class="card-category-list-name">notes</span><span class="card-category-list-count">1</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/Asynchronous-programming/" style="font-size: 1.23em; color: #999ea6">Asynchronous-programming</a> <a href="/tags/CS-Threading/" style="font-size: 1.23em; color: #999ea6">CS-Threading</a> <a href="/tags/Computer-Vision/" style="font-size: 1.1em; color: #999">Computer Vision</a> <a href="/tags/Dive-Into-Deep-Learning/" style="font-size: 1.37em; color: #99a4b2">Dive-Into-Deep-Learning</a> <a href="/tags/Generative-Model/" style="font-size: 1.1em; color: #999">Generative-Model</a> <a href="/tags/Hello/" style="font-size: 1.1em; color: #999">Hello</a> <a href="/tags/Neural-Network/" style="font-size: 1.1em; color: #999">Neural Network</a> <a href="/tags/Neural-Network/" style="font-size: 1.5em; color: #99a9bf">Neural-Network</a> <a href="/tags/Residual-learning/" style="font-size: 1.1em; color: #999">Residual-learning</a> <a href="/tags/Seq2Seq-Model/" style="font-size: 1.1em; color: #999">Seq2Seq-Model</a> <a href="/tags/hexo/" style="font-size: 1.1em; color: #999">hexo</a> <a href="/tags/papers/" style="font-size: 1.23em; color: #999ea6">papers</a> <a href="/tags/typography/" style="font-size: 1.1em; color: #999">typography</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">January 2022</span><span class="card-archive-list-count">23</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/10/"><span class="card-archive-list-date">October 2021</span><span class="card-archive-list-count">2</span></a></li></ul></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').then(() => {
+    jinrishici.load(result =>{
+      if (true) {
+        const sub = ["EL・PSY・CONGROO"]
+        const content = result.data.content
+        sub.unshift(content)
+        window.typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = result.data.content
+      }
     })
-
-    searchResultEl.appendChild(fragment)
-    searchResultEl.style.height = 'auto'
+  })
 }
 
-function searching(inputText) {
-    var inputTexts = inputText.split(' ')
-    var searchResults = []
-    inputTexts.forEach(function (searchKey) {
-        var haveSearchValue = Boolean(searchKey.trim())
-        if (!haveSearchValue) return
-
-        var key = searchKey.toLowerCase()
-
-        for (var entry of searchDatabase) {
-            var title = entry.getElementsByTagName('title')[0].textContent
-            var link = entry.getElementsByTagName('link')[0].getAttribute('href')
-            var contentWithTags = entry.getElementsByTagName('content')[0].textContent
-            var rawContent = contentWithTags.trim().replace(/<[^>]+>/g, '').toLowerCase()
-
-            var LENGTH = 80
-            var finalContent = ''
-            var contentLength = rawContent.length
-            var searchResultIdx = rawContent.indexOf(key)
-
-            var startIdx = searchResultIdx - 20,
-                endIdx = startIdx + LENGTH
-
-            if (startIdx < 0) {
-                startIdx = 0
-                endIdx = 100
-            }
-
-            endIdx > contentLength && (endIdx = contentLength)
-
-            finalContent = rawContent.substring(startIdx, endIdx)
-
-            if (title.indexOf(key) > -1 || searchResultIdx > -1) {
-                searchResults.push({
-                    link: link,
-                    title: title,
-                    content: finalContent
-                })
-            }
-        }
-    })
-    return searchResults
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
 }
-
-searchButtonEl.onclick = function () {
-    if (searchDatabase.length > 0) return;
-
-    fetch(window.location.href + '/search.xml').then(res => res.text()).then(res => {
-        var domparser = new DOMParser
-        var doc = domparser.parseFromString(res, 'application/xml')
-        searchDatabase = doc.getElementsByTagName('search')[0].children
-    })
-}</script><main class="aside-card-container profile-widget"><!-- todo: 使用取色工具动态阴影--><section class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center"><section class="is-flex is-justify-content-center avatar is-clipped skeleton"><!-- debug images "https://api.ixiaowai.cn/gqapi/gqapi.php"--><img class="js-img-fadeIn" src="/images/avatar.jpg" alt="user avatar"></section><h3 class="user-name">Xavier</h3><blockquote class="has-text-centered is-relative"><span style="margin-bottom: 5px;">while(true) me.Learn();</span></blockquote><address class="has-text-centered has-text-grey"><i class="iconfont icon-location" style="margin-right: 5px;"></i><span class="has-text-grey">Beijing</span></address></section><section class="sns-container is-flex is-justify-content-center is-align-items-center"><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/xiaoyu2018"><i class="iconfont icon-github"></i></a><!-- Ins--><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--></section></main><main class="aside-card-container recent-widget"><h3>Recent</h3><ul><li class="is-flex"><!-- change to element replace image placeholder--><img class="js-img-fadeIn" src="/images/d2l/1/cover.png" alt="cover"><!--else--><!--    div.post-img-placeholder--><section class="is-flex-grow-2"><p class="has-text-weight-semibold" style="line-height: 20px; font-size: 14px"><a href="/2021/11/24/d2l_4/">D2L: Perceptron</a></p><time class="has-text-weight-semibold has-text-grey" datetime="2021-11-24T08:09:16.313Z">2021-11-24</time></section></li><li class="is-flex"><!-- change to element replace image placeholder--><img class="js-img-fadeIn" src="/images/d2l/1/cover.png" alt="cover"><!--else--><!--    div.post-img-placeholder--><section class="is-flex-grow-2"><p class="has-text-weight-semibold" style="line-height: 20px; font-size: 14px"><a href="/2021/11/23/d2l_3/">D2L: Softmax Regression</a></p><time class="has-text-weight-semibold has-text-grey" datetime="2021-11-23T14:29:44.147Z">2021-11-23</time></section></li><li class="is-flex"><!-- change to element replace image placeholder--><img class="js-img-fadeIn" src="/images/d2l/1/cover.png" alt="cover"><!--else--><!--    div.post-img-placeholder--><section class="is-flex-grow-2"><p class="has-text-weight-semibold" style="line-height: 20px; font-size: 14px"><a href="/2021/11/23/d2l_2/">D2L: Linear Regression</a></p><time class="has-text-weight-semibold has-text-grey" datetime="2021-11-23T07:59:48.186Z">2021-11-23</time></section></li><li class="is-flex"><!-- change to element replace image placeholder--><img class="js-img-fadeIn" src="/images/transformer/transformer.jpg" alt="cover"><!--else--><!--    div.post-img-placeholder--><section class="is-flex-grow-2"><p class="has-text-weight-semibold" style="line-height: 20px; font-size: 14px"><a href="/2021/11/22/Transformer/">Transformer</a></p><time class="has-text-weight-semibold has-text-grey" datetime="2021-11-22T08:36:52.958Z">2021-11-22</time></section></li><li class="is-flex"><!-- change to element replace image placeholder--><img class="js-img-fadeIn" src="/images/CSAsynchronousProgramming/cover.png" alt="cover"><!--else--><!--    div.post-img-placeholder--><section class="is-flex-grow-2"><p class="has-text-weight-semibold" style="line-height: 20px; font-size: 14px"><a href="/2021/11/22/CSAsync3/">C# Asynchronous programming #3</a></p><time class="has-text-weight-semibold has-text-grey" datetime="2021-11-22T08:36:21.830Z">2021-11-22</time></section></li></ul></main><main class="aside-card-container categories-widget category-page"><h3>Categories</h3><section><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C#</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Genesis/">Genesis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/notes/">notes</a><span class="category-list-count">1</span></li></ul></section></main><main class="aside-card-container archives-widget"><h3>Archives</h3><section><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">November 2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a><span class="archive-list-count">2</span></li></ul></section></main><main class="aside-card-container tag-widget"><h3>Tags</h3><section><a href="/tags/typography"><span class="tag post-item-tag" style="margin-bottom: 5px;">typography</span></a><a href="/tags/hexo"><span class="tag post-item-tag" style="margin-bottom: 5px;">hexo</span></a><a href="/tags/Hello"><span class="tag post-item-tag" style="margin-bottom: 5px;">Hello</span></a><a href="/tags/Neural%20Network"><span class="tag post-item-tag" style="margin-bottom: 5px;">Neural Network</span></a><a href="/tags/papers"><span class="tag post-item-tag" style="margin-bottom: 5px;">papers</span></a><a href="/tags/Dive-Into-Deep-Learning"><span class="tag post-item-tag" style="margin-bottom: 5px;">Dive-Into-Deep-Learning</span></a><a href="/tags/Neural-Network"><span class="tag post-item-tag" style="margin-bottom: 5px;">Neural-Network</span></a><a href="/tags/Asynchronous-programming"><span class="tag post-item-tag" style="margin-bottom: 5px;">Asynchronous-programming</span></a><a href="/tags/CS-Threading"><span class="tag post-item-tag" style="margin-bottom: 5px;">CS-Threading</span></a><a href="/tags/Generative-Model"><span class="tag post-item-tag" style="margin-bottom: 5px;">Generative-Model</span></a><a href="/tags/Residual-learning"><span class="tag post-item-tag" style="margin-bottom: 5px;">Residual-learning</span></a><a href="/tags/Seq2Seq-Model"><span class="tag post-item-tag" style="margin-bottom: 5px;">Seq2Seq-Model</span></a><a href="/tags/Computer%20Vision"><span class="tag post-item-tag" style="margin-bottom: 5px;">Computer Vision</span></a></section></main></aside></div></article><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
-
-window.addEventListener('resize', $claudia.throttle(function () {
-    var images = document.querySelectorAll('.js-img-fadeIn')
-
-    images.forEach($claudia.blurBackdropImg)
-}, 150))</script></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/xiaoyu2018"><i class="iconfont icon-github"></i></a><!-- Ins--><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--></section><p><span>Copyright ©</span><span> Xavier 2022</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script>$claudia.fadeInImage(null, $claudia.blurBackdropImg)
-
-window.addEventListener('resize', $claudia.throttle(function () {
-    var images = document.querySelectorAll('.js-img-fadeIn')
-
-    images.forEach($claudia.blurBackdropImg)
-}, 150))</script></body></html>
+</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

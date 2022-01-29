@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>ResNet | Xavier's blog</title><meta name="keywords" content="papers,Neural-Network,Residual-learning"><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Residual Network深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。 在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。 Is learning better networks as easy as stacking more layers ? 当网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ResNet">
+<meta property="og:url" content="http://example.com/2022/01/29/resnet/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="Residual Network深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。 在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。 Is learning better networks as easy as stacking more layers ? 当网络">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/3.png">
+<meta property="article:published_time" content="2022-01-29T06:18:59.404Z">
+<meta property="article:modified_time" content="2022-01-29T06:18:59.404Z">
+<meta property="article:author" content="Xavier">
+<meta property="article:tag" content="papers">
+<meta property="article:tag" content="Neural-Network">
+<meta property="article:tag" content="Residual-learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/3.png"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2022/01/29/resnet/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ResNet',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-29 14:18:59'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">25</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/3.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ResNet</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-01-29T06:18:59.404Z" title="Created 2022-01-29 14:18:59">2022-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-01-29T06:18:59.404Z" title="Updated 2022-01-29 14:18:59">2022-01-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Machine-Learning/">Machine Learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ResNet"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Residual-Network"><a href="#Residual-Network" class="headerlink" title="Residual Network"></a>Residual Network</h1><p>深层的神经网络通常很难进行训练，本文使用了一个残差学习网络结构来训练比以往的神经网络要深得多的模型。残差网络容易训练，并且在深层神经网络中表现出来较好的准确率。</p>
+<p><img src="/images/resnet/plain_error.png" alt="plain_error"><br>在未使用残差网络的模型中，当网络层数变多时，训练误差以及测试误差均会升高。</p>
+<h2 id="Is-learning-better-networks-as-easy-as-stacking-more-layers"><a href="#Is-learning-better-networks-as-easy-as-stacking-more-layers" class="headerlink" title="Is learning better networks as easy as stacking more layers ?"></a><strong>Is learning better networks as easy as stacking more layers ?</strong></h2><ul>
+<li>当网络变得特别深时，会出现梯度爆炸或梯度消失</li>
+<li>传统的解决方法是：参数在初始化时要做的好一点，不要太大也不要太小；加入一些Batch Normalization Layers</li>
+<li>传统的解决方法使得神经网络能够收敛，但是网络的精度却变得更差，而这并非是模型变得复杂后导致的过拟合问题，因为模型的训练误差也变高了</li>
+<li>正常来说，如果在一个浅层的神经网络后直接加入更多的层，这些层只做identity mapping，那么这个深层神经网络的误差绝不会高于浅层的神经网络，但是传统的神经网络模型并未找到这样的解（或更好的解）</li>
+<li>如果深层网络后面的层都是是恒等映射，那么模型就可以转化为一个浅层网络</li>
+</ul>
+<h2 id="Deep-residual-learning-framework"><a href="#Deep-residual-learning-framework" class="headerlink" title="Deep residual learning framework"></a><strong>Deep residual learning framework</strong></h2><ul>
+<li>将残差块的输入与块内最后一个神经网络层的线性输出求和后在进行激活，得到残差块的输出<br><img src="/images/resnet/residual_block.png" alt="plain_error"></li>
+<li>残差块只简单地做了shortcut connections，没有引入额外的训练参数，不会增加网络复杂度</li>
+<li>已有的神经网络很难拟合潜在的恒等映射函数H(x) = x，但是ResNet将残差块设计为H(x) = F(x) + x，其直接把恒等映射作为网络的一部分，只要F(x) = 0，便得到了恒等映射。而此时F(x) = H(x) - x 称为残差函数，就是当前残差块的学习目标（学习出这样一个F(x)函数满足如图输出）</li>
+<li>值得一提的是，一个残差块中应该至少有两层（中间要包含一个非线性激活），否则就会出现如下情况，这显然是没有用的工作<br><img src="/images/resnet/no_use.png" alt="plain_error"></li>
+</ul>
+<h2 id="Deeper-bottleneck-architecture"><a href="#Deeper-bottleneck-architecture" class="headerlink" title="Deeper bottleneck architecture"></a><strong>Deeper bottleneck architecture</strong></h2><ul>
+<li>当神经网络层数进一步增多时，参数的增长会带来很大的计算开销。此时可以考虑使用1*1的卷积核暂时减少通道数来减少整个网络的数据规模<br><img src="/images/resnet/deeper.png" alt="plain_error"></li>
+</ul>
+<h2 id="Analysis-of-Deep-Residual-Networks"><a href="#Analysis-of-Deep-Residual-Networks" class="headerlink" title="Analysis of Deep Residual Networks"></a><strong>Analysis of Deep Residual Networks</strong></h2><ul>
+<li>基本BP算法流程如下<br><img src="/images/resnet/bp.jpg" alt="plain_error"></li>
+<li>残差块的反向传播过程较好地解释了残差网络避免梯度消失原因，具体推导过程如下</li>
+<li>推导中忽略偏置项和激活函数<br><img src="/images/resnet/res_bp.png" alt="plain_error"></li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/papers/">papers</a><a class="post-meta__tags" href="/tags/Neural-Network/">Neural-Network</a><a class="post-meta__tags" href="/tags/Residual-learning/">Residual-learning</a></div><div class="post_share"><div class="social-share" data-image="/img/3.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Residual-Network"><span class="toc-number">1.</span> <span class="toc-text">Residual Network</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Is-learning-better-networks-as-easy-as-stacking-more-layers"><span class="toc-number">1.1.</span> <span class="toc-text">Is learning better networks as easy as stacking more layers ?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deep-residual-learning-framework"><span class="toc-number">1.2.</span> <span class="toc-text">Deep residual learning framework</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deeper-bottleneck-architecture"><span class="toc-number">1.3.</span> <span class="toc-text">Deeper bottleneck architecture</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis-of-Deep-Residual-Networks"><span class="toc-number">1.4.</span> <span class="toc-text">Analysis of Deep Residual Networks</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
