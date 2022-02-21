@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-02-21T06:31:45.970Z</updated>
+  <updated>2022-02-21T06:36:14.190Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>D2L: Batch Normalization</title>
+    <link href="http://example.com/2022/02/21/d2l_16/"/>
+    <id>http://example.com/2022/02/21/d2l_16/</id>
+    <published>2022-02-21T06:36:14.190Z</published>
+    <updated>2022-02-21T06:36:14.190Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>问题<ul><li>损失出现在最后，由BP算法和梯度消失，后面的层训练的会更快</li><li>数据在最前面，前面的层训练的慢且前面的层变化后面的层也要跟着变（抽取的底层信息变化让后面的层要重新学），所以后面的层要重新学习很多次，导致收敛变慢</li><li>考虑在学习底部层时避免变化顶部层</li></ul></li><li>批量归一化<ul><li>固定小批量里面的均值和方差，然后再做额外的调整（可学习的参数gama和beta）<br><img src="/images/d2l/16/1.png"></li><li>是线性变换</li><li>作用在<ul><li>全连接层和卷积层输出后，激活函数前</li><li>全连接层和卷积层输入前</li></ul></li><li>对于全连接层作用于特征维</li><li>对于卷积层作用于通道维（将每一个像素都当作一个样本，通道数就是一个样本的特征数）</li></ul></li><li>批量归一化在做什么？<ul><li>最初的论文是想用它来减少内部协变量转移（使每一层的输出分布变化不那么剧烈）</li><li>后续有论文指出，批量归一化可能只是在小批量中加入噪声控制模型复杂度</li></ul></li><li>总结<ul><li>批量归一化固定小批量中的均值和方差，然后学习出适合的偏移和缩放</li><li>批量归一化可以加速收敛（可以设置更大的学习率），一般不改变模型精度</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch<br><br>net=nn.Sequential(<br>    nn.Conv2d(<span class="hljs-number">1</span>,<span class="hljs-number">6</span>,kernel_size=<span class="hljs-number">5</span>,padding=<span class="hljs-number">2</span>),nn.BatchNorm2d(<span class="hljs-number">6</span>),<br>    nn.AvgPool2d(<span class="hljs-number">2</span>),nn.Sigmoid(),<br>    nn.Conv2d(<span class="hljs-number">6</span>,<span class="hljs-number">16</span>,<span class="hljs-number">5</span>),nn.BatchNorm2d(<span class="hljs-number">16</span>),<br>    nn.AvgPool2d(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>),nn.Sigmoid(),nn.Flatten(),<br>    nn.Linear(<span class="hljs-number">16</span>*<span class="hljs-number">5</span>*<span class="hljs-number">5</span>,<span class="hljs-number">120</span>),nn.BatchNorm1d(<span class="hljs-number">120</span>),<br>    nn.Sigmoid(),<br>    nn.Linear(<span class="hljs-number">120</span>,<span class="hljs-number">84</span>),nn.BatchNorm1d(<span class="hljs-number">84</span>),<br>    nn.Sigmoid(),<br>    nn.Linear(<span class="hljs-number">84</span>,<span class="hljs-number">10</span>)<br>)<br>loss_f=nn.CrossEntropyLoss()<br>opt=optim.Adam(net.parameters(),lr=<span class="hljs-number">1.0</span>)<br><br><span class="hljs-keyword">import</span> d2l<br><br><br>train_iter,test_iter=d2l.load_data_fashion_mnist(<span class="hljs-number">256</span>)<br><br><span class="hljs-comment"># d2l.train(</span><br><span class="hljs-comment">#     10,nn.CrossEntropyLoss(),</span><br><span class="hljs-comment">#     optim.Adam(net.parameters()),</span><br><span class="hljs-comment">#     net,train_iter,save_name="LeNet_bn",</span><br><span class="hljs-comment">#     device=torch.device("cuda:0"))</span><br>d2l.evaluate(<br>    net,test_iter,nn.CrossEntropyLoss(),<br>    param_path=<span class="hljs-string">"D:/code/machine_learning/limu_d2l/params/LeNet_bn_10"</span>,<br>    device=torch.device(<span class="hljs-string">"cuda:0"</span>)<br>)<br></code></pre></td></tr></tbody></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Batch-Normalization&quot;&gt;&lt;a href=&quot;#Batch-Normalization&quot; class=&quot;headerlink&quot; title=&quot;Batch Normalization&quot;&gt;&lt;/a&gt;Batch Normalization&lt;/h1&gt;&lt;h2 i</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
+    
+  </entry>
   
   <entry>
     <title>Basic SQL</title>
@@ -149,32 +175,6 @@
     <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
     
     <category term="Generative-Model" scheme="http://example.com/tags/Generative-Model/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>D2L: Batch Normalization</title>
-    <link href="http://example.com/2022/01/29/d2l_16/"/>
-    <id>http://example.com/2022/01/29/d2l_16/</id>
-    <published>2022-01-29T06:18:39.759Z</published>
-    <updated>2022-01-29T06:18:39.759Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>问题<ul><li>损失出现在最后，由BP算法和梯度消失，后面的层训练的会更快</li><li>数据在最前面，前面的层训练的慢且前面的层变化后面的层也要跟着变（抽取的底层信息变化让后面的层要重新学），所以后面的层要重新学习很多次，导致收敛变慢</li><li>考虑在学习底部层时避免变化顶部层</li></ul></li><li>批量归一化<ul><li>固定小批量里面的均值和方差，然后再做额外的调整（可学习的参数gama和beta）<br><img src="/images/d2l/16/1.png"></li><li>是线性变换</li><li>作用在<ul><li>全连接层和卷积层输出后，激活函数前</li><li>全连接层和卷积层输入前</li></ul></li><li>对于全连接层作用于特征维</li><li>对于卷积层作用于通道维（将每一个像素都当作一个样本，通道数就是一个样本的特征数）</li></ul></li><li>批量归一化在做什么？<ul><li>最初的论文是想用它来减少内部协变量转移（使每一层的输出分布变化不那么剧烈）</li><li>后续有论文指出，批量归一化可能只是在小批量中加入噪声控制模型复杂度</li></ul></li><li>总结<ul><li>批量归一化固定小批量中的均值和方差，然后学习出适合的偏移和缩放</li><li>批量归一化可以加速收敛（可以设置更大的学习率），一般不改变模型精度</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch<br><br>net=nn.Sequential(<br>    nn.Conv2d(<span class="hljs-number">1</span>,<span class="hljs-number">6</span>,kernel_size=<span class="hljs-number">5</span>,padding=<span class="hljs-number">2</span>),nn.BatchNorm2d(<span class="hljs-number">6</span>),<br>    nn.AvgPool2d(<span class="hljs-number">2</span>),nn.Sigmoid(),<br>    nn.Conv2d(<span class="hljs-number">6</span>,<span class="hljs-number">16</span>,<span class="hljs-number">5</span>),nn.BatchNorm2d(<span class="hljs-number">16</span>),<br>    nn.AvgPool2d(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>),nn.Sigmoid(),nn.Flatten(),<br>    nn.Linear(<span class="hljs-number">16</span>*<span class="hljs-number">5</span>*<span class="hljs-number">5</span>,<span class="hljs-number">120</span>),nn.BatchNorm1d(<span class="hljs-number">120</span>),<br>    nn.Sigmoid(),<br>    nn.Linear(<span class="hljs-number">120</span>,<span class="hljs-number">84</span>),nn.BatchNorm1d(<span class="hljs-number">84</span>),<br>    nn.Sigmoid(),<br>    nn.Linear(<span class="hljs-number">84</span>,<span class="hljs-number">10</span>)<br>)<br>loss_f=nn.CrossEntropyLoss()<br>opt=optim.Adam(net.parameters(),lr=<span class="hljs-number">1.0</span>)<br><br><span class="hljs-keyword">import</span> d2l<br><br><br>train_iter,test_iter=d2l.load_data_fashion_mnist(<span class="hljs-number">256</span>)<br><br><span class="hljs-comment"># d2l.train(</span><br><span class="hljs-comment">#     10,nn.CrossEntropyLoss(),</span><br><span class="hljs-comment">#     optim.Adam(net.parameters()),</span><br><span class="hljs-comment">#     net,train_iter,save_name="LeNet_bn",</span><br><span class="hljs-comment">#     device=torch.device("cuda:0"))</span><br>d2l.evaluate(<br>    net,test_iter,nn.CrossEntropyLoss(),<br>    param_path=<span class="hljs-string">"D:/code/machine_learning/limu_d2l/params/LeNet_bn_10"</span>,<br>    device=torch.device(<span class="hljs-string">"cuda:0"</span>)<br>)<br></code></pre></td></tr></tbody></table></figure><figure class="highlight cpp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>{<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"hello world"</span>);<br>}<br><br></code></pre></td></tr></tbody></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Batch-Normalization&quot;&gt;&lt;a href=&quot;#Batch-Normalization&quot; class=&quot;headerlink&quot; title=&quot;Batch Normalization&quot;&gt;&lt;/a&gt;Batch Normalization&lt;/h1&gt;&lt;h2 i</summary>
-      
-    
-    
-    
-    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
-    
-    
-    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
-    
-    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
     
   </entry>
   
