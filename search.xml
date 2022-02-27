@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>D2L: Fine Tune</title>
+      <link href="/2022/02/27/d2l_19/"/>
+      <url>/2022/02/27/d2l_19/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Fine-Tune"><a href="#Fine-Tune" class="headerlink" title="Fine Tune"></a>Fine Tune</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li><p>一般神经网络的架构都分为两块：</p><ul><li>特征抽取部分</li><li>线性分类部分<br><img src="/images/d2l/19/1.png"></li></ul></li><li><p>微调  </p><ul><li><p>一个模型特征提取部分可以作为上游模型训练其他任务<br><img src="/images/d2l/19/2.png"></p></li><li><p>pre-train的过程一般是一个大数据集上的正常训练任务，而在fine-tune的过程中使用更强的正则化、更小的学习率、更少的epoch</p></li><li><p>原数据集和目标数据集要相似，且原数据集比目标数据集要大</p></li></ul></li><li><p>微调的一些技巧</p><ul><li>重用分类器权重：原数据集中也可能有下游任务数据的部分标号，可以用预训练模型分类器中对应标号的对应向量来初始化下游任务分类部分</li><li>固定前面的层：神经网络中靠近输入的层更加通用，可以固定底部的一些层的参数不参与更新</li><li>对于个人或小企业来说，通常不会从头开始训练模型，而是进行微调</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torchvision <span class="hljs-keyword">import</span> models,transforms<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> d2l<br><br>train_iter,test_iter=d2l.load_data_fashion_mnist(<span class="hljs-number">64</span>)<br><br>train_aug=transforms.Compose([<br>    transforms.Resize((<span class="hljs-number">224</span>,<span class="hljs-number">224</span>)),<br>    transforms.RandomHorizontalFlip(),<br>    <span class="hljs-comment"># transforms.ToTensor(), #在load时已经将PIL转化为了Tensor</span><br>    transforms.Normalize([<span class="hljs-number">0.485</span>,<span class="hljs-number">0.456</span>,<span class="hljs-number">0.406</span>],[<span class="hljs-number">0.229</span>,<span class="hljs-number">0.224</span>,<span class="hljs-number">0.225</span>]),<br>    <br>])<br><br>test_aug=transforms.Compose([<br>    transforms.Resize((<span class="hljs-number">224</span>,<span class="hljs-number">224</span>)),<br>    <span class="hljs-comment"># transforms.ToTensor(),</span><br>    transforms.Normalize([<span class="hljs-number">0.485</span>,<span class="hljs-number">0.456</span>,<span class="hljs-number">0.406</span>],[<span class="hljs-number">0.229</span>,<span class="hljs-number">0.224</span>,<span class="hljs-number">0.225</span>])<br>])<br><br><br><span class="hljs-comment"># 指定预训练模型</span><br>finetune_res=models.resnet18(pretrained=<span class="hljs-literal">True</span>,progress=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 将分类器部分重新设计，in_features属性记录了原模型的本层的输入特征数</span><br>finetune_res.fc=nn.Linear(finetune_res.fc.in_features,<span class="hljs-number">10</span>)<br><span class="hljs-comment"># 初始化新分类器参数</span><br>nn.init.xavier_uniform_(finetune_res.fc.weight)<br><br>loss_f=nn.CrossEntropyLoss()<br><span class="hljs-comment"># 增加正则化并且学习率应该设得很小</span><br>opt=optim.Adam(finetune_res.parameters(),weight_decay=<span class="hljs-number">0.1</span>,lr=<span class="hljs-number">5e-5</span>)<br><br><span class="hljs-comment"># 不需要迭代很多轮</span><br>d2l.train(<br>    <span class="hljs-number">5</span>,loss_f,opt,finetune_res,train_iter,<br>    save_name=<span class="hljs-string">"res18_pretrained"</span>,device=torch.device(<span class="hljs-string">"cuda:0"</span>),<br>    aug=train_aug<br>    )<br><br></code></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Neural-Network </tag>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: Data Augmentation</title>
       <link href="/2022/02/26/d2l_18/"/>
       <url>/2022/02/26/d2l_18/</url>

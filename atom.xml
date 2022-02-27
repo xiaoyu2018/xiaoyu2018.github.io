@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-02-26T12:30:53.085Z</updated>
+  <updated>2022-02-27T06:59:36.485Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>D2L: Fine Tune</title>
+    <link href="http://example.com/2022/02/27/d2l_19/"/>
+    <id>http://example.com/2022/02/27/d2l_19/</id>
+    <published>2022-02-27T06:59:36.485Z</published>
+    <updated>2022-02-27T06:59:36.485Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Fine-Tune"><a href="#Fine-Tune" class="headerlink" title="Fine Tune"></a>Fine Tune</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li><p>一般神经网络的架构都分为两块：</p><ul><li>特征抽取部分</li><li>线性分类部分<br><img src="/images/d2l/19/1.png"></li></ul></li><li><p>微调  </p><ul><li><p>一个模型特征提取部分可以作为上游模型训练其他任务<br><img src="/images/d2l/19/2.png"></p></li><li><p>pre-train的过程一般是一个大数据集上的正常训练任务，而在fine-tune的过程中使用更强的正则化、更小的学习率、更少的epoch</p></li><li><p>原数据集和目标数据集要相似，且原数据集比目标数据集要大</p></li></ul></li><li><p>微调的一些技巧</p><ul><li>重用分类器权重：原数据集中也可能有下游任务数据的部分标号，可以用预训练模型分类器中对应标号的对应向量来初始化下游任务分类部分</li><li>固定前面的层：神经网络中靠近输入的层更加通用，可以固定底部的一些层的参数不参与更新</li><li>对于个人或小企业来说，通常不会从头开始训练模型，而是进行微调</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torchvision <span class="hljs-keyword">import</span> models,transforms<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> d2l<br><br>train_iter,test_iter=d2l.load_data_fashion_mnist(<span class="hljs-number">64</span>)<br><br>train_aug=transforms.Compose([<br>    transforms.Resize((<span class="hljs-number">224</span>,<span class="hljs-number">224</span>)),<br>    transforms.RandomHorizontalFlip(),<br>    <span class="hljs-comment"># transforms.ToTensor(), #在load时已经将PIL转化为了Tensor</span><br>    transforms.Normalize([<span class="hljs-number">0.485</span>,<span class="hljs-number">0.456</span>,<span class="hljs-number">0.406</span>],[<span class="hljs-number">0.229</span>,<span class="hljs-number">0.224</span>,<span class="hljs-number">0.225</span>]),<br>    <br>])<br><br>test_aug=transforms.Compose([<br>    transforms.Resize((<span class="hljs-number">224</span>,<span class="hljs-number">224</span>)),<br>    <span class="hljs-comment"># transforms.ToTensor(),</span><br>    transforms.Normalize([<span class="hljs-number">0.485</span>,<span class="hljs-number">0.456</span>,<span class="hljs-number">0.406</span>],[<span class="hljs-number">0.229</span>,<span class="hljs-number">0.224</span>,<span class="hljs-number">0.225</span>])<br>])<br><br><br><span class="hljs-comment"># 指定预训练模型</span><br>finetune_res=models.resnet18(pretrained=<span class="hljs-literal">True</span>,progress=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 将分类器部分重新设计，in_features属性记录了原模型的本层的输入特征数</span><br>finetune_res.fc=nn.Linear(finetune_res.fc.in_features,<span class="hljs-number">10</span>)<br><span class="hljs-comment"># 初始化新分类器参数</span><br>nn.init.xavier_uniform_(finetune_res.fc.weight)<br><br>loss_f=nn.CrossEntropyLoss()<br><span class="hljs-comment"># 增加正则化并且学习率应该设得很小</span><br>opt=optim.Adam(finetune_res.parameters(),weight_decay=<span class="hljs-number">0.1</span>,lr=<span class="hljs-number">5e-5</span>)<br><br><span class="hljs-comment"># 不需要迭代很多轮</span><br>d2l.train(<br>    <span class="hljs-number">5</span>,loss_f,opt,finetune_res,train_iter,<br>    save_name=<span class="hljs-string">"res18_pretrained"</span>,device=torch.device(<span class="hljs-string">"cuda:0"</span>),<br>    aug=train_aug<br>    )<br><br></code></pre></td></tr></tbody></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Fine-Tune&quot;&gt;&lt;a href=&quot;#Fine-Tune&quot; class=&quot;headerlink&quot; title=&quot;Fine Tune&quot;&gt;&lt;/a&gt;Fine Tune&lt;/h1&gt;&lt;h2 id=&quot;Basic-knowledge&quot;&gt;&lt;a href=&quot;#Basic-know</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
+    
+  </entry>
   
   <entry>
     <title>D2L: Data Augmentation</title>
@@ -508,32 +534,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;Modle-Selection&quot;&gt;&lt;a href=&quot;#Modle-Selection&quot; class=&quot;headerlink&quot; title=&quot;Modle Selection&quot;&gt;&lt;/a&gt;Modle Selection&lt;/h1&gt;&lt;h2 id=&quot;Basic-Knowled</summary>
-      
-    
-    
-    
-    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
-    
-    
-    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
-    
-    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>D2L: Perceptron</title>
-    <link href="http://example.com/2022/01/29/d2l_4/"/>
-    <id>http://example.com/2022/01/29/d2l_4/</id>
-    <published>2022-01-29T06:17:40.810Z</published>
-    <updated>2022-01-29T06:17:40.810Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Perceptron"><a href="#Perceptron" class="headerlink" title="Perceptron"></a>Perceptron</h1><h2 id="Basic-Knowledge"><a href="#Basic-Knowledge" class="headerlink" title="Basic Knowledge"></a><strong>Basic Knowledge</strong></h2><ul><li>感知机  <ul><li>模型<br>感知机只比线性分类多了一个激活函数，激活函数为单层感知机带来了分类能力，为多层感知机带来了非线性因素<br><img src="/images/d2l/4/perceptron.png"></li><li>训练<br>训练感知机等价于批量大小为1的梯度下降，按顺序逐个取样本，与随机梯度下降不同<br><img src="/images/d2l/4/train_p.png"></li><li>单层感知机无法解决异或问题，他只能产生线性分割面，这导致了第一次AI寒冬</li></ul></li><li>多层感知机<ul><li>多层感知机由多个感知机组成，分为输入层、隐藏层、输出层，层内不连接，层间全连接<br><img src="/images/d2l/4/mlp.png"></li><li>每个感知机输出后要经过一个非线性的激活函数，否则多层感知机等价于单层感知机</li><li>常用激活函数：Sigmoiod、Tanh、ReLU，性能都没太大区别，ReLU计算更容易，如果没有特别的想法，用ReLU就行</li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul><li>从零实现</li></ul><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><br>train_iter,_=LoadData(<span class="hljs-number">256</span>)<br>num_in,num_out,num_h=<span class="hljs-number">784</span>,<span class="hljs-number">10</span>,<span class="hljs-number">256</span><br><span class="hljs-comment"># 隐层参数</span><br>w1=torch.randn(num_in,num_h,requires_grad=<span class="hljs-literal">True</span>)<br>b1=torch.zeros(num_h,requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 输出层参数</span><br>w2=torch.randn(num_h,num_out,requires_grad=<span class="hljs-literal">True</span>)<br>b2=torch.zeros(num_out,requires_grad=<span class="hljs-literal">True</span>)<br>params=[w1,b2,w1,b2]<br><br>loss_f=nn.CrossEntropyLoss()<br>opt=optim.SGD(params,lr=<span class="hljs-number">0.001</span>)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">ReLU</span>(<span class="hljs-params">X</span>):</span><br>    a=torch.zeros_like(X)<br>    <span class="hljs-keyword">return</span> torch.<span class="hljs-built_in">max</span>(X,a)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">Net</span>(<span class="hljs-params">X:Tensor</span>):</span><br>    X=X.view(-<span class="hljs-number">1</span>,num_in)<br>    <span class="hljs-comment"># @被重载为了矩阵乘法</span><br>    X=ReLU(X@w1+b1)<br>    <span class="hljs-keyword">return</span> X@w2+b2<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">Train</span>():</span><br>    <span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">50</span>):<br>        loss=<span class="hljs-number">0</span><br>        <span class="hljs-keyword">for</span> X,y <span class="hljs-keyword">in</span> train_iter:<br>            X=X.view(-<span class="hljs-number">1</span>,<span class="hljs-number">784</span>)<br>            out=Net(X)<br>            l=loss_f(out,y)<br><br>            l.backward()<br>            opt.step()<br>            opt.zero_grad()<br>            loss=l.item()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{epoch}</span>,<span class="hljs-subst">{loss}</span>"</span>)<br></code></pre></td></tr></tbody></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Perceptron&quot;&gt;&lt;a href=&quot;#Perceptron&quot; class=&quot;headerlink&quot; title=&quot;Perceptron&quot;&gt;&lt;/a&gt;Perceptron&lt;/h1&gt;&lt;h2 id=&quot;Basic-Knowledge&quot;&gt;&lt;a href=&quot;#Basic-</summary>
       
     
     
