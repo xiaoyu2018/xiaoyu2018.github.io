@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>D2L: Object Detection | Xavier's blog</title><meta name="keywords" content="Neural-Network,Dive-Into-Deep-Learning"><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Object DetectionBasic knowledge目标检测任务与图像分类不同，目标检测要在图片中识别出多个不同的目标并表明每个目标的位置  边缘框  边缘框表示了目标的位置，有两种坐标表示法 (左上x，左上y，右下x，右下y) (左上x，左上y，边框宽，边框高)     锚框  锚框在目标检测算法中很常用，许多目标检测算法都用到了这项技术 锚框是对边缘框的一个猜测： 提出多个被称为锚框">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D2L: Object Detection">
+<meta property="og:url" content="http://example.com/2022/03/01/d2l_20/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="Object DetectionBasic knowledge目标检测任务与图像分类不同，目标检测要在图片中识别出多个不同的目标并表明每个目标的位置  边缘框  边缘框表示了目标的位置，有两种坐标表示法 (左上x，左上y，右下x，右下y) (左上x，左上y，边框宽，边框高)     锚框  锚框在目标检测算法中很常用，许多目标检测算法都用到了这项技术 锚框是对边缘框的一个猜测： 提出多个被称为锚框">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/5.jpg">
+<meta property="article:published_time" content="2022-03-01T13:02:59.359Z">
+<meta property="article:modified_time" content="2022-03-01T13:02:59.359Z">
+<meta property="article:author" content="Xavier">
+<meta property="article:tag" content="Neural-Network">
+<meta property="article:tag" content="Dive-Into-Deep-Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/5.jpg"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2022/03/01/d2l_20/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'D2L: Object Detection',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-01 21:02:59'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1"><link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">14</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/5.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">D2L: Object Detection</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-03-01T13:02:59.359Z" title="Created 2022-03-01 21:02:59">2022-03-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-03-01T13:02:59.359Z" title="Updated 2022-03-01 21:02:59">2022-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Machine-Learning/">Machine Learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="D2L: Object Detection"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><p>目标检测任务与图像分类不同，目标检测要在图片中识别出多个不同的目标并表明每个目标的位置</p>
+<ul>
+<li><p>边缘框</p>
+<ul>
+<li>边缘框表示了目标的位置，有两种坐标表示法<ul>
+<li>(左上x，左上y，右下x，右下y)</li>
+<li>(左上x，左上y，边框宽，边框高)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>锚框</p>
+<ul>
+<li>锚框在目标检测算法中很常用，许多目标检测算法都用到了这项技术</li>
+<li>锚框是对边缘框的一个猜测：<ul>
+<li>提出多个被称为锚框的区域</li>
+<li>预测每个锚框中是否含有目标物体</li>
+<li>如果有，则继续预测从这个锚框到真实边缘框的偏移</li>
+</ul>
+</li>
+<li>使用交并比（IoU）来计算两个框的相似度(预测框和标签框)<br><img src="/images/d2l/20/1.png"></li>
+<li>赋予锚框标号<ul>
+<li>在训练时，每个锚框都是一个训练样本，每次读取一张图片都要进行一次赋予锚框标号的操作</li>
+<li>将每个锚框要么标注为背景，要么标注为与真实边缘框相关</li>
+<li>可能生成大量锚框导致负样本过多</li>
+<li>锚框可固定生成，或根据图片生成，甚至随机</li>
+<li>假设一个图片有4个标签边缘框，生成了9个锚框，一种赋予标号的算法如下图<br><img src="/images/d2l/20/2.png"></li>
+</ul>
+</li>
+<li>在预测时，使用非极大值抑制（NMS）输出<br><img src="/images/d2l/20/3.png"></li>
+</ul>
+</li>
+<li><p>目标检测常用算法</p>
+<ol>
+<li><p>Faster R-CNN<br>图片进入一个CNN后分成两条路线，一条路线进入RPN（负责生成锚框），另一条路线经过RoI pooling（将不同大小的锚框提取为同一大小）后连接至全连接层，最后做出分类以及边缘框预测。Faster R-CNN相对其他算法来说还是很慢，但精度很高，适合刷榜。<br><img src="/images/d2l/20/4.png"></p>
+</li>
+<li><p>SSD（单发多框检测）<br>SSD由一个基础的网络来抽取特征，然后多个卷积层块来减半高宽。每段都会生成锚框，底部段拟合小物体，顶部段拟合大物体。每个锚框都会预测类别和边缘框<br><img src="/images/d2l/20/5.png"></p>
+</li>
+<li><p>YOLO<br>SSD中锚框有大量重叠，YOLO将图片均匀分成SxS个锚框，每个锚框预测B个边缘框。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul>
+<li><p>边缘框实现</p>
+  <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br><span class="hljs-keyword">from</span> matplotlib <span class="hljs-keyword">import</span> pyplot <span class="hljs-keyword">as</span> plt<br><br>img=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">"./1.jpg"</span>)<br>plt.imshow(img)<br>plt.show()<br>fig=plt.imshow(img)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">box_corner_to_center</span>(<span class="hljs-params">boxes</span>):</span><br>    <span class="hljs-string">"""(左上，右下)转换到(中间，宽度，高度)</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        boxs : 一组边缘框 </span><br><span class="hljs-string">    """</span><br>    x1, y1, x2, y2 = boxes[:, <span class="hljs-number">0</span>], boxes[:, <span class="hljs-number">1</span>], boxes[:, <span class="hljs-number">2</span>], boxes[:, <span class="hljs-number">3</span>]<br>    cx = (x1 + x2) / <span class="hljs-number">2</span><br>    cy = (y1 + y2) / <span class="hljs-number">2</span><br>    w = x2 - x1<br>    h = y2 - y1<br>    <span class="hljs-comment"># 将新坐标堆叠起来变为二维Tensor，注意与cat不同</span><br>    boxes = torch.stack((cx, cy, w, h))<br>    <span class="hljs-comment"># 返回转置</span><br>    <span class="hljs-keyword">return</span> boxes.T<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">box_center_to_corner</span>(<span class="hljs-params">boxes</span>):</span><br>    <span class="hljs-string">"""(中间，宽度，高度)转换到(左上，右下)</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        boxs : 一组边缘框 </span><br><span class="hljs-string">    """</span><br>    cx, cy, w, h = boxes[:, <span class="hljs-number">0</span>], boxes[:, <span class="hljs-number">1</span>], boxes[:, <span class="hljs-number">2</span>], boxes[:, <span class="hljs-number">3</span>]<br>    x1 = cx - <span class="hljs-number">0.5</span> * w<br>    y1 = cy - <span class="hljs-number">0.5</span> * h<br>    x2 = cx + <span class="hljs-number">0.5</span> * w<br>    y2 = cy + <span class="hljs-number">0.5</span> * h<br>    boxes = torch.stack((x1, y1, x2, y2))<br>    <span class="hljs-keyword">return</span> boxes.T<br><br>x=torch.tensor([[<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>]])<br>x=box_corner_to_center(x)<br><span class="hljs-built_in">print</span>(x)<br>x=box_center_to_corner(x)<br><span class="hljs-built_in">print</span>(x)<br><br><br>box1=torch.tensor([<span class="hljs-number">360</span>,<span class="hljs-number">170</span>,<span class="hljs-number">650</span>,<span class="hljs-number">650</span>])<br>box2=torch.tensor([<span class="hljs-number">120</span>,<span class="hljs-number">210</span>,<span class="hljs-number">350</span>,<span class="hljs-number">290</span>])<br><br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">show_bboxes</span>(<span class="hljs-params">fig,bboxes,color</span>):</span><br>    <span class="hljs-string">"""显示带边缘框的图片</span><br><span class="hljs-string"></span><br><span class="hljs-string">    """</span> <br>    <span class="hljs-keyword">for</span> b,c <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(bboxes,color):<br>        fig.axes.add_patch(_bbox_to_rect(b, c))<br>    plt.show()<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_bbox_to_rect</span>(<span class="hljs-params">bbox, color</span>):</span><br>        <span class="hljs-keyword">return</span> plt.Rectangle(xy=(bbox[<span class="hljs-number">0</span>], bbox[<span class="hljs-number">1</span>]), width=bbox[<span class="hljs-number">2</span>] - bbox[<span class="hljs-number">0</span>],<br>                                height=bbox[<span class="hljs-number">3</span>] - bbox[<span class="hljs-number">1</span>], fill=<span class="hljs-literal">False</span>,<br>                                edgecolor=color, linewidth=<span class="hljs-number">2</span>)<br><br><br><br>show_bboxes(fig,[box1,box2],[<span class="hljs-string">'red'</span>,<span class="hljs-string">'green'</span>])<br><br></code></pre></td></tr></tbody></table></figure></li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Neural-Network/">Neural-Network</a><a class="post-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a></div><div class="post_share"><div class="social-share" data-image="/img/5.jpg" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Object-Detection"><span class="toc-number">1.</span> <span class="toc-text">Object Detection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Basic-knowledge"><span class="toc-number">1.1.</span> <span class="toc-text">Basic knowledge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implementation"><span class="toc-number">1.2.</span> <span class="toc-text">Implementation</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

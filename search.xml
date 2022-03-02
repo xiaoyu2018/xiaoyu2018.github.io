@@ -4,6 +4,62 @@
   
     
     <entry>
+      <title>You Only Look Once #1</title>
+      <link href="/2022/03/02/YOLOv1/"/>
+      <url>/2022/03/02/YOLOv1/</url>
+      
+        <content type="html"><![CDATA[<h1 id="You-Only-Look-Once-Unified-Real-Time-Object-Detection"><a href="#You-Only-Look-Once-Unified-Real-Time-Object-Detection" class="headerlink" title="You Only Look Once: Unified, Real-Time Object Detection"></a>You Only Look Once: Unified, Real-Time Object Detection</h1><h2 id="Prime-Algorithm"><a href="#Prime-Algorithm" class="headerlink" title="Prime Algorithm"></a><strong>Prime Algorithm</strong></h2><ul><li><p>概述<br><img src="/images/yolo/2.png"></p><ul><li><p>YOLO将输入图片划分为SxS个网格。每个网格预测B个边缘框，表示为(x,y,h,w,c)，分别代表中心点坐标、边缘框高宽和边缘框置信度(图片中越粗的线c越大)；同时，每个网格还要预测一组类别概率（softmax分类概率）来确定目标的类别</p></li><li><p>上述过程训练阶段和测试阶段具体方法有所不同，下文将两个阶段分别讨论</p></li></ul></li><li><p>预测阶段  </p><ul><li><p>在预测阶段，网络直接接受3x448x448的图片作为输入。图片经24层卷积提取特征，再经两个全连接层回归得到7x7x30（S=7，B=2，类别数=30-Bx5=20）的张量作为输出，即输出49个网格生成的98个边缘框的信息及每个网格所属20个类别分别的概率（<em>全部的信息都是由神经网络预测得出的</em>）。这也表明了YOLOv1最多只能检测SxS个目标，且难以检测小而密集的目标<br><img src="/images/yolo/1.png"></p></li><li><p>在获取YOLO提供的预测信息后，需要进行一系列的后处理（置信度过滤和非极大值抑制）得到目标检测结果。下图为SxS个网格生成的BxSxS个边缘框，颜色代表了其预测类别（一个网格生成的所有边缘框同属一个类别），粗细代表了其置信度，经后处理得到最终结果<br><img src="/images/yolo/3.png"></p></li><li><p>计算全概率：将每个边缘框的置信度与其所属网格的类别概率相乘得到BxSxS个类别数维的全概率向量</p></li><li><p>NMS：对所有类别分别做如下操作，将最大全概率的边缘框与其他所有非零的边缘框计算IoU，如果超过了threshold（如0.5），则认为他们重复预测了同一目标，将概率小的边缘框在这一类别的概率置零，再继续将第二高全概率的边缘框与其后（降序）所有其他边缘框比较并重复上述过程。如此反复，直到找不到新的非零概率边缘框。有二十个类别的情况下会做二十次的NMS<br><img src="/images/yolo/6.png"></p></li><li><p>完整后处理过程：将全概率向量中数值小于threshold的直接置零，然后按照某一类别将向量降序排列，并用NMS非极大值抑制删除多余边缘框，最后对每一个全概率向量（对应每一个边缘框）找出它最大概率的类别（非零），画出该边缘框并表明这一类别。如果向量此时为零向量，则代表该边缘框不包含任何目标，不画出该边缘框<br><img src="/images/yolo/7.png"></p></li></ul></li><li><p>训练阶段</p><ul><li><p>在训练阶段，训练集提供了已经标注好的ground truth，我们要让YOLO的输出去拟合ground truth。</p></li><li><p>真实边缘框的中心点落在哪一个网格内，就应当由哪一个网格负责去预测出一个边缘框来拟合该真实边缘框，并且此网格的类别也被决定。每一个网格将预测B个边缘框，选择与真实边缘框IoU大的去拟合，小的边缘框置信度越小越好<br><img src="/images/yolo/8.png"></p></li><li><p>对于没有真实边缘框中心点落入的网格，其预测边缘框的置信度越小越好</p></li><li><p>在训练时，也是整张图片作为输入，预测的中心点坐标值是0-1之间的数，表明了在某一个网格的坐标</p></li><li><p>损失函数如下（lambda是权重，因为不包含目标的边缘框一般远多于包含的边缘框）<br><img src="/images/yolo/9.png"></p></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> papers </tag>
+            
+            <tag> Neural Network </tag>
+            
+            <tag> Computer Vision </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>D2L: Object Detection</title>
+      <link href="/2022/03/01/d2l_20/"/>
+      <url>/2022/03/01/d2l_20/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><p>目标检测任务与图像分类不同，目标检测要在图片中识别出多个不同的目标并表明每个目标的位置</p><ul><li><p>边缘框</p><ul><li>边缘框表示了目标的位置，有两种坐标表示法<ul><li>(左上x，左上y，右下x，右下y)</li><li>(左上x，左上y，边框宽，边框高)</li></ul></li></ul></li><li><p>锚框</p><ul><li>锚框在目标检测算法中很常用，许多目标检测算法都用到了这项技术</li><li>锚框是对边缘框的一个猜测：<ul><li>提出多个被称为锚框的区域</li><li>预测每个锚框中是否含有目标物体</li><li>如果有，则继续预测从这个锚框到真实边缘框的偏移</li></ul></li><li>使用交并比（IoU）来计算两个框的相似度(预测框和标签框)<br><img src="/images/d2l/20/1.png"></li><li>赋予锚框标号<ul><li>在训练时，每个锚框都是一个训练样本，每次读取一张图片都要进行一次赋予锚框标号的操作</li><li>将每个锚框要么标注为背景，要么标注为与真实边缘框相关</li><li>可能生成大量锚框导致负样本过多</li><li>锚框可固定生成，或根据图片生成，甚至随机</li><li>假设一个图片有4个标签边缘框，生成了9个锚框，一种赋予标号的算法如下图<br><img src="/images/d2l/20/2.png"></li></ul></li><li>在预测时，使用非极大值抑制（NMS）输出<br><img src="/images/d2l/20/3.png"></li></ul></li><li><p>目标检测常用算法</p><ol><li><p>Faster R-CNN<br>图片进入一个CNN后分成两条路线，一条路线进入RPN（负责生成锚框），另一条路线经过RoI pooling（将不同大小的锚框提取为同一大小）后连接至全连接层，最后做出分类以及边缘框预测。Faster R-CNN相对其他算法来说还是很慢，但精度很高，适合刷榜。<br><img src="/images/d2l/20/4.png"></p></li><li><p>SSD（单发多框检测）<br>SSD由一个基础的网络来抽取特征，然后多个卷积层块来减半高宽。每段都会生成锚框，底部段拟合小物体，顶部段拟合大物体。每个锚框都会预测类别和边缘框<br><img src="/images/d2l/20/5.png"></p></li><li><p>YOLO<br>SSD中锚框有大量重叠，YOLO将图片均匀分成SxS个锚框，每个锚框预测B个边缘框。</p></li></ol></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul><li><p>边缘框实现</p>  <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br><span class="hljs-keyword">from</span> matplotlib <span class="hljs-keyword">import</span> pyplot <span class="hljs-keyword">as</span> plt<br><br>img=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">"./1.jpg"</span>)<br>plt.imshow(img)<br>plt.show()<br>fig=plt.imshow(img)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">box_corner_to_center</span>(<span class="hljs-params">boxes</span>):</span><br>    <span class="hljs-string">"""(左上，右下)转换到(中间，宽度，高度)</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        boxs : 一组边缘框 </span><br><span class="hljs-string">    """</span><br>    x1, y1, x2, y2 = boxes[:, <span class="hljs-number">0</span>], boxes[:, <span class="hljs-number">1</span>], boxes[:, <span class="hljs-number">2</span>], boxes[:, <span class="hljs-number">3</span>]<br>    cx = (x1 + x2) / <span class="hljs-number">2</span><br>    cy = (y1 + y2) / <span class="hljs-number">2</span><br>    w = x2 - x1<br>    h = y2 - y1<br>    <span class="hljs-comment"># 将新坐标堆叠起来变为二维Tensor，注意与cat不同</span><br>    boxes = torch.stack((cx, cy, w, h))<br>    <span class="hljs-comment"># 返回转置</span><br>    <span class="hljs-keyword">return</span> boxes.T<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">box_center_to_corner</span>(<span class="hljs-params">boxes</span>):</span><br>    <span class="hljs-string">"""(中间，宽度，高度)转换到(左上，右下)</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        boxs : 一组边缘框 </span><br><span class="hljs-string">    """</span><br>    cx, cy, w, h = boxes[:, <span class="hljs-number">0</span>], boxes[:, <span class="hljs-number">1</span>], boxes[:, <span class="hljs-number">2</span>], boxes[:, <span class="hljs-number">3</span>]<br>    x1 = cx - <span class="hljs-number">0.5</span> * w<br>    y1 = cy - <span class="hljs-number">0.5</span> * h<br>    x2 = cx + <span class="hljs-number">0.5</span> * w<br>    y2 = cy + <span class="hljs-number">0.5</span> * h<br>    boxes = torch.stack((x1, y1, x2, y2))<br>    <span class="hljs-keyword">return</span> boxes.T<br><br>x=torch.tensor([[<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>]])<br>x=box_corner_to_center(x)<br><span class="hljs-built_in">print</span>(x)<br>x=box_center_to_corner(x)<br><span class="hljs-built_in">print</span>(x)<br><br><br>box1=torch.tensor([<span class="hljs-number">360</span>,<span class="hljs-number">170</span>,<span class="hljs-number">650</span>,<span class="hljs-number">650</span>])<br>box2=torch.tensor([<span class="hljs-number">120</span>,<span class="hljs-number">210</span>,<span class="hljs-number">350</span>,<span class="hljs-number">290</span>])<br><br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">show_bboxes</span>(<span class="hljs-params">fig,bboxes,color</span>):</span><br>    <span class="hljs-string">"""显示带边缘框的图片</span><br><span class="hljs-string"></span><br><span class="hljs-string">    """</span> <br>    <span class="hljs-keyword">for</span> b,c <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(bboxes,color):<br>        fig.axes.add_patch(_bbox_to_rect(b, c))<br>    plt.show()<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_bbox_to_rect</span>(<span class="hljs-params">bbox, color</span>):</span><br>        <span class="hljs-keyword">return</span> plt.Rectangle(xy=(bbox[<span class="hljs-number">0</span>], bbox[<span class="hljs-number">1</span>]), width=bbox[<span class="hljs-number">2</span>] - bbox[<span class="hljs-number">0</span>],<br>                                height=bbox[<span class="hljs-number">3</span>] - bbox[<span class="hljs-number">1</span>], fill=<span class="hljs-literal">False</span>,<br>                                edgecolor=color, linewidth=<span class="hljs-number">2</span>)<br><br><br><br>show_bboxes(fig,[box1,box2],[<span class="hljs-string">'red'</span>,<span class="hljs-string">'green'</span>])<br><br></code></pre></td></tr></tbody></table></figure></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Neural-Network </tag>
+            
+            <tag> Dive-Into-Deep-Learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>D2L: Fine Tune</title>
       <link href="/2022/02/27/d2l_19/"/>
       <url>/2022/02/27/d2l_19/</url>
