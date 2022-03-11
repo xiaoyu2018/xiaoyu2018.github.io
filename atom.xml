@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-03-08T13:19:10.111Z</updated>
+  <updated>2022-03-11T14:37:46.163Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Git Skills</title>
+    <link href="http://example.com/2022/03/11/Git/"/>
+    <id>http://example.com/2022/03/11/Git/</id>
+    <published>2022-03-11T14:37:46.163Z</published>
+    <updated>2022-03-11T14:37:46.163Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Git-Skills"><a href="#Git-Skills" class="headerlink" title="Git Skills"></a>Git Skills</h1><ul><li><p>初始化本地git仓库  </p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git init [仓库名]<br></code></pre></td></tr></tbody></table></figure><p>  不指定仓库名时在当前文件夹下创建本地git仓库。初始化仓库后生成隐藏文件夹，包含本地仓库各种信息。</p></li><li><p>关联远端git仓库</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git remote add &lt;远端仓库名称&gt; &lt;远端仓库地址&gt;<br></code></pre></td></tr></tbody></table></figure><p>  远端仓库名称随便起，供本地仓库之后使用，可以关联多个。</p></li><li><p>创建/切换分支</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">git branch &lt;分支名&gt; <br>git switch &lt;分支名&gt;<br></code></pre></td></tr></tbody></table></figure><p>  本地分支与远端仓库分支一一对应。<br>  向远端仓库push时如果远端仓库没有创建对应分支，则应先创建同名分支</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git push --set-upstream origin &lt;分支名&gt;<br></code></pre></td></tr></tbody></table></figure></li><li><p>拉取远端仓库到本地</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">git pull [远程主机名] [远程分支名] <br>git fetch [远程主机名] [远程分支名] <br></code></pre></td></tr></tbody></table></figure><p>  不指定远端主机名和远端分支名时，拉取默认远端主机的同名分支的代码。<br>  git pull会将代码直接与本地仓库合并<br>  git fetch 不会直接合并，需要手动合并</p></li><li><p>将本地仓库推送至远端仓库</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git push [远程主机名] [远程分支名]<br></code></pre></td></tr></tbody></table></figure><p>  不指定远端主机名和远端分支名时，推送至默认远端主机的同名分支。 </p></li><li><p>快速关联github与本地仓库</p><ol><li>在github新建仓库</li><li>在本地git clone 新建的仓库</li><li>此时本地仓库已经与远端仓库自动关联，且具有相同分支</li></ol></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Git-Skills&quot;&gt;&lt;a href=&quot;#Git-Skills&quot; class=&quot;headerlink&quot; title=&quot;Git Skills&quot;&gt;&lt;/a&gt;Git Skills&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;初始化本地git仓库  &lt;/p&gt;
+  &lt;figure cl</summary>
+      
+    
+    
+    
+    <category term="notes" scheme="http://example.com/categories/notes/"/>
+    
+    
+    <category term="git" scheme="http://example.com/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>You Only Look Once #2</title>
+    <link href="http://example.com/2022/03/09/YOLOv2/"/>
+    <id>http://example.com/2022/03/09/YOLOv2/</id>
+    <published>2022-03-09T07:05:44.589Z</published>
+    <updated>2022-03-09T07:05:44.589Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="YOLO9000-Better-Faster-Stronger"><a href="#YOLO9000-Better-Faster-Stronger" class="headerlink" title="YOLO9000: Better, Faster, Stronger"></a>YOLO9000: Better, Faster, Stronger</h1><h2 id="Improvement"><a href="#Improvement" class="headerlink" title="Improvement"></a><strong>Improvement</strong></h2><ul><li><p>Yolov1还存在着诸多缺陷：</p><ul><li>相比于其他两阶段目标检测算法，Yolov1虽然速度更快，但准确率更低</li><li>将图片中全部目标检出的能力较差，尤其是密集且小的物体</li><li>Yolov1对目标定位的能力更差</li></ul></li><li><p>Yolov2对上一版本进行了许多改进，并取得了不错的效果</p><ul><li>改进效果主要体现在：Better（更准确）、Faster（更快）、Stronger（能检测更多种类的目标）</li><li>改进方法主要有：Batch Normalization、High Resolution classifier、Anchor、Dimension、Direct Location、Fine-grained Features、Multi-scale Training</li></ul></li></ul><h2 id="Prime-Algorithm"><a href="#Prime-Algorithm" class="headerlink" title="Prime Algorithm"></a><strong>Prime Algorithm</strong></h2><ul><li>Batch Normalization</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;YOLO9000-Better-Faster-Stronger&quot;&gt;&lt;a href=&quot;#YOLO9000-Better-Faster-Stronger&quot; class=&quot;headerlink&quot; title=&quot;YOLO9000: Better, Faster, Stro</summary>
+      
+    
+    
+    
+    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
+    
+    
+    <category term="papers" scheme="http://example.com/tags/papers/"/>
+    
+    <category term="Neural Network" scheme="http://example.com/tags/Neural-Network/"/>
+    
+    <category term="Computer Vision" scheme="http://example.com/tags/Computer-Vision/"/>
+    
+  </entry>
   
   <entry>
     <title>Asynchronous programming</title>
@@ -473,58 +527,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;LeNet&quot;&gt;&lt;a href=&quot;#LeNet&quot; class=&quot;headerlink&quot; title=&quot;LeNet&quot;&gt;&lt;/a&gt;LeNet&lt;/h1&gt;&lt;h2 id=&quot;Basic-knowledge&quot;&gt;&lt;a href=&quot;#Basic-knowledge&quot; class=&quot;he</summary>
-      
-    
-    
-    
-    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
-    
-    
-    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
-    
-    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>D2L: AlexNet</title>
-    <link href="http://example.com/2022/01/29/d2l_12/"/>
-    <id>http://example.com/2022/01/29/d2l_12/</id>
-    <published>2022-01-29T06:18:25.147Z</published>
-    <updated>2022-01-29T06:18:25.147Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>在深度学习之前：<ul><li>核方法<ul><li>特征提取</li><li>选择核函数</li><li>凸优化问题</li><li>漂亮的定理</li></ul></li><li>几何学<ul><li>抽取特征</li><li>将计算机视觉问题描述为几何问题（如多相机）</li><li>凸优化</li><li>漂亮的定理</li><li>建立假设模型，若假设满足，效果会很好</li></ul></li><li>特征工程<ul><li>特征工程（人工特征提取）是关键，不太关心机器学习模型</li><li>特征描述子（SIFT、SURF）</li><li>视觉词袋（聚类）</li><li>最后一般用SVM</li></ul></li></ul></li><li>AlexNet赢得了2012年ImageNet竞赛的冠军，引起了深度学习的热潮，其本质上是一个更深更大的LeNet<ul><li>主要改进：<ul><li>丢弃法</li><li>ReLU</li><li>MaxPooling</li><li>数据增强（截取、调亮度、调色温等）</li><li>更深更大</li></ul></li></ul></li><li>网络结构与复杂度<br><img src="/images/d2l/12/1.png"></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><span class="hljs-keyword">import</span> d2l<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AlexNet</span>(<span class="hljs-params">nn.Module</span>):</span><br>    <br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self</span>):</span><br>        <span class="hljs-built_in">super</span>().__init__()<br>        self.conv1=nn.Conv2d(<span class="hljs-number">1</span>,<span class="hljs-number">96</span>,kernel_size=<span class="hljs-number">11</span>,stride=<span class="hljs-number">4</span>,padding=<span class="hljs-number">1</span>)<br>        self.conv2=nn.Conv2d(<span class="hljs-number">96</span>,<span class="hljs-number">256</span>,kernel_size=<span class="hljs-number">5</span>,padding=<span class="hljs-number">2</span>)<br>        self.conv3=nn.Conv2d(<span class="hljs-number">256</span>,<span class="hljs-number">384</span>,kernel_size=<span class="hljs-number">3</span>,padding=<span class="hljs-number">1</span>)<br>        self.conv4=nn.Conv2d(<span class="hljs-number">384</span>,<span class="hljs-number">384</span>,kernel_size=<span class="hljs-number">3</span>,padding=<span class="hljs-number">1</span>)<br>        self.conv5=nn.Conv2d(<span class="hljs-number">384</span>,<span class="hljs-number">256</span>,kernel_size=<span class="hljs-number">3</span>,padding=<span class="hljs-number">1</span>)<br>        self.liner1=nn.Linear(<span class="hljs-number">6400</span>,<span class="hljs-number">4096</span>)<br>        self.liner2=nn.Linear(<span class="hljs-number">4096</span>,<span class="hljs-number">4096</span>)<br>        self.liner3=nn.Linear(<span class="hljs-number">4096</span>,<span class="hljs-number">10</span>)<br><br>        self.pool=nn.MaxPool2d(kernel_size=<span class="hljs-number">3</span>,stride=<span class="hljs-number">2</span>)<br>        self.flatten=nn.Flatten()<br>        self.relu=nn.ReLU()<br>        self.dropout=nn.Dropout(p=<span class="hljs-number">0.5</span>)<br>    <br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span>(<span class="hljs-params">self,x</span>):</span><br>        <br>        x=self.relu(self.pool(self.conv1(x)))<br>        <br>        x=self.relu(self.pool(self.conv2(x)))<br>        x=self.relu(self.conv3(x))<br>        x=self.relu(self.conv4(x))<br>        x=self.relu(self.conv5(x))<br>        x=self.pool(x)<br>        x=self.flatten(x)<br>        x=self.dropout((self.liner1(x)))<br>        x=self.dropout((self.liner2(x)))<br>        x=self.liner3(x)<br><br>        <span class="hljs-keyword">return</span> x<br><br>net=AlexNet().to(torch.device(<span class="hljs-string">"cuda:0"</span>))<br><br><span class="hljs-comment"># x=torch.rand((1,1,224,224)).cuda()</span><br><span class="hljs-comment"># print(net(x).size())</span><br><br><span class="hljs-comment"># 读取Fashion-MNIST，将图片直接拉伸为224x224</span><br>train_iter,test_iter=d2l.load_data_fashion_mnist(<span class="hljs-number">256</span>,<span class="hljs-number">224</span>)<br><br><span class="hljs-comment"># d2l.train(</span><br><span class="hljs-comment">#     25,nn.CrossEntropyLoss(),</span><br><span class="hljs-comment">#     optim.Adam(net.parameters()),</span><br><span class="hljs-comment">#     net,train_iter,save_name="AlexNet",</span><br><span class="hljs-comment">#     device=torch.device("cuda:0"))</span><br>d2l.evaluate(<br>    net,test_iter,nn.CrossEntropyLoss(),<br>    param_path=<span class="hljs-string">"D:\code\machine_learning\limu_d2l\params\AlexNet_5"</span>,<br>    device=torch.device(<span class="hljs-string">"cuda:0"</span>)<br>)<br></code></pre></td></tr></tbody></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;AlexNet&quot;&gt;&lt;a href=&quot;#AlexNet&quot; class=&quot;headerlink&quot; title=&quot;AlexNet&quot;&gt;&lt;/a&gt;AlexNet&lt;/h1&gt;&lt;h2 id=&quot;Basic-knowledge&quot;&gt;&lt;a href=&quot;#Basic-knowledge&quot; c</summary>
-      
-    
-    
-    
-    <category term="Machine Learning" scheme="http://example.com/categories/Machine-Learning/"/>
-    
-    
-    <category term="Neural-Network" scheme="http://example.com/tags/Neural-Network/"/>
-    
-    <category term="Dive-Into-Deep-Learning" scheme="http://example.com/tags/Dive-Into-Deep-Learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>D2L: NiN</title>
-    <link href="http://example.com/2022/01/29/d2l_14/"/>
-    <id>http://example.com/2022/01/29/d2l_14/</id>
-    <published>2022-01-29T06:18:22.343Z</published>
-    <updated>2022-01-29T06:18:22.343Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="NiN"><a href="#NiN" class="headerlink" title="NiN"></a>NiN</h1><h2 id="Basic-knowledge"><a href="#Basic-knowledge" class="headerlink" title="Basic knowledge"></a><strong>Basic knowledge</strong></h2><ul><li>全连接层的问题：<ul><li>全连接层参数比卷积层的参数多很多，导致很多的内存（显存）及计算带宽占用</li><li>全连接层容易带来过拟合</li></ul></li><li>NiN思想：完全不要全连接层</li><li>NiN块：<ul><li>一个卷积层后跟两个起到全连接层的作用的卷积层</li><li>起到全连接层的作用的卷积层为1x1步幅为1无填充的卷积层</li></ul></li><li>NiN架构<ul><li>无全连接层</li><li>交替使用NiN块和步幅为2的最大池化层</li><li>最后使用全局平均池化层得到输出（通道数是类别数）<br><img src="/images/d2l/14/1.png"></li></ul></li></ul><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NiNBlock</span>(<span class="hljs-params">nn.Module</span>):</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-function">        self,in_channels,out_channels,</span></span><br><span class="hljs-params"><span class="hljs-function">        kernel_size,stride,padding</span></span><br><span class="hljs-params"><span class="hljs-function">    </span>):</span><br>        <span class="hljs-built_in">super</span>().__init__()<br>        self.conv=nn.Conv2d(<br>            in_channels,out_channels,kernel_size,<br>            stride=stride,padding=padding<br>        )<br>        self.f1=nn.Conv2d(out_channels,out_channels,<span class="hljs-number">1</span>)<br>        self.f2=nn.Conv2d(out_channels,out_channels,<span class="hljs-number">1</span>)<br>        self.relu=nn.ReLU()<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span>(<span class="hljs-params">self,x</span>):</span><br>        x=self.relu(self.conv(x))<br>        x=self.relu(self.f1(x))<br>        x=self.relu(self.f2(x))<br>        <span class="hljs-keyword">return</span> x<br><br>nin_net=nn.Sequential(<br>    NiNBlock(<span class="hljs-number">1</span>,<span class="hljs-number">96</span>,<span class="hljs-number">11</span>,<span class="hljs-number">4</span>,<span class="hljs-number">0</span>),<br>    nn.MaxPool2d(<span class="hljs-number">3</span>,stride=<span class="hljs-number">2</span>),<br>    NiNBlock(<span class="hljs-number">96</span>,<span class="hljs-number">256</span>,<span class="hljs-number">5</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>),<br>    nn.MaxPool2d(<span class="hljs-number">3</span>,stride=<span class="hljs-number">2</span>),<br>    NiNBlock(<span class="hljs-number">256</span>,<span class="hljs-number">384</span>,<span class="hljs-number">3</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>),<br>    nn.MaxPool2d(<span class="hljs-number">3</span>,stride=<span class="hljs-number">2</span>),nn.Dropout(),<br>    NiNBlock(<span class="hljs-number">384</span>,<span class="hljs-number">10</span>,<span class="hljs-number">3</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>),<br>    <span class="hljs-comment"># 目标输出size为1x1，也就是全局池化</span><br>    nn.AdaptiveAvgPool2d(<span class="hljs-number">1</span>),<br>    nn.Flatten()<br>)<br><br>loss_f=nn.CrossEntropyLoss()<br>opt=optim.Adam(nin_net.parameters())<br><br><span class="hljs-keyword">import</span> d2l<br><br>train_iter,test_iter=d2l.load_data_fashion_mnist(<span class="hljs-number">128</span>,resize=<span class="hljs-number">224</span>)<br><br><span class="hljs-comment"># d2l.train(</span><br><span class="hljs-comment">#     10,loss_f,opt,nin_net,train_iter,</span><br><span class="hljs-comment">#     device=torch.device("cuda:0"),</span><br><span class="hljs-comment">#     save_name="NIN"</span><br><span class="hljs-comment"># )</span><br>d2l.evaluate(<br>    nin_net,test_iter,loss_f,<br>    <span class="hljs-string">"D:/code/machine_learning/limu_d2l/params/NIN_5"</span>,<br>    device=torch.device(<span class="hljs-string">"cuda:0"</span>)<br>)<br></code></pre></td></tr></tbody></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;NiN&quot;&gt;&lt;a href=&quot;#NiN&quot; class=&quot;headerlink&quot; title=&quot;NiN&quot;&gt;&lt;/a&gt;NiN&lt;/h1&gt;&lt;h2 id=&quot;Basic-knowledge&quot;&gt;&lt;a href=&quot;#Basic-knowledge&quot; class=&quot;headerlink</summary>
       
     
     

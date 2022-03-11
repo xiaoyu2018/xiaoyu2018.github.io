@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>Git Skills</title>
+      <link href="/2022/03/11/Git/"/>
+      <url>/2022/03/11/Git/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Git-Skills"><a href="#Git-Skills" class="headerlink" title="Git Skills"></a>Git Skills</h1><ul><li><p>初始化本地git仓库  </p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git init [仓库名]<br></code></pre></td></tr></tbody></table></figure><p>  不指定仓库名时在当前文件夹下创建本地git仓库。初始化仓库后生成隐藏文件夹，包含本地仓库各种信息。</p></li><li><p>关联远端git仓库</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git remote add &lt;远端仓库名称&gt; &lt;远端仓库地址&gt;<br></code></pre></td></tr></tbody></table></figure><p>  远端仓库名称随便起，供本地仓库之后使用，可以关联多个。</p></li><li><p>创建/切换分支</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">git branch &lt;分支名&gt; <br>git switch &lt;分支名&gt;<br></code></pre></td></tr></tbody></table></figure><p>  本地分支与远端仓库分支一一对应。<br>  向远端仓库push时如果远端仓库没有创建对应分支，则应先创建同名分支</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git push --set-upstream origin &lt;分支名&gt;<br></code></pre></td></tr></tbody></table></figure></li><li><p>拉取远端仓库到本地</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">git pull [远程主机名] [远程分支名] <br>git fetch [远程主机名] [远程分支名] <br></code></pre></td></tr></tbody></table></figure><p>  不指定远端主机名和远端分支名时，拉取默认远端主机的同名分支的代码。<br>  git pull会将代码直接与本地仓库合并<br>  git fetch 不会直接合并，需要手动合并</p></li><li><p>将本地仓库推送至远端仓库</p>  <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git push [远程主机名] [远程分支名]<br></code></pre></td></tr></tbody></table></figure><p>  不指定远端主机名和远端分支名时，推送至默认远端主机的同名分支。 </p></li><li><p>快速关联github与本地仓库</p><ol><li>在github新建仓库</li><li>在本地git clone 新建的仓库</li><li>此时本地仓库已经与远端仓库自动关联，且具有相同分支</li></ol></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> notes </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> git </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>You Only Look Once #2</title>
+      <link href="/2022/03/09/YOLOv2/"/>
+      <url>/2022/03/09/YOLOv2/</url>
+      
+        <content type="html"><![CDATA[<h1 id="YOLO9000-Better-Faster-Stronger"><a href="#YOLO9000-Better-Faster-Stronger" class="headerlink" title="YOLO9000: Better, Faster, Stronger"></a>YOLO9000: Better, Faster, Stronger</h1><h2 id="Improvement"><a href="#Improvement" class="headerlink" title="Improvement"></a><strong>Improvement</strong></h2><ul><li><p>Yolov1还存在着诸多缺陷：</p><ul><li>相比于其他两阶段目标检测算法，Yolov1虽然速度更快，但准确率更低</li><li>将图片中全部目标检出的能力较差，尤其是密集且小的物体</li><li>Yolov1对目标定位的能力更差</li></ul></li><li><p>Yolov2对上一版本进行了许多改进，并取得了不错的效果</p><ul><li>改进效果主要体现在：Better（更准确）、Faster（更快）、Stronger（能检测更多种类的目标）</li><li>改进方法主要有：Batch Normalization、High Resolution classifier、Anchor、Dimension、Direct Location、Fine-grained Features、Multi-scale Training</li></ul></li></ul><h2 id="Prime-Algorithm"><a href="#Prime-Algorithm" class="headerlink" title="Prime Algorithm"></a><strong>Prime Algorithm</strong></h2><ul><li>Batch Normalization</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Machine Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> papers </tag>
+            
+            <tag> Neural Network </tag>
+            
+            <tag> Computer Vision </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Asynchronous programming</title>
       <link href="/2022/03/08/AsyncAwait/"/>
       <url>/2022/03/08/AsyncAwait/</url>
