@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>D2L: Weight Decay &amp; Dropout | Xavier's blog</title><meta name="keywords" content="Neural-Network,Dive-Into-Deep-Learning"><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Weight Decay &amp; DropoutConcept and Principle 权重衰退权重衰退可以控制模型复杂度，使其复杂度不会太大，从而一定程度上避免过拟合 使用均方范数作为硬性限制通过限制参数的取值范围来控制模型容量，具体有如下例子在限制参数向量范数的情况下优化损失函数，一般不会使用这种正则方式 使用均方范数作为柔性限制上述硬性限制有一个等价方案，具体如下，这就是一般的正则化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D2L: Weight Decay &amp; Dropout">
+<meta property="og:url" content="http://example.com/2022/09/15/d2l_6/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="Weight Decay &amp; DropoutConcept and Principle 权重衰退权重衰退可以控制模型复杂度，使其复杂度不会太大，从而一定程度上避免过拟合 使用均方范数作为硬性限制通过限制参数的取值范围来控制模型容量，具体有如下例子在限制参数向量范数的情况下优化损失函数，一般不会使用这种正则方式 使用均方范数作为柔性限制上述硬性限制有一个等价方案，具体如下，这就是一般的正则化">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/5.jpg">
+<meta property="article:published_time" content="2022-09-15T01:44:35.846Z">
+<meta property="article:modified_time" content="2022-09-15T01:44:35.846Z">
+<meta property="article:author" content="Xavier">
+<meta property="article:tag" content="Neural-Network">
+<meta property="article:tag" content="Dive-Into-Deep-Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/5.jpg"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2022/09/15/d2l_6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'D2L: Weight Decay & Dropout',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-15 09:44:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">36</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">20</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/5.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">D2L: Weight Decay &amp; Dropout</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-09-15T01:44:35.846Z" title="Created 2022-09-15 09:44:35">2022-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-09-15T01:44:35.846Z" title="Updated 2022-09-15 09:44:35">2022-09-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Machine-Learning/">Machine Learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="D2L: Weight Decay &amp; Dropout"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Weight-Decay-amp-Dropout"><a href="#Weight-Decay-amp-Dropout" class="headerlink" title="Weight Decay &amp; Dropout"></a>Weight Decay &amp; Dropout</h1><h2 id="Concept-and-Principle"><a href="#Concept-and-Principle" class="headerlink" title="Concept and Principle"></a><strong>Concept and Principle</strong></h2><ul>
+<li>权重衰退<br>权重衰退可以控制模型复杂度，使其复杂度不会太大，从而一定程度上避免过拟合<ul>
+<li>使用均方范数作为硬性限制<br>通过限制参数的取值范围来控制模型容量，具体有如下例子<br>在限制参数向量范数的情况下优化损失函数，一般不会使用这种正则方式<br><img src="/images/d2l/6/hard_res.png"></li>
+<li>使用均方范数作为柔性限制<br>上述硬性限制有一个等价方案，具体如下，这就是一般的正则化方法，其作用同样也是使得参数被限制在一个较小的范围<br><img src="/images/d2l/6/soft_res.png"><br>下面是正则项对最优解影响的一个演示<br>坐标轴分别是w的各个分量，圆线是等高线。<br>正则项给了另外一个梯度，把原始的损失函数算出的最优解往原点拉，必然会导致W的取值范围变小从而使模型复杂度降低，也就减小了过拟合。另外一种理解，正则项加入后优化目标就不再全局最优点了，所以肯定会减小训练集拟合程度，也就减小了过拟合<br>考虑为什么λ控制了正则项的重要程度，因为求偏导时λ会变成梯度前的常数项<br><img src="/images/d2l/6/effect.png"></li>
+<li>参数更新<br>带正则项后参数更新过程如下，这也说明了为什么这种方法叫权重衰退：更新前先把权重减小，然后继续更新梯度<br><img src="/images/d2l/6/update.png"></li>
+<li>注意<br>权重衰减也只在训练过程中使用，用来限制训练过程中的参数，在最终的验证过程中，指标还是原先的损失函数</li>
+</ul>
+</li>
+<li>丢弃法<ul>
+<li>动机<br>一个好的模型需要对输入数据加入扰动鲁棒，使用有噪音的数据等价于Tikhonov正则。丢弃法就是在层之间加入噪音，丢弃法也可以看作一个正则</li>
+<li>无偏差地加入噪音<br>丢弃法就是加入了无偏噪音<br><img src="/images/d2l/6/noise.png"></li>
+<li>使用丢弃法  <ul>
+<li>对其发作用域隐藏层地输出上，即随机将某些神经元的输出置零且其它输出按上述公式增大</li>
+<li>丢弃法只在训练过程中使用，测试和验证过程中不使用，这样保证了确定的输出</li>
+<li>丢弃法常用于全连接层</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul>
+<li>权重衰减从零实现</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn,optim<br><span class="hljs-keyword">from</span> d2l <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment"># 训练数据设置比较小，容易过拟合</span><br>num_train=<span class="hljs-number">20</span><br>num_test=<span class="hljs-number">100</span><br>num_inputs=<span class="hljs-number">200</span><br>batch_size=<span class="hljs-number">5</span><br><br>true_w,true_b=torch.ones(num_inputs)*<span class="hljs-number">0.01</span>,<span class="hljs-number">0.05</span><br><br>train_data=synthetic_data(true_w,true_b,num_train)<br>train_iter=data_loader(train_data,batch_size)<br>test_data=synthetic_data(true_w,true_b,num_test)<br>test_iter=data_loader(test_data,batch_size)<br><br><span class="hljs-comment"># for X,y in train_iter:</span><br><span class="hljs-comment">#     print(X,y)</span><br>w=torch.normal(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,size=true_w.shape,requires_grad=<span class="hljs-literal">True</span>)<br>b=torch.zeros(<span class="hljs-number">1</span>,requires_grad=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># L2正则</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">L2_penalty</span>(<span class="hljs-params">lambada,w</span>):</span><br>    <span class="hljs-keyword">return</span> torch.<span class="hljs-built_in">sum</span>(w**<span class="hljs-number">2</span>)/<span class="hljs-number">2</span>*lambada<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">liner_reg</span>(<span class="hljs-params">w,b,X</span>):</span><br>    <span class="hljs-keyword">return</span> torch.matmul(X,w)+b<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">net</span>(<span class="hljs-params">X</span>):</span><br>    <span class="hljs-keyword">return</span> liner_reg(w,b,X)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">squared_loss_L2</span>(<span class="hljs-params">y_hat,y</span>):</span><br>    loss=(y_hat.view(y.shape)-y)**<span class="hljs-number">2</span>/<span class="hljs-number">2</span>/<span class="hljs-built_in">len</span>(y)<br>    <span class="hljs-keyword">return</span> (loss+L2_penalty(<span class="hljs-number">0.5</span>,w)).<span class="hljs-built_in">sum</span>()<br><br>opt=optim.SGD([w,b],lr=<span class="hljs-number">0.01</span>)<br><br><br><br>train(<span class="hljs-number">100</span>,squared_loss_L2,opt,net,train_iter,test_iter)<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>权重衰减简洁实现</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">net=nn.Sequential(nn.Linear(num_inputs,<span class="hljs-number">1</span>))<br>loss_f=nn.MSELoss()<br><span class="hljs-comment"># weight_decay代表了L2范数前面的λ系数</span><br><span class="hljs-comment"># 权重衰减系数很小时，在当前数据集下过拟合非常明显</span><br><span class="hljs-comment"># 权重衰减系数很大时，欠拟合则会非常明显</span><br>opt=optim.SGD(net.parameters(),lr=<span class="hljs-number">0.01</span>,weight_decay=<span class="hljs-number">1.2</span>)<br><br>train(<span class="hljs-number">100</span>,loss_f,opt,net,train_iter,test_iter)<br><span class="hljs-comment"># 其它范数的正则pytorch没有直接的实现</span><br><span class="hljs-comment"># 手动实现也很简单</span><br></code></pre></td></tr></tbody></table></figure></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Neural-Network/">Neural-Network</a><a class="post-meta__tags" href="/tags/Dive-Into-Deep-Learning/">Dive-Into-Deep-Learning</a></div><div class="post_share"><div class="social-share" data-image="/img/5.jpg" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Weight-Decay-amp-Dropout"><span class="toc-number">1.</span> <span class="toc-text">Weight Decay &amp; Dropout</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concept-and-Principle"><span class="toc-number">1.1.</span> <span class="toc-text">Concept and Principle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implementation"><span class="toc-number">1.2.</span> <span class="toc-text">Implementation</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Inversion of Control | Xavier's blog</title><meta name="keywords" content="IoC,DI,DIP,Design Patterns"><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Inversion of ControlConcept and PrincipleDIP、IoC、DI、SL 是什么 DIP，即依赖倒置原则（Dependency inversion principle），不是一种技术，而是一种面向对象设计思想，其使得高层次的类不依赖于低层次的类的实现细节，依赖关系被倒置（高低层次的类都反而依赖接口），从而使得低层次类依赖于高层次类的需求抽象。  IoC，即控制反">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inversion of Control">
+<meta property="og:url" content="http://example.com/2022/09/15/IoC/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="Inversion of ControlConcept and PrincipleDIP、IoC、DI、SL 是什么 DIP，即依赖倒置原则（Dependency inversion principle），不是一种技术，而是一种面向对象设计思想，其使得高层次的类不依赖于低层次的类的实现细节，依赖关系被倒置（高低层次的类都反而依赖接口），从而使得低层次类依赖于高层次类的需求抽象。  IoC，即控制反">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/5.jpg">
+<meta property="article:published_time" content="2022-09-15T11:31:53.922Z">
+<meta property="article:modified_time" content="2022-09-15T11:31:53.922Z">
+<meta property="article:author" content="Xavier">
+<meta property="article:tag" content="IoC">
+<meta property="article:tag" content="DI">
+<meta property="article:tag" content="DIP">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/5.jpg"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2022/09/15/IoC/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Inversion of Control',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-15 19:31:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">36</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">20</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/5.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Inversion of Control</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-09-15T11:31:53.922Z" title="Created 2022-09-15 19:31:53">2022-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-09-15T11:31:53.922Z" title="Updated 2022-09-15 19:31:53">2022-09-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Computer-Literacy/">Computer Literacy</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Inversion of Control"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Inversion-of-Control"><a href="#Inversion-of-Control" class="headerlink" title="Inversion of Control"></a>Inversion of Control</h1><h2 id="Concept-and-Principle"><a href="#Concept-and-Principle" class="headerlink" title="Concept and Principle"></a><strong>Concept and Principle</strong></h2><h3 id="DIP、IoC、DI、SL-是什么"><a href="#DIP、IoC、DI、SL-是什么" class="headerlink" title="DIP、IoC、DI、SL 是什么"></a>DIP、IoC、DI、SL 是什么</h3><ul>
+<li><p><strong>DIP</strong>，即依赖倒置原则（Dependency inversion principle），不是一种技术，而是一种面向对象设计思想，其使得高层次的类不依赖于低层次的类的实现细节，依赖关系被倒置（高低层次的类都反而依赖接口），从而使得低层次类依赖于高层次类的需求抽象。</p>
+</li>
+<li><p><strong>IoC</strong>，即控制反转（Inversion of Control）。也是一种面向对象设计思想，是相对于DIP更进一步的解耦（连在所需类中自行创建具体的对象也不需要）。实现方式便是将用户或框架设计好的对象交给容器控制，而非传统编程过程中在其他对象内部控制，这种方式在现代的web开发、图像开发中很常用。</p>
+</li>
+<li><p><strong>SL</strong>，即服务定位器（Service Locator）。是IoC的一种具体实现方法，实现了按需返回服务实例，在该模式中，服务会被提前注册到服务定位器中，并通过 ID 唯一标识。应用需要某个服务时，通过 ID 或所需类型从服务定位器中得到这个服务的实例。服务定位器解耦了服务调用者和具体的服务实现。</p>
+</li>
+<li><p><strong>DI</strong>，即依赖注入（Dependency Injection）。是IoC的一种具体实现方法，组件之间的依赖关系由容器在 <em>运行期间</em> 自行决定（使用反射技术），由容器动态地将依赖项注入到组件当中。</p>
+</li>
+</ul>
+<h3 id="IoC-DI的优点"><a href="#IoC-DI的优点" class="headerlink" title="IoC/DI的优点"></a>IoC/DI的优点</h3><ul>
+<li><p>没有引入IOC之前，对象A依赖于对象B，那么对象A在初始化或者运行到某一点的时候，A直接使用new关键字创建B的实例，程序高度耦合，效率低下，无论是创建还是使用B对象，控制权都在自己手上。</p>
+</li>
+<li><p>传统的代码，每个对象负责管理与自己需要依赖的对象，导致如果需要切换依赖对象的实现类时，需要修改很多地方。同时，过度耦合也使得对象难以进行单元测试。</p>
+</li>
+<li><p>实现IoC之后，依赖关系高度解耦，在可见的代码中不需要手动new，这个过程被推迟到运行过程中由容器动态控制，使单元测试、程序修改更加方便，并且解放了程序员在大型程序复杂依赖的手动控制。</p>
+</li>
+</ul>
+<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a><strong>Implementation</strong></h2><ul>
+<li>传统编程</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">//需要手动创建依赖实例,更换某一组件时，组件和应用代码都要更改</span><br>DialModule dialModule = <span class="hljs-keyword">new</span> DialModule();<br>VideoPlayerModule videoplayerModule=<span class="hljs-keyword">new</span> VideoPlayerModule();<br>Phone phone=<span class="hljs-keyword">new</span> Phone(videoplayerModule,dialModule);<br><br>phone.Play(<span class="hljs-keyword">new</span> Video(<span class="hljs-string">"the Suit"</span>, <span class="hljs-number">120</span>));<br>phone.Dial(<span class="hljs-string">"2838896"</span>);<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title">DialModule</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        Console.WriteLine(<span class="hljs-string">$"calling <span class="hljs-subst">{phone_number}</span>..."</span>);<br>    }<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">Video</span><br>{<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; }<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Period { <span class="hljs-keyword">get</span>; }<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Video</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> name,<span class="hljs-built_in">int</span> period</span>)</span><br>    {<br>        Name=name;<br>        Period=period;<br>    }<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">VideoPlayerModule</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Play</span>(<span class="hljs-params">Video video</span>)</span><br>    {<br>        Console.WriteLine(<span class="hljs-string">$"playing <span class="hljs-subst">{video.Name}</span>"</span>);<br>    }<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">Phone</span><br>{<br>    <span class="hljs-keyword">private</span> VideoPlayerModule _videoPlayerModule;<br>    <span class="hljs-keyword">private</span> DialModule _dialModule;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Phone</span>(<span class="hljs-params">VideoPlayerModule videoPlayerModule, DialModule dialModule</span>)</span><br>    {<br>        _videoPlayerModule = videoPlayerModule;<br>        _dialModule = dialModule;<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        _dialModule.Dial(phone_number);<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Play</span>(<span class="hljs-params">Video video</span>)</span><br>    {<br>        _videoPlayerModule.Play(video);<br>    }<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>接口编程（DIP）</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">//需要手动创建依赖实例,更换某一组件时，只需要在这里改</span><br>IDial dialModule = <span class="hljs-keyword">new</span> CommonDial();<br><br>Phone phone=<span class="hljs-keyword">new</span> Phone(dialModule);<br><br>phone.Dial(<span class="hljs-string">"xxxxxxx"</span>);<br><br><br><span class="hljs-keyword">interface</span> <span class="hljs-title">IDial</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span>;<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">CommonDial</span>:<span class="hljs-title">IDial</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        Console.WriteLine(<span class="hljs-string">$"calling <span class="hljs-subst">{phone_number}</span>..."</span>);<br>    }<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">PrivateDial</span> : <span class="hljs-title">IDial</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        Console.WriteLine(<span class="hljs-string">$"secretly calling <span class="hljs-subst">{phone_number}</span>..."</span>);<br>    }<br>}<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title">Phone</span><br>{<br>    <br>    <span class="hljs-keyword">private</span> IDial _dialModule;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Phone</span>(<span class="hljs-params">IDial dialModule</span>)</span><br>    {<br>        <br>        _dialModule = dialModule;<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        _dialModule.Dial(phone_number);<br>    }<br><br>    <br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>控制反转（IoC）</li>
+</ul>
+<figure class="highlight csharp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">//微软提供的依赖注入扩展</span><br><span class="hljs-keyword">using</span> Microsoft.Extensions.DependencyInjection;<br><br><br><span class="hljs-comment">//实例化一个容器</span><br>IServiceCollection services=<span class="hljs-keyword">new</span> ServiceCollection();<br><span class="hljs-comment">//注册服务</span><br>services.AddScoped&lt;IDial, CommonDial&gt;();<br>services.AddScoped&lt;IDial, PrivateDial&gt;();<br>services.AddScoped&lt;Phone&gt;();<br><br><span class="hljs-comment">//获取服务定位器</span><br><span class="hljs-keyword">var</span> provider=services.BuildServiceProvider();<br><span class="hljs-comment">//首个实例的创建需要使用服务定位器的方式获得</span><br><span class="hljs-comment">//之后的依赖，通过依赖注入的方式在运行中由容器分配</span><br>Phone? phone=provider.GetService&lt;Phone&gt;();<br><br><span class="hljs-keyword">if</span>(phone!=<span class="hljs-literal">null</span>)<br>{<br>    phone.Dial(<span class="hljs-string">"xxxxxxxxxxxx"</span>);<br>}<br><br><span class="hljs-keyword">interface</span> <span class="hljs-title">IDial</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span>;<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">CommonDial</span>:<span class="hljs-title">IDial</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        Console.WriteLine(<span class="hljs-string">$"calling <span class="hljs-subst">{phone_number}</span>..."</span>);<br>    }<br>}<br><br><span class="hljs-keyword">class</span> <span class="hljs-title">PrivateDial</span> : <span class="hljs-title">IDial</span><br>{<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        Console.WriteLine(<span class="hljs-string">$"secretly calling <span class="hljs-subst">{phone_number}</span>..."</span>);<br>    }<br>}<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title">Phone</span><br>{<br>    <br>    <span class="hljs-keyword">private</span> IDial _dialModule;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Phone</span>(<span class="hljs-params">IDial dialModule</span>)</span><br>    {<br>        <br>        _dialModule = dialModule;<br>    }<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Dial</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> phone_number</span>)</span><br>    {<br>        _dialModule.Dial(phone_number);<br>    }<br><br>    <br>}<br></code></pre></td></tr></tbody></table></figure></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/IoC/">IoC</a><a class="post-meta__tags" href="/tags/DI/">DI</a><a class="post-meta__tags" href="/tags/DIP/">DIP</a><a class="post-meta__tags" href="/tags/Design-Patterns/">Design Patterns</a></div><div class="post_share"><div class="social-share" data-image="/img/5.jpg" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Inversion-of-Control"><span class="toc-number">1.</span> <span class="toc-text">Inversion of Control</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concept-and-Principle"><span class="toc-number">1.1.</span> <span class="toc-text">Concept and Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DIP%E3%80%81IoC%E3%80%81DI%E3%80%81SL-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.1.1.</span> <span class="toc-text">DIP、IoC、DI、SL 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IoC-DI%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">1.1.2.</span> <span class="toc-text">IoC&#x2F;DI的优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implementation"><span class="toc-number">1.2.</span> <span class="toc-text">Implementation</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
