@@ -1,0 +1,255 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Basic SQL | Xavier's blog</title><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Basic SQL数据库语言可分为两个部分，DDL和DML。  DDL（Data Definitoin Language）：描述数据库中要存储的现实世界实体（操作表），操作数据库的结构等 DML（Data Manipulation Language）：操作数据库存储的对象或记录 DQL（Data Query Language）：查询数据库中记录  SQL DDL:数据定义数据库命令 查询数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Basic SQL">
+<meta property="og:url" content="http://example.com/2023/02/15/mysql_1/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="Basic SQL数据库语言可分为两个部分，DDL和DML。  DDL（Data Definitoin Language）：描述数据库中要存储的现实世界实体（操作表），操作数据库的结构等 DML（Data Manipulation Language）：操作数据库存储的对象或记录 DQL（Data Query Language）：查询数据库中记录  SQL DDL:数据定义数据库命令 查询数据库">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/5.jpg">
+<meta property="article:published_time" content="2023-02-15T08:42:35.209Z">
+<meta property="article:modified_time" content="2023-02-15T08:42:35.209Z">
+<meta property="article:author" content="Xavier">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/5.jpg"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2023/02/15/mysql_1/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Basic SQL',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-15 16:42:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">19</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/5.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Basic SQL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-02-15T08:42:35.209Z" title="Created 2023-02-15 16:42:35">2023-02-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-02-15T08:42:35.209Z" title="Updated 2023-02-15 16:42:35">2023-02-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MySQL/">MySQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Basic SQL"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Basic-SQL"><a href="#Basic-SQL" class="headerlink" title="Basic SQL"></a>Basic SQL</h1><p>数据库语言可分为两个部分，DDL和DML。</p>
+<ul>
+<li>DDL（Data Definitoin Language）：描述数据库中要存储的现实世界实体（操作表），操作数据库的结构等</li>
+<li>DML（Data Manipulation Language）：操作数据库存储的对象或记录</li>
+<li>DQL（Data Query Language）：查询数据库中记录</li>
+</ul>
+<h2 id="SQL-DDL-数据定义"><a href="#SQL-DDL-数据定义" class="headerlink" title="SQL DDL:数据定义"></a><strong>SQL DDL:数据定义</strong></h2><h3 id="数据库命令"><a href="#数据库命令" class="headerlink" title="数据库命令"></a>数据库命令</h3><ul>
+<li><p>查询数据库</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--显示当前mysql服务器中所有数据库</span><br><span class="hljs-keyword">SHOW</span> DATABASES;<br><span class="hljs-comment">--显示创建某一数据库时的语句</span><br><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">CREATE</span> DATABASE 数据库名称;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>创建新数据库</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--字符集为utf-8(默认就是)，校验规则utf8_general_ci(不区分大小写，默认就是)</span><br><span class="hljs-comment">--创建数据库名称是使用反引号规避关键字</span><br><span class="hljs-comment">--数据库的字符集和校对规则会成为该数据库下表的默认规则</span><br><span class="hljs-comment">--utf8_bin区分大小写，大小写指的是数据库中记录的字符大小写 </span><br><span class="hljs-keyword">CREATE</span> DATABASE 数据库名称 <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> 字符集 <span class="hljs-keyword">COLLATE</span> 校验规则;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>删除数据库</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> DATABASE 数据库名称;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>备份和恢复数据库  </p>
+<ul>
+<li>备份数据库即将数据库导出至其他文件，恢复数据库即从备份文件恢复至某一DBMS，备份与恢复操作不是sql指令需要在shell执行，mysql提供的程序在mysql目录中的bin文件夹下，备份其实就是备份数据库生命周期内从头到尾对应的sql语句。</li>
+<li>备份：<code>./mysqldump -u 用户名 -p -B 数据库1 数据库2 ... &gt; 备份文件的路径</code></li>
+<li>恢复：直接用dbms终端打开备份sql文件并执行或者打开mysql命令行执行：<code>source 备份文件路径</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="表命令"><a href="#表命令" class="headerlink" title="表命令"></a>表命令</h3><ul>
+<li><p>查询表</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--显示当前数据库中全部表</span><br><span class="hljs-keyword">SHOW</span> TABLES;<br><span class="hljs-comment">--显示某一张表的信息</span><br><span class="hljs-keyword">DESC</span> 表名<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>创建新表</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql">   <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> 表名<br>   (<br>字段名称<span class="hljs-number">1</span> 数据类型(容量) 约束，<br>字段名称<span class="hljs-number">2</span> 数据类型(容量) 约束，<br>字段名称<span class="hljs-number">3</span> 数据类型(容量) 约束,<br>...    <br>   )<span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> 字符集 <span class="hljs-keyword">COLLATE</span> 校验规则 ENGINE 引擎;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>删除表</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> 表名称;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>修改表</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 添加列<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> 表名<br><span class="hljs-keyword">ADD</span> (<br>字段名 数据类型(容量) 约束,<br>字段名 数据类型(容量) 约束,<br>...<br>);<br><br>#修改列<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> 表名<br>MODIFY 字段名 数据类型(容量) 约束;<br><br>#修改列名<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> 表名<br>CHANGE 旧字段名 新字段名 数据类型(容量) 约束;<br><br>#删除列<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> 表名<br><span class="hljs-keyword">DROP</span> 字段名;<br><br># 修改表名<br>RENAME <span class="hljs-keyword">TABLE</span> 旧表名 <span class="hljs-keyword">TO</span> 新表名;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>备份及恢复表</p>
+<ul>
+<li>同样使用mysqldump,使用命令：<br><code>mysqldump -u 用户名 -p密码 数据库名 表1 表2... &gt; 备份文件路径</code></li>
+<li>恢复表同恢复数据库的操作，要注意切换到目标数据库之后再执行备份语句</li>
+</ul>
+</li>
+</ul>
+<h2 id="SQL-DML-数据操作"><a href="#SQL-DML-数据操作" class="headerlink" title="SQL DML:数据操作"></a><strong>SQL DML:数据操作</strong></h2><ul>
+<li><p>插入</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 向表中插入一条或多条记录</span><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <br>    (字段<span class="hljs-number">1</span>, 字段<span class="hljs-number">2</span>, ...) <br>    <span class="hljs-keyword">VALUES</span> (值<span class="hljs-number">1</span>, 值<span class="hljs-number">2</span>, ...)<br>           (值<span class="hljs-number">1</span>, 值<span class="hljs-number">2</span>, ...)<br>           (值<span class="hljs-number">1</span>, 值<span class="hljs-number">2</span>, ...)<br>        ...;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>修改</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 修改表中某一条记录</span><br>UPDATE <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SET</span> 字段<span class="hljs-number">1</span><span class="hljs-operator">=</span>值<span class="hljs-number">1</span>, 字段<span class="hljs-number">2</span><span class="hljs-operator">=</span>值<span class="hljs-number">2</span>, ... <span class="hljs-keyword">WHERE</span> ...;<br><br><span class="hljs-comment">-- 在UPDATE语句中，更新字段时可以使用表达式。例如，把所有80分以下的同学的成绩加10分：</span><br>UPDATE <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SET</span> score<span class="hljs-operator">=</span>score<span class="hljs-operator">+</span><span class="hljs-number">10</span> <span class="hljs-keyword">WHERE</span> score<span class="hljs-operator">&lt;=</span><span class="hljs-number">80</span>;<br><span class="hljs-comment">-- 如果WHERE条件没有匹配到任何记录，UPDATE语句不会报错，也不会有任何记录被更新</span><br><span class="hljs-comment">-- UPDATE语句不指定WHERE条件时，会作用于表中所有记录</span><br>UPDATE <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SET</span> 字段<span class="hljs-number">1</span><span class="hljs-operator">=</span>值<span class="hljs-number">1</span>, 字段<span class="hljs-number">2</span><span class="hljs-operator">=</span>值<span class="hljs-number">2.</span>..;<br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>删除</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 删除表中指定条件的记录</span><br><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">WHERE</span> ...;<br><br><span class="hljs-comment">-- 当DELETE语句没有找到匹配的where不会报错，也不会删除任何记录</span><br><span class="hljs-comment">-- 不指定where时，DELETE会删除表中所有记录</span><br><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span>;<br><span class="hljs-comment">-- 在使用DELETE之前，最好先使用SELECT查看WHERE是否选中了期望的记录集，再执行DELETE</span><br></code></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="SQL-DQL-数据查询"><a href="#SQL-DQL-数据查询" class="headerlink" title="SQL DQL:数据查询"></a><strong>SQL DQL:数据查询</strong></h2><ul>
+<li><p>基本查询</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 最普通查询语句</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span>;<br><span class="hljs-comment">-- SELECT 语句也可以不带FROM语句，一般用于检查数据库连接状态</span><br><span class="hljs-comment">-- 或是用于计算</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-number">1</span>;<br><span class="hljs-keyword">SELECT</span> <span class="hljs-number">1</span><span class="hljs-operator">+</span><span class="hljs-number">1</span>;<br><span class="hljs-comment">-- 带条件的投影查询</span><br><span class="hljs-keyword">SELECT</span> 字段<span class="hljs-number">1</span>,字段<span class="hljs-number">2</span> ... <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">WHERE</span> 条件;<br><br><span class="hljs-comment">-- 使用SELECT进行查询时，查询结果默认按主键排序</span><br><span class="hljs-comment">-- 通过ORDER BY子句指定排序依据的字段，DESC表示倒叙</span><br><span class="hljs-comment">-- 当字段x相同时，再按字段y排序</span><br><span class="hljs-keyword">SELECT</span> 字段<span class="hljs-number">1</span>,字段<span class="hljs-number">2</span> ... <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">WHERE</span> 条件 <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> 字段x <span class="hljs-keyword">DESC</span>, 字段y;<br><br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>分页查询</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 使用SELECT查询时，如果结果集数据量很大，放在一个页面显示的话数据量太大，此时应考虑分页显示</span><br><span class="hljs-comment">-- M表示一页最多M条记录，N表示跳过前N条记录</span><br><span class="hljs-keyword">SELECT</span> 字段<span class="hljs-number">1</span>,字段<span class="hljs-number">2</span> ...<br><span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span><br>LIMIT M <span class="hljs-keyword">OFFSET</span> N;<br><br><span class="hljs-comment">-- 注意，查询结果只会显示一页，所以实际上时用OFFSET控制显示第几页</span><br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>聚合查询</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 聚合查询即使用MySQL提供的聚合函数进行查询</span><br><span class="hljs-keyword">SELECT</span> 聚合函数(字段) 别名 <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">WHERE</span> 条件;<br><br><span class="hljs-comment">-- 分组聚合使用GROUP BY</span><br><span class="hljs-comment">-- 按多个字段分组</span><br><span class="hljs-keyword">SELECT</span> 聚合函数(字段) 别名 <span class="hljs-keyword">FROM</span> <span class="hljs-operator">&lt;</span>表名<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> 字段x,字段y...;<br><br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>多表查询</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- SELECT可以同时从多张表查询数据，最后的查询结果是多表的笛卡尔积</span><br><span class="hljs-comment">-- 多个表中有字段名相同的情况，可以使用 "." 运算符明确字段</span><br><span class="hljs-keyword">SELECT</span> 表<span class="hljs-number">1.</span>字段<span class="hljs-number">1</span>,表<span class="hljs-number">2.</span>字段<span class="hljs-number">2</span> ... <span class="hljs-keyword">FROM</span> 表<span class="hljs-number">1</span>,表<span class="hljs-number">2</span> ... <span class="hljs-keyword">WHERE</span> 条件;<br><br><span class="hljs-comment">-- 不指定条件的表1和表2多表查询最终得到的记录条数为M x N</span><br><span class="hljs-comment">-- 其中M为表1记录条数，N为表2记录条数</span><br><br></code></pre></td></tr></tbody></table></figure></li>
+<li><p>连接查询</p>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 连接查询的查询结果是多表查询的子集，可以看作特殊的多表查询</span><br><br><span class="hljs-comment">-- 内连接，查询结果是符合连接条件，且在两表中均有的条件字段值的记录集</span><br><span class="hljs-keyword">SELECT</span> 别名<span class="hljs-number">1.</span>字段<span class="hljs-number">1</span>,别名<span class="hljs-number">2.</span>字段<span class="hljs-number">1</span> ...<br><span class="hljs-keyword">FROM</span> 表<span class="hljs-number">1</span> 别名<span class="hljs-number">1</span><br><span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> 表<span class="hljs-number">2</span> 别名<span class="hljs-number">2</span><br><span class="hljs-keyword">ON</span> 连接条件（等指连接，非等值连接）<br><span class="hljs-keyword">WHERE</span> 查询条件;<br><br><span class="hljs-comment">-- 外连接，以连接的表为基准，查询的记录要包含某一表或所有表的所有记录</span><br><span class="hljs-comment">-- 分为左外连接，右外连接和全外连接</span><br><span class="hljs-keyword">SELECT</span> 别名<span class="hljs-number">1.</span>字段<span class="hljs-number">1</span>,别名<span class="hljs-number">2.</span>字段<span class="hljs-number">1</span> ...<br><span class="hljs-keyword">FROM</span> 表<span class="hljs-number">1</span> 别名<span class="hljs-number">1</span><br><span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> 表<span class="hljs-number">2</span> 别名<span class="hljs-number">2</span><br><span class="hljs-keyword">ON</span> 连接条件（等指连接，非等值连接）<br><span class="hljs-keyword">WHERE</span> 查询条件;<br><br></code></pre></td></tr></tbody></table></figure></li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/5.jpg" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Basic-SQL"><span class="toc-number">1.</span> <span class="toc-text">Basic SQL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-DDL-%E6%95%B0%E6%8D%AE%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">SQL DDL:数据定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%91%BD%E4%BB%A4"><span class="toc-number">1.1.1.</span> <span class="toc-text">数据库命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.1.2.</span> <span class="toc-text">表命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-DML-%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">SQL DML:数据操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-DQL-%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.3.</span> <span class="toc-text">SQL DQL:数据查询</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
