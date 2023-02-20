@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Database Designment | Xavier's blog</title><meta name="author" content="Xavier"><meta name="copyright" content="Xavier"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Database Designment数据库设计是指对于一个给定的应用场景，构造（设计）优化的数据库逻辑模式和物理结构，并据此建立数据库，满足各种用户的应用需求。一般的设计步骤为：    需求分析 概念结构设计 逻辑结构设计 物理结构设计 数据库实施 数据库运行维护  需求分析通过详细调查现实世界要处理的对象（组织、部门、企业等），充分了解原系统（手工系统或计算机系统）工作概况，明确用户的各种需求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Database Designment">
+<meta property="og:url" content="http://example.com/2023/02/18/mysql_7/index.html">
+<meta property="og:site_name" content="Xavier&#39;s blog">
+<meta property="og:description" content="Database Designment数据库设计是指对于一个给定的应用场景，构造（设计）优化的数据库逻辑模式和物理结构，并据此建立数据库，满足各种用户的应用需求。一般的设计步骤为：    需求分析 概念结构设计 逻辑结构设计 物理结构设计 数据库实施 数据库运行维护  需求分析通过详细调查现实世界要处理的对象（组织、部门、企业等），充分了解原系统（手工系统或计算机系统）工作概况，明确用户的各种需求">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/5.jpg">
+<meta property="article:published_time" content="2023-02-18T07:55:39.246Z">
+<meta property="article:modified_time" content="2023-02-18T07:55:39.246Z">
+<meta property="article:author" content="Xavier">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/5.jpg"><link rel="shortcut icon" href="/img/tom.jpg"><link rel="canonical" href="http://example.com/2023/02/18/mysql_7/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":85,"languages":{"author":"Author: Xavier","link":"Link: ","source":"Source: Xavier's blog","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Database Designment',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-18 15:55:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css"><script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script><meta name="generator" content="Hexo 5.4.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Xavier's blog" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37758182?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">45</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">19</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/5.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Xavier's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Database Designment</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-02-18T07:55:39.246Z" title="Created 2023-02-18 15:55:39">2023-02-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-02-18T07:55:39.246Z" title="Updated 2023-02-18 15:55:39">2023-02-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MySQL/">MySQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Database Designment"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Database-Designment"><a href="#Database-Designment" class="headerlink" title="Database Designment"></a>Database Designment</h1><p>数据库设计是指对于一个给定的应用场景，构造（设计）优化的数据库逻辑模式和物理结构，并据此建立数据库，满足各种用户的应用需求。<br>一般的设计步骤为：  </p>
+<ul>
+<li>需求分析</li>
+<li>概念结构设计</li>
+<li>逻辑结构设计</li>
+<li>物理结构设计</li>
+<li>数据库实施</li>
+<li>数据库运行维护</li>
+</ul>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a><strong>需求分析</strong></h2><p>通过详细调查现实世界要处理的对象（组织、部门、企业等），充分了解原系统（手工系统或计算机系统）工作概况，明确用户的各种需求。<br>其任务是由数据库设计人员和用户双方共同收集信息需求和处理需求；通过仔细分析；将这些需求按一定的规范要求以用户和设计人员都能理解接受的文档形式确定下来。</p>
+<h2 id="概念结构设计"><a href="#概念结构设计" class="headerlink" title="概念结构设计"></a><strong>概念结构设计</strong></h2><p>通过对用户需求进行综合、归纳与抽象，形成一个独立于具体数据库管理系统的概念模型。<br>最常用的概念模型即E-R模型。<br>E-R模型将现实世界中的信息用实体、属性和实体之间的联系表示。<br>一些E-R图的要点如下：</p>
+<ul>
+<li>矩形表示实体、椭圆表示属性、零星表示关系</li>
+<li>关系是实体间的关系，有三种：1对1、1对n、m对n</li>
+<li>属性必须为不可再分的项，不能包含其他属性，不能与其他实体具有关系</li>
+</ul>
+<h2 id="逻辑结构设计"><a href="#逻辑结构设计" class="headerlink" title="逻辑结构设计"></a><strong>逻辑结构设计</strong></h2><p>将概念结构转换成特定DBMS所支持的数据模型的过程。MySQL是关系型数据库，所以此步便是将E-R图转换为表的过程。<br>在此阶段，要做的事一般包括以下三点：</p>
+<ul>
+<li>将概念模型(E-R图)转换为关系模式（表）的集合</li>
+<li>使用范式理论对模式进行优化</li>
+<li>设计关系子模式–视图</li>
+</ul>
+<h3 id="E-R图向关系模型（表）的转换"><a href="#E-R图向关系模型（表）的转换" class="headerlink" title="E-R图向关系模型（表）的转换"></a>E-R图向关系模型（表）的转换</h3><ul>
+<li>一个实体对应一个表，联系也可以单独对应一个表，实体或联系的属性构成表的字段</li>
+<li>1:1联系中，可以将联系单独建表（包含字段为联系两端实体的主键+联系本身的属性）;也可以将联系归入任一一端实体（为这个实体对应的表增加字段另一个实体的主键和原来联系包含的属性）</li>
+<li>1:n联系中，可以将联系单独建表（包含字段为联系两端实体的主键+联系本身的属性）;也可以将联系归入任n端实体（为这个实体对应的表增加字段另一个实体的主键和原来联系包含的属性）</li>
+<li>m:n联系中，只能将联系单独建表（包含字段为联系两端实体的主键+联系本身的属性）</li>
+<li>多实体联系中，只能将联系单独建表（包含字段为联系多端实体的主键+联系本身的属性）</li>
+</ul>
+<h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><p>为了建立<strong>冗余较小</strong>、<strong>结构合理</strong>的数据库，设计数据库时必须遵循一定的规则。在关系型数据库中这种规则就称为范式。范式是符合某一种设计要求的总结。要想设计一个结构合理的关系型数据库，必须满足一定的范式。<br>目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。<br>数据库的范式设计得越高阶，冗余度就越低，同时高阶的范式一定满足低阶的范式的要求。一般来说，在关系型数据库中，最高也就遵循到BCNF，普遍是3NF，但也不是绝对，有时候为了提高某些查询性能，我们还需要破坏范式规则，也就是反规范化。</p>
+<ul>
+<li><p>1NF：第一范式要求确保数据表中每个字段的值都具有原子性，也就是说表中每个字段不能再被拆分。这个范式一定需要遵守。</p>
+</li>
+<li><p>2NF：在满足第一范式的基础上，还要满足数据库表中的每一条数据，都是可唯一标识的。而且所有非主键字段，都必须完全依赖主键，不能只依赖主键的一部分。</p>
+<ul>
+<li>比赛表（球员编号，比赛编号）–&gt; (姓名，年龄，比赛时间，场地，得分)则不满足第二范式。虽然联合主键（球员编号，比赛编号）可以唯一标识么一条记录，但比赛表存在部分依赖，即（球员编号）–&gt; (姓名，年龄)和(比赛编号–&gt;比赛时间，比赛场地)</li>
+<li>不满足第二范式会产生如下问题：<ul>
+<li>数据冗余：如果一个球员参加了n场比赛，那么球员的姓名和年龄就重复了n次，一个比赛也有可能有m个球员参加，那比赛的时间和地点就重复了m次。</li>
+<li>插入异常：如果我们想要添加一场新的比赛，但是这时球员还没有确定，那么就无法插入。</li>
+<li>删除异常：如果我们想要删除某个球员编号，会将比赛信息删除掉。</li>
+<li>更新异常：如果我们想要调整某个比赛的时间，那么数据库表中所有关于这个比赛的时间都需要进行调整，否则会出现一场比赛时间不同的情况。</li>
+</ul>
+</li>
+<li>将比赛表调整为球员表（球员编号，姓名，年龄）、比赛表（比赛编号，比赛场地，比赛时间）和得分表（比赛编号，球员编号，得分）三个表则满足2NF</li>
+</ul>
+</li>
+<li><p>3NF：在第二范式的基础上，确保数据表中的每一个非主键字段都和主键字段直接相关，也就是说，要求数据表中的所有非主键字段不能依赖于其他非主键字段字段。（即不能存在非主属性A依赖非主属性B，非主属性B依赖于主键C的情况）。通俗来说，该规则的意思是所有非主键属性之间不能有依赖关系，必须相互独立。</p>
+<ul>
+<li>员工信息表（员工编号）–&gt;(姓名，部门编号，部门名称)满足2NF，但是存在(部门编号)–&gt;(部门名称)不满足3NF</li>
+<li>将其分为员工表（员工编号，姓名）和部门表（部门编号，部门名称）满足3NF</li>
+</ul>
+</li>
+<li><p>BCNF：前三个范式消除了非主属性对候选键的部分依赖和传递依赖，如果进一步消除主属性对候选键的部份依赖和传递依赖则满足BCNF</p>
+<ul>
+<li>仓库表（仓库名，管理员，物品名，数量）有仓库名 → 管理员，管理员 → 仓库名，（仓库名，物品名）→ 数量。其候选键为：（管理员，物品名），（仓库名，物品名）。主属性为：仓库名、管理员、物品名</li>
+<li>满足3NF，但由于主属性管理员部分依赖于候选键(仓库名，物品名)不满足BCNF</li>
+<li>将其拆分为仓库（仓库名，管理员）、库存（仓库名，物品名，数量）满足BCNF</li>
+</ul>
+</li>
+</ul>
+<h2 id="物理结构设计"><a href="#物理结构设计" class="headerlink" title="物理结构设计"></a><strong>物理结构设计</strong></h2><p>为逻辑数据结构选取一个最适合应用环境的物理结构,包括存储结构和存取方法。<br>此阶段的工作是：</p>
+<ul>
+<li>为关系模式选取合适的存取方法（即索引）</li>
+<li>设计关系(表)、聚簇、索引、日志、备份等数据的物理存储结构及确定系统配置<ul>
+<li>可以将比较大的表分别放在两个磁盘上，以加快存取速度，这在多用户环境下特别有效</li>
+<li>可以将日志文件与数据库对象（表、索引等）放在不同的磁盘以改进系统的性能</li>
+<li>系统都为数据库的系统配置（同时使用数据库的用户数、同时打开的数据库对象数、内存分配参数、缓冲区分配参数（使用的缓冲区长度、个数）、存储分配参数 、物理块的大小、物理块装填因子、时间片大小、数据库的大小、锁的数目等）赋予了合理的缺省值。在进行物理设计时需要根据应用环境确定这些参数值，以使系统性能最优。</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据库实施"><a href="#数据库实施" class="headerlink" title="数据库实施"></a><strong>数据库实施</strong></h2><p>根据逻辑设计和物理设计的结果构建数据库,编写与调试应用程序,组织数据入库并进行试运行。<br>此阶段的工作是：</p>
+<ul>
+<li>建立数据库，建表</li>
+<li>装入数据</li>
+<li>测试运行</li>
+</ul>
+<h2 id="数据库运行和维护"><a href="#数据库运行和维护" class="headerlink" title="数据库运行和维护"></a><strong>数据库运行和维护</strong></h2><p>经过试运行后即可投入正式运行,在运行过程中必须不断对其进行评估、调整与修改。<br>此阶段的工作是：</p>
+<ul>
+<li>数据库备份和恢复</li>
+<li>数据库权限控制</li>
+<li>数据库性能监督、分析与改进</li>
+<li>数据库重组织和重构造（数据库长期运行的dml操作会使物理存储性能变差，重组织可以提高系统性能）</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/5.jpg" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Database-Designment"><span class="toc-number">1.</span> <span class="toc-text">Database Designment</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">概念结构设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.3.</span> <span class="toc-text">逻辑结构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#E-R%E5%9B%BE%E5%90%91%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B%EF%BC%88%E8%A1%A8%EF%BC%89%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.3.1.</span> <span class="toc-text">E-R图向关系模型（表）的转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8C%83%E5%BC%8F"><span class="toc-number">1.3.2.</span> <span class="toc-text">范式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.4.</span> <span class="toc-text">物理结构设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%96%BD"><span class="toc-number">1.5.</span> <span class="toc-text">数据库实施</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%90%E8%A1%8C%E5%92%8C%E7%BB%B4%E6%8A%A4"><span class="toc-number">1.6.</span> <span class="toc-text">数据库运行和维护</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/4.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Xavier</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Have a good day !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadUtterances () {
+  let ele = document.createElement('script')
+  ele.setAttribute('id', 'utterances_comment')
+  ele.setAttribute('src', 'https://utteranc.es/client.js')
+  ele.setAttribute('repo', 'xiaoyu2018/xiaoyu2018.github.io')
+  ele.setAttribute('issue-term', 'pathname')
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+  ele.setAttribute('theme', nowTheme)
+  ele.setAttribute('crossorigin', 'anonymous')
+  ele.setAttribute('async', 'true')
+  document.getElementById('utterances-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function utterancesTheme () {
+  const iframe = document.querySelector('.utterances-frame')
+  if (iframe) {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'photon-dark' : 'github-light'
+    const message = {
+      type: 'set-theme',
+      theme: theme
+    };
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+}
+
+if ('Utterances' === 'Utterances' || !false) {
+  if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+  else loadUtterances()
+} else {
+  function loadOtherComment () {
+    loadUtterances()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
